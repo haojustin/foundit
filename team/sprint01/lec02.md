@@ -6,6 +6,8 @@ Type of Meeting: Daily Scrum
 
 Team: Alex Justin Victor Baimin Zixiao Kevin Kendrick
 
+Absent: none
+
 Scribed Discussion:
 
 Alex added team files. No blockers
