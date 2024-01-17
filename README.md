@@ -1,6 +1,8 @@
-FoundIt
+# FoundIt
 
 Post found or lost items, and receive replies from claimants and finders.
+
+## Group members
 
 Justin Hao: haojustin
 
