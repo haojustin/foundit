@@ -17,3 +17,7 @@ Baimin Wang: Baiming-Wang
 Kevin Lavelle: coder626
 
 Alex Castelein: 17acastelein
+
+## Tech stack
+
+We have decided on using React Native for iOS-Android cross compatibility.
