@@ -1,3 +1,7 @@
+# personas:
+- Sally, 20, UCSB student
+- Bob, 31, UCSB faculty
+
 # Scenario 1:
 Sally lost her purse in front of the ILP. She posted this in the UCSB Reddit and YikYak but received no response. She wishes there existed a better electronic way to alert others that she lost her item.
 
