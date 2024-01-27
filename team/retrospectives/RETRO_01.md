@@ -2,7 +2,7 @@
 
 * Led by: Kendrick Lee
 * Present: Baimin, Alex, Victor, Kevin
-* Absent: Zixiao, Justin (added to retro)
+* Absent: Zixiao, Justin (added to retro despite being unable to show up in person)
 
 Start
 -Making sure everyone is on the same page during class time
