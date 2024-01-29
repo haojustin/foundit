@@ -2,7 +2,7 @@
 
 * Led by: Kendrick Lee
 * Present: Baimin, Alex, Victor, Kevin
-* Absent: Zixiao, Justin
+* Absent: Zixiao, Justin (added to retro despite being unable to show up in person)
 
 Start
 -Making sure everyone is on the same page during class time
@@ -12,10 +12,12 @@ Start
 Stop
 -Wasting time organizing github
 -Worrying about other peoples code to work on your computer
+-Trying to flush everything out
 
 Continue
 -Continue communicating with the discord
 -Continue working on frontend 
+-Continue brainstorming new potential features/improvements to current functionality 
 
 ## Action item
 
