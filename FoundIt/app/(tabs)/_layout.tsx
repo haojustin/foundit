@@ -18,7 +18,7 @@ function TabBarIcon(props: {
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
-  return (
+	return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
@@ -61,6 +61,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
+		<Tabs.Screen
+			name="post"
+			options={{
+				title: "Post",
+				tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+			}}
+		/>
     </Tabs>
   );
 }
