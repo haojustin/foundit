@@ -16,6 +16,7 @@ export default function TabOneScreen() {
       <View style={styles.Body}>
         <Text style={styles.title}>Recent Posts</Text>
       </View>
+      <View style={styles.separator}></View>
 
       <FlatList
         data={postsData}
@@ -52,12 +53,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Palatino',
     marginLeft: 0,
     marginTop: 0,
-    color: 'cyan',
+    color: '#2551FF',
   },
   separator: {
-    marginVertical: 30,
+    marginVertical: 10,
     height: 1,
     width: '80%',
+    color: 'yellow'
   },
   blocksContainer: {
     flex:0,
@@ -72,22 +74,28 @@ const styles = StyleSheet.create({
     backgroundColor: 'pink',
     margin: 0,
     borderRadius: 15,
+    borderWidth: 1, 
+    borderColor: 'black',
+    padding: 10,
+    
+    shadowColor: '#000',        // Color of the shadow
+    shadowOffset: { width: 5, height: 5}, // x, y offset of the shadow
+    shadowOpacity: 0.25,        // Opacity of the shadow
+    shadowRadius: 4,         // Blur radius of the shadow
+    elevation: 5, 
   },
   inblocktitle:{
     fontSize: 18,
     fontWeight: 'bold',
     fontFamily: 'Times New Roman',
-    marginLeft: 15,
-    marginTop: 5,
     color: 'black',
     textDecorationLine: 'underline',
   },
   inblocktext:{
     fontSize: 15,
     fontFamily: 'Times New Roman',
-    marginLeft: 15,
-    marginTop: 5,
     color: 'black',
+    padding: 5,
   },
 
 });
