@@ -1,9 +1,11 @@
-import { StyleSheet, Button } from 'react-native';
+import { StyleSheet, Button, Appearance } from 'react-native';
+import { useEffect } from 'react';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 
 export default function TabOneScreen() {
+	useEffect(() => Appearance.setColorScheme('dark'),[])
 	return (
 		<View style={styles.container}>
 			<Text style={styles.title}>Tab One</Text>
