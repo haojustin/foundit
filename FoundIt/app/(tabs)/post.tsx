@@ -30,6 +30,21 @@ export default function Post() {
 					</Text>
 				</TouchableOpacity>
 			</View>
+			<View style={styles.inputElement}>
+				<TouchableOpacity style={styles.picButton} activeOpacity={0.5}>
+					<Text>
+						(camera logo here) Add a picture
+					</Text>
+				</TouchableOpacity>
+			</View>
+			<View style={styles.inputElement}>
+				<TouchableOpacity style={styles.picButton} activeOpacity={0.5}>
+					<Text>
+						(location logo here) Where did you lose/find your item?
+					</Text>
+				</TouchableOpacity>
+			</View>
+
 		</View>
 	);
 }
@@ -86,4 +101,11 @@ const styles = StyleSheet.create({
 		borderColor: colors.lightGray,
 		borderRadius: 5,
 	},
+	picButton: {
+		margin: 10,
+		flex: 1,
+		height: 30,
+		backgroundColor: 'black',
+		justifyContent: 'center',
+	}
 });
