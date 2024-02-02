@@ -11,3 +11,5 @@ Kevin Posted a tutorial on using button in react_natiive in the react_native_hel
 Justin posted a youtube tutorial about building a camera feature using expo in react_native_help
 
 Alex posted a link to the expo documentation files in react_native_help
+
+Zixiao posted a youtube tutorial about Google sign-in in js_help
