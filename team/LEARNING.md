@@ -4,7 +4,7 @@ Some team members are familiar with javascript and typescript, while others are 
 
 Lab03: 
 
-Victor posted a Git tutorial video in the git_help channel.
-Kevin Posted a tutorial on using button in react_natiive in the react_native_help channel
-Justin posted a youtube tutorial about building a camera feature using expo in react_native_help 
+Victor posted a Git tutorial video in the git_help channel. \n
+Kevin Posted a tutorial on using button in react_natiive in the react_native_help channel \n
+Justin posted a youtube tutorial about building a camera feature using expo in react_native_help \n
 Alex posted a link to the expo documentation files in react_native_help
