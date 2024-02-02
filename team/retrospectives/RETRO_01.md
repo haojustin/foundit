@@ -40,10 +40,13 @@ Measurement: Everyone has a similar understanding on where we are as a group. We
 * What advice would you give to the next person leading a retro
   based on what you learned today?
 
-We used the start/stop/continue process for the retro. I believe that it went well and that we all understand where each group member where everyone is struggling a bit or where everyone is making good progress. I think alot of good points were made during the stop/stop/continue and some were similar which really shows that the group all have very similar concerns or things that they think we are doing well. One advice I would give to the next person leading the retro is to spend more time on stops because I feel that groups usually don't make as many stops as the other options.
+We used the start/stop/continue process for the retro. I believe that it went well and that we all understand where each group member where everyone is struggling a bit or where everyone is making good progress. I think a lot of good points were made during the stop/stop/continue and some were similar which shows that the group all have very similar concerns or things that they think we are doing well. I would advise the next person leading the retro to spend more time on stops because groups usually don't make as many stops as the other options.
 
 ## Experiment/Change
 
 * A brief description of what constitutes your change/experiment
 * A brief assessment of how its results (did it improve things? move the needle at all?)
-* A decision going forward: keep the change, revert to previous procedure, make a new change? 
+* A decision going forward: keep the change, revert to previous procedure, make a new change?
+
+Our experiment was to communicate more by having the group use Discord every day to make check-ins and progress. This experiment improved things within our group because everyone was making better progress since we were helping each other with blockers outside of class rather than waiting until class time. Some group members even had time to meet up outside of class and communicated the meet-up through Discord. Going forward we will continue to use discord to communicate daily about progress and blockers.
+
