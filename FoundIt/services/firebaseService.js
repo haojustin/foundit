@@ -1,12 +1,21 @@
 // firebaseService.js
-import db from './firebaseConfig'; // import the Firestore instance from your config file
+import db from '../constants/firebaseConfig'; // import the Firestore instance from your config file
 
-const addUserData = (userData) => {
-  return db.collection('users').add(userData);
+const addUserData = (userId) => {
+  return db.collection('users').add(userId);
 };
 
 const getUserData = () => {
   return db.collection('users').get();
 };
 
-export { addUserData, getUserData };
+const addPostForUser = (userId, postData) => {
+  return db.collection('users').doc(userId).collection('posts').add(postData);
+};
+
+const getPostsForUser = (userId) => {
+  return db.collection('users').doc(userId).collection('posts').get();
+};
+
+
+export { addUserData, getUserData , getPostsForUser, db};

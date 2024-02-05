@@ -1,31 +1,50 @@
 import { StyleSheet } from 'react-native';
-import { ScrollView } from 'react-native'; //Scrolling up and down
 import { Dimensions } from 'react-native';
 import { FlatList } from 'react-native';    // OPtimizing Runtime and Memory for a list of things
+import React, { useEffect, useState } from 'react'
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
+
+import {getUserData, getPostsForUser, db} from '../../services/firebaseService.js'
 
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
 export default function TabOneScreen() {
+  const [posts, setPosts] = useState([]);
+  const userId = 'mbx1LMVeRmoleCz7RD88';
+
+  useEffect(() => {
+    getPostsForUser(userId)
+      .then(querySnapshot => {
+        const postsArray = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        console.log(postsArray);
+        setPosts(postsArray);
+      })
+      .catch(error => {
+        console.error("Error fetching posts:", error);
+      });
+  }, [userId]);
+
   return (
     <View style={styles.container}>
       <View style={styles.Body}>
         <Text style={styles.title}>Recent Posts</Text>
       </View>
       <View style={styles.separator}></View>
-
       <FlatList
-        data={postsData}
+        data={posts}
         renderItem={({ item }) => (
           <View style={styles.blocksContainer}>
-
             <View style={styles.block}>
-              <Text style={styles.inblocktitle}>{item.title}</Text>
-              <Text style={styles.inblocktext}>{item.content}</Text>
+              <Text style={styles.inblocktitle}>{item.Title}</Text>
+              <Text style={styles.inblocktext}>{item.Description}</Text>
+              <Text style={styles.inblocktitle}>Date: {item.Date}</Text>
             </View>
 
           </View>
@@ -101,9 +120,3 @@ const styles = StyleSheet.create({
 });
 
 
-const postsData = [
-  { id: 1, title: 'Post 1', content: 'This is the content of post 1' },
-  { id: 2, title: 'Post 2', content: 'This is the content of post 2' },
-  { id: 3, title: 'Post 3', content: 'This is the content of post 3' },
-  // ... more posts
-];
