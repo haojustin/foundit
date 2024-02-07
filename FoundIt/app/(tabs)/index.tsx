@@ -23,7 +23,6 @@ export default function TabOneScreen() {
           id: doc.id,
           ...doc.data()
         }));
-        console.log(postsArray);
         setPosts(postsArray);
       })
       .catch(error => {
