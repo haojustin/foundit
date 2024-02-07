@@ -1,26 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Button, Image, Text, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity, SafeAreaView, StatusBar, Text, TouchableWithoutFeedback } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Video } from 'expo-av';
 
-/**
- * CameraPage component displays a camera interface allowing the user to take pictures
- * and pick images from the gallery using Camera and ImagePicker.
- */
-const CameraPage = () => {
-  // Reference to the camera component
+const CameraPage: React.FC = () => {
   const cameraRef = useRef<Camera | null>(null);
-
-  // State to manage camera permission status
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
-
-  // State to manage the camera type (front or back)
   const [type, setType] = useState(Camera.Constants.Type.back);
+  const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
+  const [media, setMedia] = useState<{ uri: string | null; type: 'image' | 'video' | null }>({ uri: null, type: null });
+  const [isRecording, setIsRecording] = useState<boolean>(false);
+  const lastTapRef = useRef<number>(0);
 
-  // State to store the captured or selected image URI
-  const [image, setImage] = useState<string | null>(null);
-
-  // Use useEffect to request camera permissions when the component mounts
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
@@ -28,78 +21,169 @@ const CameraPage = () => {
     })();
   }, []);
 
-  // If camera permission is pending, render an empty view
+  const toggleFlashMode = () => {
+    setFlashMode(
+      flashMode === Camera.Constants.FlashMode.off
+        ? Camera.Constants.FlashMode.on
+        : Camera.Constants.FlashMode.off
+    );
+  };
+
+  const handleDoubleTap = () => {
+    const now = Date.now();
+    if (now - lastTapRef.current < 300) {
+      setType(type === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back);
+    }
+    lastTapRef.current = now;
+  };
+
+  const takePicture = async () => {
+    if (cameraRef.current && !isRecording) {
+      const photo = await cameraRef.current.takePictureAsync();
+      setMedia({ uri: photo.uri, type: 'image' });
+    }
+  };
+
+  const startRecording = async () => {
+    setIsRecording(true);
+    if (cameraRef.current) {
+      const video = await cameraRef.current.recordAsync();
+      setMedia({ uri: video.uri, type: 'video' });
+      setIsRecording(false);
+    }
+  };
+
+  const handlePressIn = () => {
+    pressTimer = setTimeout(async () => {
+      await startRecording();
+    }, 500);
+  };
+
+  const handlePressOut = () => {
+    if (pressTimer) {
+      clearTimeout(pressTimer);
+      pressTimer = null;
+      if (!isRecording) {
+        takePicture();
+      } else {
+        if (cameraRef.current) {
+          cameraRef.current.stopRecording();
+          setIsRecording(false);
+        }
+      }
+    }
+  };
+
   if (hasPermission === null) {
     return <View />;
   }
 
-  // If camera permission is denied, display a message
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
 
-  // Function to take a picture using the camera
-  const takePicture = async () => {
-    if (!cameraRef.current) return;
-    const photo = await cameraRef.current.takePictureAsync();
-    setImage(photo.uri);
-  };
-
-  // Function to pick an image from the gallery
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.cancelled) {
-      setImage(result.uri);
-    }
-  };
-
   return (
-    <View style={styles.container}>
-      {/* Camera component */}
-      <Camera style={styles.camera} type={type} ref={cameraRef}>
-        {/* Button container */}
-        <View style={styles.buttonContainer}>
-          {/* Button to flip between front and back camera */}
-          <Button title="Flip Camera" onPress={() => {
-            setType(type === Camera.Constants.Type.back
-              ? Camera.Constants.Type.front
-              : Camera.Constants.Type.back);
-          }} />
-          {/* Button to take a picture */}
-          <Button title="Take Picture" onPress={takePicture} />
-          {/* Button to pick an image from the gallery */}
-          <Button title="Pick Image from Gallery" onPress={pickImage} />
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="light-content" />
+      <TouchableWithoutFeedback onPress={handleDoubleTap}>
+        <Camera style={styles.camera} type={type} flashMode={flashMode} ref={cameraRef}>
+          <TouchableOpacity style={styles.flashButton} onPress={toggleFlashMode}>
+            <Icon name={flashMode === Camera.Constants.FlashMode.on ? "flash" : "flash-off"} size={24} color="white" />
+          </TouchableOpacity>
+        </Camera>
+      </TouchableWithoutFeedback>
+      <View style={styles.controls}>
+      <TouchableOpacity style={styles.iconButton} onPress={() => {}}>
+            <Icon name="image-multiple" size={30} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.captureButton, isRecording && { borderColor: 'red' }]}
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}
+          >
+            <View style={styles.innerRing}>
+              <View style={[styles.innerCircle, isRecording && { backgroundColor: 'red' }]} />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconButton} onPress={() => setType(type === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back)}>
+            <Icon name="camera-switch" size={30} color="white" />
+          </TouchableOpacity>
         </View>
-      </Camera>
-      {/* Display the captured or selected image */}
-      {image && <Image source={{ uri: image }} style={styles.image} />}
-    </View>
+      {media.uri && (
+        media.type === 'image' ? (
+          <Image source={{ uri: media.uri }} style={styles.preview} />
+        ) : (
+          <Video source={{ uri: media.uri }} style={styles.preview} isLooping useNativeControls />
+        )
+      )}
+    </SafeAreaView>
   );
 };
 
-// Styles for the component
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'black',
+  },
+  fullScreen: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
   },
   camera: {
     flex: 1,
+    justifyContent: 'flex-end',
   },
-  buttonContainer: {
-    flex: 1,
-    backgroundColor: 'transparent',
+  flashButton: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    zIndex: 10,
+  },
+  controls: {
+    position: 'absolute',
+    bottom: 20,
     flexDirection: 'row',
-    margin: 20,
+    justifyContent: 'space-around',
+    width: '100%',
   },
-  image: {
-    flex: 1,
-    resizeMode: 'contain',
+  iconButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  captureButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 75,
+    height: 75,
+    borderRadius: 37.5, 
+    backgroundColor: 'transparent', 
+    borderWidth: 2, 
+    borderColor: 'white', 
+    padding: 2, 
+  },
+  innerRing: {
+    width: '100%', 
+    height: '100%',
+    borderRadius: 35.5, 
+    backgroundColor: 'black', 
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 1, 
+  },
+  innerCircle: {
+    width: '100%', 
+    height: '100%',
+    borderRadius: 34, 
+    backgroundColor: 'white', 
+  },
+  preview: {
+    position: 'absolute',
+    bottom: 100,
+    right: 20,
+    width: 100,
+    height: 150,
+    borderRadius: 8,
   },
 });
 
