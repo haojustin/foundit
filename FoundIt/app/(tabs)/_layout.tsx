@@ -55,11 +55,28 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <AntDesign name="camerao" size={24} color="black" />,
         }}
       />
+      <Tabs.Screen
+        name="account/profile"
+        options={{ 
+          title: "Profile",
+          tabBarIcon: ({ color }) => <AntDesign name="user" size={24} color="black" />,
+          headerRight: () => (
+            <Link href="/(tabs)/account/settings" asChild>
+              <Pressable>
+                {({ pressed }) => (
+                  <AntDesign name="setting" size={24} color="black" style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}/>
+                )}
+              </Pressable>
+            </Link>
+          ),
+        }}
+      />
 	  <Tabs.Screen
-        name="settings"
+        name="account/settings"
         options={{
           title: "Settings",
           tabBarIcon: ({ color }) => <AntDesign name="setting" size={24} color="black" />,
+          href : null
         }}
       />
 		<Tabs.Screen
@@ -67,6 +84,7 @@ export default function TabLayout() {
 			options={{
 				title: "Post",
 				tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        href : null,
 			}}
 		/>
     </Tabs>
