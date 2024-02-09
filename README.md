@@ -78,7 +78,7 @@ Many features are hard coded now and will be implemented in the future.
 5. Submit a pull request :D
 
 ## License
-Copyright (c) [2024] [pj-06-FoundIt]
+Copyright (c) 2024 Justin Hao, Kevin Lavelle, Victor Li, Zixiao Jin, Baimin Wang, Alexandre Castelein, Kendrick Lee
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
