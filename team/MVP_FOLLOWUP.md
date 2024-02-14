@@ -22,6 +22,14 @@ Many viewers also wanted a built-in chat feature so users could talk to each oth
 
 # Response Actions
 
+1) The camera is our best feature currently but should be upgraded somewhat.
+2) The UI is defintely too sparse right now, and we have more features planned.
+3) The overall concept was very good and we are progressing toward a final product.
+4) Our map function needs to be integrated with actual map items so that users can post.
+5) Users should definetly be able to communicate with each other in-app without having to leave the app. 
+
 # Next Steps
+
+1) 
 
 
