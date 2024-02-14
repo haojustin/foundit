@@ -30,6 +30,10 @@ Many viewers also wanted a built-in chat feature so users could talk to each oth
 
 # Next Steps
 
-1) 
+1) We need to allow the user to have a full screen preview of the picture they take.
+2) We will use AI tools to quickly add more features and populate our app with more buttons such as an account page and settings page.
+3) We will continue progressing on our idea toward a final product.
+4) The map function will be integrated with the posts so users can either pin the location on the map or get a geocoded address of where they posted from.
+5) We will add a robust chat feature so users can communicate with each other in the app. 
 
 
