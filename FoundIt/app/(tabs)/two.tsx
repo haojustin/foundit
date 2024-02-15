@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Image, StyleSheet, TouchableOpacity, SafeAreaView, StatusBar, Text, TouchableWithoutFeedback } from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity, SafeAreaView, StatusBar, Text, TouchableWithoutFeedback, Modal } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -13,6 +13,8 @@ const CameraPage: React.FC = () => {
   const [media, setMedia] = useState<{ uri: string | null; type: 'image' | 'video' | null }>({ uri: null, type: null });
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const lastTapRef = useRef<number>(0);
+  let pressTimer: NodeJS.Timeout | null = null;
+  const [fullScreenPreviewVisible, setFullScreenPreviewVisible] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -41,6 +43,7 @@ const CameraPage: React.FC = () => {
     if (cameraRef.current && !isRecording) {
       const photo = await cameraRef.current.takePictureAsync();
       setMedia({ uri: photo.uri, type: 'image' });
+      setFullScreenPreviewVisible(false); // Reset preview visibility
     }
   };
 
@@ -50,6 +53,7 @@ const CameraPage: React.FC = () => {
       const video = await cameraRef.current.recordAsync();
       setMedia({ uri: video.uri, type: 'video' });
       setIsRecording(false);
+      setFullScreenPreviewVisible(false); // Reset preview visibility
     }
   };
 
@@ -74,6 +78,10 @@ const CameraPage: React.FC = () => {
     }
   };
 
+  const toggleFullScreenPreview = () => {
+    setFullScreenPreviewVisible(!fullScreenPreviewVisible);
+  };
+
   if (hasPermission === null) {
     return <View />;
   }
@@ -93,8 +101,8 @@ const CameraPage: React.FC = () => {
         </Camera>
       </TouchableWithoutFeedback>
       <View style={styles.controls}>
-      <TouchableOpacity style={styles.iconButton} onPress={() => {}}>
-            <Icon name="image-multiple" size={30} color="white" />
+          <TouchableOpacity style={styles.iconButton} onPress={() => {}}>
+                <Icon name="image-multiple" size={30} color="white" />
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.captureButton, isRecording && { borderColor: 'red' }]}
@@ -110,11 +118,30 @@ const CameraPage: React.FC = () => {
           </TouchableOpacity>
         </View>
       {media.uri && (
-        media.type === 'image' ? (
-          <Image source={{ uri: media.uri }} style={styles.preview} />
-        ) : (
-          <Video source={{ uri: media.uri }} style={styles.preview} isLooping useNativeControls />
-        )
+        <TouchableOpacity style={styles.preview} onPress={toggleFullScreenPreview}>
+          {media.type === 'image' ? (
+            <Image source={{ uri: media.uri }} style={styles.fullScreen} />
+          ) : (
+            <Video source={{ uri: media.uri }} style={styles.fullScreen} isLooping useNativeControls />
+          )}
+        </TouchableOpacity>
+      )}
+      {fullScreenPreviewVisible && (
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={fullScreenPreviewVisible}
+          onRequestClose={toggleFullScreenPreview}
+        >
+          {media.type === 'image' ? (
+            <Image source={{ uri: media.uri }} style={styles.fullScreen} />
+          ) : (
+            <Video source={{ uri: media.uri }} style={styles.fullScreen} isLooping useNativeControls />
+          )}
+          <TouchableOpacity style={styles.closeButton} onPress={toggleFullScreenPreview}>
+            <Icon name="close" size={30} color="white" />
+          </TouchableOpacity>
+        </Modal>
       )}
     </SafeAreaView>
   );
@@ -156,26 +183,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 75,
     height: 75,
-    borderRadius: 37.5, 
-    backgroundColor: 'transparent', 
-    borderWidth: 2, 
-    borderColor: 'white', 
-    padding: 2, 
+    borderRadius: 37.5,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: 'white',
+    padding: 2,
   },
   innerRing: {
-    width: '100%', 
+    width: '100%',
     height: '100%',
-    borderRadius: 35.5, 
-    backgroundColor: 'black', 
+    borderRadius: 35.5,
+    backgroundColor: 'black',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 1, 
+    padding: 1,
   },
   innerCircle: {
-    width: '100%', 
+    width: '100%',
     height: '100%',
-    borderRadius: 34, 
-    backgroundColor: 'white', 
+    borderRadius: 34,
+    backgroundColor: 'white',
   },
   preview: {
     position: 'absolute',
@@ -185,6 +212,12 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 8,
   },
+  closeButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    zIndex: 30,
+  }
 });
 
 export default CameraPage;
