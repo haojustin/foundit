@@ -1,1 +1,1 @@
-
+We decided on using Jest as our testing library because ChatGPT recommended it for React Native apps. We implemented one simple unit test, which basically confirms that a certain text element renders correctly.
