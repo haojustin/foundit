@@ -4,3 +4,6 @@
 
 **Victor Li:**
 I used ChatGPT to help me set up the unit test for Lab 5. It did generate the unit test code, but was quite useless for helping me actually set up the testing system. Ended up spending 5 hours throwing random extremely specific and esoteric bits of code from the internet at the problem until some combination of those bits apparently made it work. So I guess you could say that's a limitation of the AI. It's good at helping generate lots of surface-level, common, basic code, such as unit tests, and we definitely will be using it for those in the future, but it cannot hope to match the kind of ancient knowledge that may be found in decade old StackOverflow posts. Additionally, AI can't generate code exactly for your purpose. In the time it would take to engineer a prompt to generate the perfect code you needed that worked right out of the box, one could easily just adapt an imperfect generation to their purposes.
+
+**Zixiao Jin**
+I used ChatGPT to help me create components for my sign-in page, It helps me set all the text boxes, add alerts, and add placeholders. It also teaches me how to do navigation stuff using stack navigator. I found ChatGPT really helpful in terms of coding for these basic components.
