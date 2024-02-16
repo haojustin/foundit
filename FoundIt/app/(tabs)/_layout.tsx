@@ -2,12 +2,16 @@ import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
 import { Pressable } from 'react-native';
-
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import Post from './postfolder/post';
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
+import CameraPage from './postfolder/two';
+import { Camera } from 'expo-camera';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -19,6 +23,21 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const Stack = createStackNavigator();
+
+  function MyStack() {
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        }}
+      >
+        <Stack.Screen name="/postfolder/post" component={Post} />
+        <Stack.Screen name="/postfolder/two" component= {CameraPage}/>
+      </Stack.Navigator>
+    );
+  }
 
 	return (
     <Tabs
@@ -46,15 +65,27 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="postfolder/two"
         options={{
           title: 'Post',
           tabBarIcon: ({ color }) => <AntDesign name="camerao" size={24} color="black" />,
+          headerRight: () => (
+            <Link href="/(tabs)/postfolder/post" asChild>
+            </Link>
+          ),
         }}
       />
       <Tabs.Screen
+        name="postfolder/post"
+        options={{
+          title: "Post",
+          href : null
+        }}
+      />
+
+      <Tabs.Screen
         name="account/profile"
-        options={{ 
+        options={{
           title: "Profile",
           tabBarIcon: ({ color }) => <AntDesign name="user" size={24} color="black" />,
           headerRight: () => (
@@ -68,7 +99,7 @@ export default function TabLayout() {
           ),
         }}
       />
-	  <Tabs.Screen
+      <Tabs.Screen
         name="account/settings"
         options={{
           title: "Settings",
@@ -76,14 +107,6 @@ export default function TabLayout() {
           href : null
         }}
       />
-		<Tabs.Screen
-			name="post"
-			options={{
-				title: "Post",
-				tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        href : null,
-			}}
-		/>
     </Tabs>
   );
 }
