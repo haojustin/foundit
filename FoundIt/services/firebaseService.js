@@ -9,13 +9,20 @@ const getUserData = () => {
   return db.collection('users').get();
 };
 
-const addPostForUser = (userId, postData) => {
+const addPosts = (userId, postData) => {
   return db.collection('users').doc(userId).collection('posts').add(postData);
 };
 
-const getPostsForUser = (userId) => {
-  return db.collection('users').doc(userId).collection('posts').get();
+const getPosts = (userId) => {
+  if (userId == '')
+  {
+    return db.collection('posts').get();
+  }
+  else
+  {
+    return db.collection('users').doc(userId).collection('posts').get();
+  }
 };
 
 
-export { addUserData, getUserData , getPostsForUser, db};
+export { addUserData, getUserData , getPosts, addPosts};

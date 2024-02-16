@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Button, TextInput} from 'react-native';
 import { Dimensions } from 'react-native';
 import { FlatList } from 'react-native';    // OPtimizing Runtime and Memory for a list of things
 import React, { useEffect, useState } from 'react'
@@ -6,18 +6,24 @@ import React, { useEffect, useState } from 'react'
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 
-import {getUserData, getPostsForUser, db} from '../../services/firebaseService.js'
+import {addUserData, getUserData , getPosts, addPosts} from '../../services/firebaseService.js'
 
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
+
+
 export default function TabOneScreen() {
   const [posts, setPosts] = useState([]);
-  const userId = 'mbx1LMVeRmoleCz7RD88';
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const searchPerson = (event) => {
+    setSearchQuery(event.nativeEvent.text);
+  };
 
   useEffect(() => {
-    getPostsForUser(userId)
+    getPosts(searchQuery)
       .then(querySnapshot => {
         const postsArray = querySnapshot.docs.map(doc => ({
           id: doc.id,
@@ -28,13 +34,21 @@ export default function TabOneScreen() {
       .catch(error => {
         console.error("Error fetching posts:", error);
       });
-  }, [userId]);
+  }, [searchQuery]);
 
   return (
     <View style={styles.container}>
       <View style={styles.Body}>
         <Text style={styles.title}>Recent Posts</Text>
       </View>
+
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Search..."
+        value={searchQuery}
+        onChange={searchPerson}
+      />
+
       <View style={styles.separator}></View>
       <FlatList
         data={posts}
@@ -50,6 +64,7 @@ export default function TabOneScreen() {
         )}
         keyExtractor={(item) => item.id.toString()} // Assuming each post has a unique id
       />
+      
     </View>
   );
 }
@@ -115,6 +130,16 @@ const styles = StyleSheet.create({
     color: 'black',
     padding: 5,
   },
+
+  searchBar:{
+    height: 40,
+    //width: screenWidth *0.9,
+    borderColor: 'gray',
+    //align: 'center',
+    borderWidth: 2,
+    borderRadius: 5,
+    paddingLeft: 10,
+  }
 
 });
 
