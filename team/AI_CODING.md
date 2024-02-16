@@ -14,3 +14,6 @@ I used Google Bard to help me retrieve the React Native user's location. Google 
 
 **Justin Hao:**
 I used chatgpt to help me understand the react native stack navigator. I watched a lot of YouTube videos but I still had trouble with moving between pages on our app. Eventually, I entered specific chunks of my post codebase and it was able to give me a breakdown of possible implementations. Although the implementations weren't copy-paste-ready since they required implementation in different files that depended on each other, it gave me an idea of how to approach it.
+
+**Kendrick Lee:**  
+I used ChatGPT to help me make the profile page UI within the tab bar. I was also having difficulty with linking the settings page into the profile page as a button since the settings page would still show up on the tab bar even though I thought I removed it. I used ChatGPT to help me hide the settings page on the tab bar feature and link the page to a button, which I had previously linked on the wrong page.
