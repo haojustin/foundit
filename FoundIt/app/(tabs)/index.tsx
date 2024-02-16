@@ -6,7 +6,7 @@ import { StyleSheet, Button, Appearance } from 'react-native';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 
-import {getUserData, getPostsForUser, db} from '../../services/firebaseService.js'
+import {getUserData, getPostsForUser, db} from '../../services/firebaseService.js';
 
 
 const screenWidth = Dimensions.get('screen').width;
