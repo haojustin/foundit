@@ -11,3 +11,6 @@ I used ChatGPT to help me create components for my sign-in page, It helps me set
 
 **Kevin Lavelle:** 
 I used Google Bard to help me retrieve the React Native user's location. Google Bard recommended an obscure library with with weird dependencies that made the entire project very difficult to manage. I was able to get a map feature working, but the coordiantes were wrong and I couldn't moveo utside of the Bay Area. I used ChatGPT next to try to write the code. It gave me the built-in React Native library and it integrated into the project quickly and easily. The dependencies were already built into our project and I was able to get a funcitnoal map into our app. ChatGPT did not have the locaiton-based errros the Google Bard code did. 
+
+**Justin Hao:**
+I used chatgpt to help me understand the react native stack navigator. I watched a lot of YouTube videos but I still had trouble with moving between pages on our app. Eventually, I entered specific chunks of my post codebase and it was able to give me a breakdown of possible implementations. Although the implementations weren't copy-paste-ready since they required implementation in different files that depended on each other, it gave me an idea of how to approach it.
