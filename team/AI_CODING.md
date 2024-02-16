@@ -7,3 +7,7 @@ I used ChatGPT to help me set up the unit test for Lab 5. It did generate the un
 
 **Zixiao Jin**
 I used ChatGPT to help me create components for my sign-in page, It helps me set all the text boxes, add alerts, and add placeholders. It also teaches me how to do navigation stuff using stack navigator. I found ChatGPT really helpful in terms of coding for these basic components.
+
+
+**Kevin Lavelle:** 
+I used Google Bard to help me retrieve the React Native user's location. Google Bard recommended an obscure library with with weird dependencies that made the entire project very difficult to manage. I was able to get a map feature working, but the coordiantes were wrong and I couldn't moveo utside of the Bay Area. I used ChatGPT next to try to write the code. It gave me the built-in React Native library and it integrated into the project quickly and easily. The dependencies were already built into our project and I was able to get a funcitnoal map into our app. ChatGPT did not have the locaiton-based errros the Google Bard code did. 
