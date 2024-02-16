@@ -1,1 +1,3 @@
 We decided on using Jest as our testing library because ChatGPT recommended it for React Native apps. In retrospect, it may not have been the best choice, because there were a lot of issues getting it working due to the fact that we used TypeScript and not JavaScript. But it worked eventually. We implemented one simple unit test, which basically confirms that a certain text element renders correctly.
+
+The Unit Test is located in FoundIt/tests/index.test.js
