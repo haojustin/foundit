@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { ScrollView, StyleSheet, TextInput, TouchableOpacity, Image, View, Text, Dimensions } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Video } from 'expo-av'; // Import Expo AV for video playback
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Ensure you have this library installed
+import { Video } from 'expo-av';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function Post() {
     const navigation = useNavigation();

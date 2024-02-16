@@ -47,11 +47,11 @@ const CameraPage: React.FC = () => {
     });
 
     if (!result.canceled && result.assets && result.assets.length > 0) {
-        // Access the first selected image/video
+        // Access the first selected image/video, will allow for multi select and limit video length in future
         const selectedMedia = result.assets[0];
         setMedia({
             uri: selectedMedia.uri,
-            type: selectedMedia.type || 'image' // This will be 'image' as indicated in your log
+            type: selectedMedia.type || 'image'
         });
         setFullScreenPreviewVisible(true); // Show the preview modal
     }
