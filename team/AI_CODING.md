@@ -17,3 +17,6 @@ I used chatgpt to help me understand the react native stack navigator. I watched
 
 **Kendrick Lee:**  
 I used ChatGPT to help me make the profile page UI within the tab bar. I was also having difficulty with linking the settings page into the profile page as a button since the settings page would still show up on the tab bar even though I thought I removed it. I used ChatGPT to help me hide the settings page on the tab bar feature and link the page to a button, which I had previously linked on the wrong page.
+
+**Alex Castelein**
+I used ChatGPT to optimize the development of my chat page UI in React Native. It provided valuable recommendations for selecting and integrating React Native packages like react-native-slider and react-native-dropdown-picker, enhancing functionality and user experience. It helped resolve type mismatches highlighted by VSCode's TypeScript warnings, particularly in the onValueChange prop of the Slider component. Additionally, ChatGPT's insights on code organization and state management improved the overall architecture of my chat page, leading to enhanced readability and maintainability. Despite the need for continuous testing and refinement to address potential bugs, ChatGPT's contributions significantly expedited the development process, highlighting its efficacy as a versatile tool for software development.
