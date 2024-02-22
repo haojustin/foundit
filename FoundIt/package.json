@@ -20,6 +20,7 @@
     "\\.js$": "<rootDir>/node_modules/babel-jest"
   },
   "dependencies": {
+    "@babel/preset-react": "^7.23.3",
     "@expo/vector-icons": "^14.0.0",
     "@miblanchard/react-native-slider": "^2.3.1",
     "@react-native-firebase/app": "^18.8.0",
