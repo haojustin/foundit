@@ -15,20 +15,18 @@
     "transformIgnorePatterns": [
       "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)"
     ]
-    
   },
   "transform": {
     "\\.js$": "<rootDir>/node_modules/babel-jest"
   },
-
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
     "@miblanchard/react-native-slider": "^2.3.1",
     "@react-native-firebase/app": "^18.8.0",
     "@react-native-firebase/auth": "^18.8.0",
     "@react-native-firebase/crashlytics": "^18.8.0",
-    "@react-navigation/native": "^6.1.10",
-    "@react-navigation/native-stack": "^6.9.18",
+    "@react-navigation/native": "^6.1.9",
+    "@react-navigation/native-stack": "^6.9.17",
     "@react-navigation/stack": "^6.3.21",
     "expo": "~50.0.3",
     "expo-av": "~13.10.5",
@@ -50,14 +48,8 @@
     "react-dom": "18.2.0",
     "react-native": "^0.73.2",
     "react-native-dropdown-picker": "^5.4.6",
-<<<<<<< HEAD
-    "react-native-gesture-handler": "~2.14.0",
-    "react-native-maps": "^1.10.1",
-    "react-native-safe-area-context": "^4.9.0",
-=======
     "react-native-maps": "^1.10.2",
     "react-native-safe-area-context": "4.8.2",
->>>>>>> d032702822f5a60a5bd2b4a6393f5147c50b5e0d
     "react-native-screens": "~3.29.0",
     "react-native-vector-icons": "^10.0.3",
     "react-native-web": "~0.19.6",
