@@ -48,8 +48,8 @@ The retro went quickly because everyone largely agreed on the issues.
 * A brief assessment of how its results (did it improve things? move the needle at all?)
 * A decision going forward: keep the change, revert to previous procedure, make a new change?
 
-Our change would be constituted if we had more issues on the Kanban board (more than 5) that were quickly attainable and smaller in magnitude. These issues would be moved to the done column. 
+Our change would be constituted if we had more issues on the Kanban board (more than 5) that were quickly attainable and smaller in magnitude. These issues would be moved to the done column.
 
-Every member was able to move at least 1 issue to the done column. 7 issues total were moved to the Done column. 
+Every member was able to move at least 1 issue to the done column. 7 issues total were moved to the Done column. We found that this experiment raised our productivity and made us more efficient in makign progress toward our final product. We have begun integrated our product into Firebase and our frontend is mostly done. 
 
-The next retro leader should allow everyone in the group to share their input and to force the group to reach a consensus. Multiple people had conflicting opinions but we eventually reached a consensus. 
+The next retro leader should allow everyone in the group to share their input and to force the group to reach a consensus. Multiple people had conflicting opinions but we eventually reached a consensus. The retro functions better when everyone is forced to come up with 2 ideas that they believe in.
