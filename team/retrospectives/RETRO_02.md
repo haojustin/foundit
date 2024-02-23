@@ -47,3 +47,9 @@ The retro went quickly because everyone largely agreed on the issues.
 * A brief description of what constitutes your change/experiment
 * A brief assessment of how its results (did it improve things? move the needle at all?)
 * A decision going forward: keep the change, revert to previous procedure, make a new change?
+
+Our change would be constituted if we had more issues on the Kanban board (more than 5) that were quickly attainable and smaller in magnitude. These issues would be moved to the done column. 
+
+Every member was able to move at least 1 issue to the done column. 7 issues total were moved to the Done column. 
+
+The next retro leader should allow everyone in the group to share their input and to force the group to reach a consensus. Multiple people had conflicting opinions but we eventually reached a consensus. 
