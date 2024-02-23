@@ -20,7 +20,7 @@
     const [searchQuery, setSearchQuery] = useState('');
 
     const handleSearch = () => {
-      getPosts(searchQuery)
+      getPosts(searchQuery.toLowerCase())
         .then(querySnapshot => {
           const postsArray = querySnapshot.docs.map(doc => ({
             id: doc.id,
