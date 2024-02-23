@@ -9,7 +9,7 @@ import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import Post from './postfolder/post';
-import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
+import { createNativeStackNavigator, CardStyleInterpolators } from '@react-navigation/native-stack';
 import CameraPage from './postfolder/two';
 import { Camera } from 'expo-camera';
 
@@ -23,7 +23,7 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const Stack = createStackNavigator();
+  const Stack = createNativeStackNavigator();
 
   function MyStack() {
     return (
