@@ -40,7 +40,7 @@ export default function Settings() {
 				<View style={styles.settingLabel}>
 					<Text style={styles.text}>Notifications:</Text>
 				</View>
-				<View style={styles.settingComponent}>
+				<View style={styles.settingComponent} testID="dropdown">
 					<DropDownPicker 
 						style = {styles.dropdown} 
 						labelStyle = {styles.text}
