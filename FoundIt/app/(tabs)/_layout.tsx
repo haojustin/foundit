@@ -1,7 +1,7 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -54,12 +54,14 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <AntDesign name="home" size={24} color="black" />,
           headerRight: () => (
             <Link href="/modal" asChild>
+			<View testID="map">
               <Pressable>
                 {({ pressed }) => (
                   <SimpleLineIcons name="location-pin" size={24} color={Colors[colorScheme ?? 'light'].text}
                   style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}/>
                 )}
               </Pressable>
+			</View>
             </Link>
           ),
         }}
