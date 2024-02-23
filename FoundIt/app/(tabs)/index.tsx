@@ -34,17 +34,7 @@
     };
 
     useEffect(() => {
-      getPosts(searchQuery)
-        .then(querySnapshot => {
-          const postsArray = querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          }));
-          setPosts(postsArray);
-        })
-        .catch(error => {
-          console.error("Error fetching posts:", error);
-        });
+      handleSearch()
     }, [searchQuery]);
 
     return (
@@ -56,7 +46,7 @@
         <View style={styles.searchFunc}>
           <TextInput
             style={styles.searchBar}
-            placeholder="Search..."
+            placeholder="Search For Something..."
             placeholderTextColor="white"
             value={searchQuery}
             onChangeText={text => setSearchQuery(text)}
@@ -66,6 +56,7 @@
               <Icon name="search" size={30} color="black" />
             </TouchableOpacity>
           </View>
+          
         </View>
 
         <FlatList
