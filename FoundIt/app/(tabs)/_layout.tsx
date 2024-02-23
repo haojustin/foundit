@@ -1,12 +1,17 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
-
+import { Pressable, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
+import { SimpleLineIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import Post from './postfolder/post';
+import { createNativeStackNavigator, CardStyleInterpolators } from '@react-navigation/native-stack';
+import CameraPage from './postfolder/two';
+import { Camera } from 'expo-camera';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -18,8 +23,23 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const Stack = createNativeStackNavigator();
 
-  return (
+  function MyStack() {
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        }}
+      >
+        <Stack.Screen name="/postfolder/post" component={Post} />
+        <Stack.Screen name="/postfolder/two" component= {CameraPage}/>
+      </Stack.Navigator>
+    );
+  }
+
+	return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
@@ -34,14 +54,47 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <AntDesign name="home" size={24} color="black" />,
           headerRight: () => (
             <Link href="/modal" asChild>
+			<View testID="map">
               <Pressable>
                 {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
+                  <SimpleLineIcons name="location-pin" size={24} color={Colors[colorScheme ?? 'light'].text}
+                  style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}/>
+                )}
+              </Pressable>
+			</View>
+            </Link>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="postfolder/two"
+        options={{
+          title: 'Post',
+          tabBarIcon: ({ color }) => <AntDesign name="camerao" size={24} color="black" />,
+          headerRight: () => (
+            <Link href="/(tabs)/postfolder/post" asChild>
+            </Link>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="postfolder/post"
+        options={{
+          title: "Post",
+          href : null
+        }}
+      />
+
+      <Tabs.Screen
+        name="account/profile"
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color }) => <AntDesign name="user" size={24} color="black" />,
+          headerRight: () => (
+            <Link href="/(tabs)/account/settings" asChild>
+              <Pressable>
+                {({ pressed }) => (
+                  <AntDesign name="setting" size={24} color="black" style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}/>
                 )}
               </Pressable>
             </Link>
@@ -49,17 +102,11 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="two"
-        options={{
-          title: 'Post',
-          tabBarIcon: ({ color }) => <AntDesign name="camerao" size={24} color="black" />,
-        }}
-      />
-	  <Tabs.Screen
-        name="settings"
+        name="account/settings"
         options={{
           title: "Settings",
           tabBarIcon: ({ color }) => <AntDesign name="setting" size={24} color="black" />,
+          href : null
         }}
       />
     </Tabs>

@@ -18,7 +18,6 @@
   export default function TabOneScreen() {
     const [posts, setPosts] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-
     const handleSearch = () => {
       getPosts(searchQuery.toLowerCase())
         .then(querySnapshot => {
