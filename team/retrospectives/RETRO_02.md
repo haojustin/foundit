@@ -1,4 +1,4 @@
-# Date of Retrospective: 01/26/24
+# Date of Retrospective: 02/16/24
 
 * Led by: Kevin Lavelle
 * Present: Baimin, Alex, Victor, Kevin, Kendrick, Zixiao, Justin
