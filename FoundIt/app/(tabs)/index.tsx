@@ -3,7 +3,9 @@
   import { FlatList } from 'react-native';    // OPtimizing Runtime and Memory for a list of things
   import React, { useEffect, useState } from 'react'
   import Icon from 'react-native-vector-icons/MaterialIcons';           //React Native Vector Icons
+  import ElegantHeader from "react-native-elegant-header";
 
+  
   import EditScreenInfo from '@/components/EditScreenInfo';
   import { Text, View } from '@/components/Themed';
 
@@ -39,7 +41,9 @@
     return (
       <View style={styles.container}>
         <View style={styles.Body}>
-          <Text style={styles.title}>Recent Posts</Text>
+          <ElegantHeader
+            title = "Recent Posts"
+            />
         </View>
 
         <View style={styles.searchFunc}>
