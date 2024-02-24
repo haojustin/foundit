@@ -3,6 +3,9 @@ import { ScrollView, StyleSheet, TextInput, TouchableOpacity, Image, View, Text,
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Video } from 'expo-av';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {db} from '../../../constants/firebaseConfig';
+import {serverTimestamp} from 'firebase/firestore';
+import {addPosts} from '../../../services/firebaseService.js'
 
 export default function Post() {
     const navigation = useNavigation();
@@ -27,6 +30,17 @@ export default function Post() {
             },
         });
     }, [navigation]);
+
+	function post()
+	{
+		addPosts({
+			title: title,
+			lostFoundReturned: lostFound,
+			description: description,
+			reward: reward,
+			timeStamp: serverTimestamp(),
+		});
+	}
 
     return (
 
@@ -108,7 +122,7 @@ export default function Post() {
                 </View>
             )}
 
-            <TouchableOpacity style={styles.post} onPress={() => {/* Post submission logic here */}}>
+            <TouchableOpacity style={styles.post} onPress={post}>
                 <Text style={styles.text}>Post</Text>
             </TouchableOpacity>
         </ScrollView>

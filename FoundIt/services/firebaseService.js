@@ -9,8 +9,14 @@ const getUserData = () => {
   return db.collection('users').get();
 };
 
+/*
 const addPosts = (userId, postData) => {
   return db.collection('users').doc(userId).collection('posts').add(postData);
+};
+*/
+//i(Victor)dk what the deal with userId is so I'm getting rid of it for now
+const addPosts = (postData) => {
+  return db.collection('posts').add(postData);
 };
 
 const getPosts = (name) => {
