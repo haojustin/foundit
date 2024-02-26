@@ -12,7 +12,7 @@ Scribed Discussion:
 
 Alex: Did nothing. Will figure out getting firebase working with expo properly. Blocker is a dependency issue in expo.
 
-Justin: Did nothing, 
+Justin: Did nothing. Will organize the backend. No blockers.
 
 Victor: Made it so post button sends to firebase. Will try to send image to firebase. No blockers
 
