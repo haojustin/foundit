@@ -10,20 +10,20 @@
 
 # Lab 7 Role Assignment
 
-Product Owner:
+Product Owner: Justin Hao
 
-Scrum Master:
+Scrum Master: Kendrick Lee
 
-QA Coordinator:
+QA Coordinator: Kevin Lavelle
 
-Retro 3 Leader:
+Retro 3 Leader: Alex Castelein
 
-UX Coordinator:
+UX Coordinator: Victor Li
 
-Design Document Coordinator:
+Design Document Coordinator: Kevin Lavelle
 
-Deployment Document Coordinator:
+Deployment Document Coordinator: Alex Castelein
 
-User Manual Coordinator:
+User Manual Coordinator: Zixiao Jin
 
-Final Presentation Leader:
+Final Presentation Leader: Baimin Wang
