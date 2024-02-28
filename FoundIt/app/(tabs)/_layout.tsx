@@ -65,7 +65,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="postfolder/two"
+        name="postfolder/post"
         options={{
           title: 'Post',
           tabBarIcon: ({ color }) => <AntDesign name="camerao" size={24} color="black" />,
@@ -76,7 +76,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="postfolder/post"
+        name="postfolder/two"
         options={{
           title: "Post",
           href : null
