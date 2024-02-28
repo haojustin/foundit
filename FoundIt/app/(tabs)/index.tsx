@@ -18,20 +18,20 @@
 
 
   export default function TabOneScreen() {
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState<any[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const handleSearch = () => {
-      getPosts(searchQuery.toLowerCase())
-        .then(querySnapshot => {
-          const postsArray = querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          }));
-          setPosts(postsArray);
-        })
-        .catch(error => {
-          console.error("Error fetching posts:", error);
-        });
+      getPosts(searchQuery)
+          .then(results => {
+            const postsArray = results.map(result => ({
+                id: result.id,
+                ...result
+            }));
+            setPosts(postsArray);
+          })
+          .catch(error => {
+              console.error("Error fetching posts:", error);
+          });
     };
 
     useEffect(() => {
