@@ -8,8 +8,10 @@ import { getLocation } from './locationUtil';
 export default function Post() {
     const navigation = useNavigation();
     const route = useRoute();
+    const [currentIndex, setCurrentIndex] = useState(0);
 
     const media = route.params?.media;
+    const mediaArray = media || [];
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -19,7 +21,7 @@ export default function Post() {
     useLayoutEffect(() => {
         navigation.setOptions({
             headerLeft: () => (
-                <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 10 }}>
+                <TouchableOpacity style={{ marginLeft: 10 }}>
                     <Text style={{ color: colors.blue, fontSize: 18 }}>Back</Text>
                 </TouchableOpacity>
             ),
@@ -53,19 +55,13 @@ export default function Post() {
                 placeholderTextColor={colors.darkGray}
             />
             {/* Media preview */}
-            {media?.uri && (
-                media.type === 'image' ? (
-                    <Image source={{ uri: media.uri }} style={styles.mediaPreview} />
+            {mediaArray.map((item: { type: string; uri: any; }, index: React.Key | null | undefined) => (
+                item.type === 'image' ? (
+                    <Image key={index} source={{ uri: item.uri }} style={styles.mediaPreview} />
                 ) : (
-                    <Video
-                        source={{ uri: media.uri }}
-                        style={styles.mediaPreview}
-                        useNativeControls
-                        resizeMode="contain"
-                        isLooping
-                    />
+                    <Video key={index} source={{ uri: item.uri }} style={styles.mediaPreview} useNativeControls resizeMode="contain" isLooping />
                 )
-            )}
+            ))}
             <View style={styles.lostFoundWrapper}>
                 <TouchableOpacity
                     style={lostFound === 'lost' ? styles.lostFoundButtonSelected : styles.lostFoundButton}
@@ -80,9 +76,9 @@ export default function Post() {
             </View>
 
             {/* Additional photo upload and location indication */}
-            <TouchableOpacity style={styles.additionalButton}>
+            <TouchableOpacity style={styles.additionalButton} onPress={() => {navigation.navigate('postfolder/two');}}>
                 <Icon name="camera-plus" size={24} color={colors.lightGray} />
-                <Text style={styles.text}>Add more photos</Text>
+                <Text style={styles.text}>Add photos</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.additionalButton}>
                 <Icon name="map-marker" size={24} color={colors.lightGray} />

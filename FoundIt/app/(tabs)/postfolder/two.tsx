@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Image, StyleSheet, TouchableOpacity, SafeAreaView, StatusBar, Text, TouchableWithoutFeedback, Modal, GestureResponderEvent } from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity, SafeAreaView, StatusBar, Text, TouchableWithoutFeedback, Modal, GestureResponderEvent, ScrollView, Dimensions, } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -14,7 +14,7 @@ const CameraPage: React.FC = () => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
-  const [media, setMedia] = useState<{ uri: string | null; type: 'image' | 'video' | null }>({ uri: null, type: null });
+  const [media, setMedia] = useState<Array<{ uri: string; type: 'image' | 'video' }>[]>([]);
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const lastTapRef = useRef<number>(0);
   let pressTimer: NodeJS.Timeout | null = null;
@@ -40,20 +40,21 @@ const CameraPage: React.FC = () => {
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: false, // Set to false to allow multiple selections
+      aspect: [4, 3],
+      quality: 1,
+      allowsMultipleSelection: true, // Enable multiple selections
     });
 
-    if (!result.canceled && result.assets && result.assets.length > 0) {
-        // Access the first selected image/video, will allow for multi select and limit video length in future
-        const selectedMedia = result.assets[0];
-        setMedia({
-            uri: selectedMedia.uri,
-            type: selectedMedia.type || 'image'
-        });
-        setFullScreenPreviewVisible(true); // Show the preview modal
+    if (!result.canceled && result.assets) {
+      // Update to handle multiple media items
+      const selectedMedia = result.assets.map(asset => ({
+        uri: asset.uri,
+        type: asset.mediaType || 'image', // Ensure type is set correctly
+      }));
+      setMedia(selectedMedia);
+      setFullScreenPreviewVisible(true); // Optionally, adjust or remove this based on your UI/UX preferences
     }
   };
 
@@ -102,26 +103,27 @@ const CameraPage: React.FC = () => {
   const takePicture = async () => {
     if (cameraRef.current && !isRecording) {
       const photo = await cameraRef.current.takePictureAsync();
-      setMedia({ uri: photo.uri, type: 'image' });
-      setFullScreenPreviewVisible(false);
-
+      // Wrap the photo object in an array when setting the media state
+      setMedia([{ uri: photo.uri, type: 'image' }]);
+      setFullScreenPreviewVisible(true);
     }
   };
 
   const startRecording = async () => {
     if (cameraRef.current) {
       try {
-        setIsRecording(true); // Start recording UI indication
+        setIsRecording(true);
         const video = await cameraRef.current.recordAsync();
-        // Wait until recording is done to update the UI
-        setMedia({ uri: video.uri, type: 'video' });
+        // Wrap the video object in an array when setting the media state
+        setMedia([{ uri: video.uri, type: 'video' }]);
       } catch (error) {
         console.error("Error during recording: ", error);
       } finally {
-        setIsRecording(false); // Reset recording UI indication only after recording is complete
+        setIsRecording(false);
       }
     }
   };
+
 
   const handlePressIn = () => {
     pressTimer = setTimeout(async () => {
@@ -147,9 +149,11 @@ const CameraPage: React.FC = () => {
   const toggleFullScreenPreview = () => {
     setFullScreenPreviewVisible(!fullScreenPreviewVisible);
   };
+
   const navigateToPost = () => {
-    navigation.navigate('postfolder/post', { media });
+    navigation.navigate('postfolder/post', { media: media });
     setFullScreenPreviewVisible(false);
+    setMedia([]);
   };
 
   if (hasPermission === null) {
@@ -173,7 +177,8 @@ const CameraPage: React.FC = () => {
           </Camera>
         </View>
       </TouchableWithoutFeedback>
-      <View style={styles.controls}>
+        <View style={styles.controls}>
+
         <TouchableOpacity style={styles.iconButton} onPress={pickImage}>
           <Icon name="image-multiple" size={30} color="white" />
         </TouchableOpacity>
@@ -203,24 +208,46 @@ const CameraPage: React.FC = () => {
         </TouchableOpacity>
       )}
       {fullScreenPreviewVisible && (
-          <Modal
-              animationType="slide"
-              transparent={false}
-              visible={fullScreenPreviewVisible}
-              onRequestClose={() => setFullScreenPreviewVisible(false)}
-          >
-              {media.type === 'image' ? (<Image source={{ uri: media.uri }} style={styles.fullScreen}/>) : (
-                  // Assuming video handling remains as is, for simplicity
-                  <Video source={{ uri: media.uri }} style={styles.fullScreen} isLooping useNativeControls />
-              )}
-              <TouchableOpacity style={styles.closeButton} onPress={() => setFullScreenPreviewVisible(false)}>
-                  <Icon name="close" size={30} color="white" />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.nextButton} onPress={() => navigateToPost()}>
-                  <Text style={styles.nextButtonText}>Next</Text>
-              </TouchableOpacity>
-          </Modal>
-      )}
+  <Modal
+    animationType="slide"
+    transparent={false}
+    visible={fullScreenPreviewVisible}
+    onRequestClose={() => setFullScreenPreviewVisible(false)}
+  >
+    <ScrollView
+      horizontal={true}
+      pagingEnabled={true}
+      showsHorizontalScrollIndicator={false}
+      style={{ flex: 1 }}
+    >
+      {media.map((item, index) => (
+        item.type === 'image' ? (
+          <Image
+            key={index}
+            source={{ uri: item.uri }}
+            style={styles.fullScreenImage}
+          />
+        ) : (
+          <Video
+            key={index}
+            source={{ uri: item.uri }}
+            style={styles.fullScreenImage} // Adjust style as needed
+            isLooping
+            useNativeControls
+            resizeMode="contain"
+          />
+        )
+      ))}
+    </ScrollView>
+    <TouchableOpacity style={styles.closeButton} onPress={() => setFullScreenPreviewVisible(false)}>
+      <Icon name="close" size={30} color="white" />
+    </TouchableOpacity>
+    <TouchableOpacity style={styles.nextButton} onPress={() => navigateToPost()}>
+      <Text style={styles.nextButtonText}>Next</Text>
+    </TouchableOpacity>
+  </Modal>
+)}
+
     </SafeAreaView>
   );
 };
@@ -307,7 +334,12 @@ const styles = StyleSheet.create({
   nextButtonText: {
     color: 'white',
     fontSize: 18,
-  }
+  },
+  fullScreenImage: {
+    width: Dimensions.get('window').width, // Full width of the screen
+    height: Dimensions.get('window').height, // Full height of the screen
+    resizeMode: 'contain', // Ensure content is scaled to fit
+  },
 });
 
 export default CameraPage;
