@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import {Slider} from '@miblanchard/react-native-slider';
 import React from 'react';
@@ -13,9 +13,27 @@ export default function Settings() {
 		{label: 'Email', value: 'email'},
 		{label: 'Off', value: 'off'}
 	]);	
+	const [usernameState, setUsernameState] = React.useState("Current username");
 
 	return (
 		<View style={[styles.container, styles.testBorder]}>
+			{/* Change username */}
+			<View style={[styles.changeNameWrapper, styles.testBorder]}>
+				<View style={[styles.changeNameLabel, styles.testBorder]}>
+					<Text style={styles.text}>Username:</Text>
+				</View>
+				<View style={[styles.testBorder, styles.changeNameInput]}>
+					<TextInput
+						style={styles.text}
+						onChangeText={setUsernameState}
+						value={usernameState}
+						selectionColor={colors.lightGray}
+					/>
+				</View>
+				<TouchableOpacity style={[styles.changeNameButton, styles.testBorder]}>
+					<Text style={styles.text}>Change</Text>
+				</TouchableOpacity>
+			</View>
 			{/* Search radius */}
 			<View style={[styles.searchRadiusWrapper, styles.testBorder]}>
 				<View style={[styles.searchRadiusLabel, styles.testBorder]}>
@@ -31,23 +49,24 @@ export default function Settings() {
 						maximumTrackTintColor = {colors.lightGray}
 						minimumTrackTintColor = {colors.darkGray}
 						thumbTintColor = {colors.darkGray}
+						itemSeparator = {true}
 					/>
 				</View>
 			</View>
 			{/* Notification method */}
-			<View style={styles.setting}>
-				<View style={styles.settingLabel}>
+			<View style={[styles.notifWrapper, styles.testBorder]}>
+				<View style={styles.notifLabel}>
 					<Text style={styles.text}>Notifications:</Text>
 				</View>
-				<View style={styles.settingComponent} testID="dropdown">
+				<View style={[styles.notifDropdownWrapper, styles.testBorder]} testID="dropdown">
 					<DropDownPicker 
-						style = {styles.dropdown} 
+						style = {styles.notifDropdown} 
 						labelStyle = {styles.text}
-						dropDownContainerStyle={styles.dropdown}
+						dropDownContainerStyle={styles.notifDropdown}
 						listItemLabelStyle={styles.text}
 
-						arrowIconStyle={{tintColor: colors.lightGray}}
-						tickIconStyle={{tintColor: colors.lightGray}}
+						arrowIconStyle={{tintColor: colors.darkGray}}
+						tickIconStyle={{tintColor: colors.darkGray}}
 												
 						open={notifOpen}
 						value={notifValue}
@@ -72,14 +91,18 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		padding: 10
 	},
+	text: {
+		fontSize: 15,
+		color: colors.darkGray,
+	},
 	testBorder: {
-		borderWidth: 1,
+		borderWidth: 0,
 		borderColor: 'red',
 	},
+
 	searchRadiusWrapper: {
 		flexDirection: 'row',
 		height: 50,
-		alignItems: 'left',
 		margin: 10,
 	},
 	searchRadiusLabel: {
@@ -90,14 +113,52 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 	},
-	dropdownWrapper: {
-		
+
+	notifWrapper: {
+		flexDirection: 'row',
+		height: 50,
+		margin: 10,
 	},
-	dropdown: {
+	notifLabel: {
+		flex: 1,
+		justifyContent: 'center',
+	},
+	notifDropdownWrapper: {
+		flex: 1,
+		alignSelf: 'center',
+	},
+	notifDropdown: {
 		backgroundColor: colors.lightGray,
+		borderRadius: 20,
+		minHeight: 40,
+		borderWidth: 0,
 	},
-	text: {
-		fontSize: 15,
+
+	changeNameWrapper: {
+		flexDirection: 'row',
+		height: 50,
+		margin: 10,
+		alignItems: 'center',
+	},
+	changeNameLabel: {
+		justifyContent: 'center',
+	},
+	changeNameInput: {
+		flex: 3,
+		height: 20,
+		justifyContent: 'center',
+		borderBottomWidth: 1,
+		borderColor: colors.lightGray,
+		marginHorizontal: 10,
+		marginTop: 4,
+	},
+	changeNameButton: {
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
 		color: colors.darkGray,
+		backgroundColor: colors.lightGray,
+		borderRadius: 20,
+		height: 40,
 	},
 });
