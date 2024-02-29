@@ -15,13 +15,13 @@ export default function Settings() {
 	]);	
 
 	return (
-		<View style={styles.container}>
+		<View style={[styles.container, styles.testBorder]}>
 			{/* Search radius */}
-			<View style={styles.setting}>
-				<View style={styles.settingLabel}>
+			<View style={[styles.searchRadiusWrapper, styles.testBorder]}>
+				<View style={[styles.searchRadiusLabel, styles.testBorder]}>
 					<Text style={styles.text}>Search radius: {searchSliderState} mi</Text>
 				</View>
-				<View style={styles.settingComponent}>
+				<View style={[styles.searchRadiusSlider, styles.testBorder]}>
 					<Slider
 						minimumValue = {5}
 						value = {searchSliderState}
@@ -34,7 +34,6 @@ export default function Settings() {
 					/>
 				</View>
 			</View>
-
 			{/* Notification method */}
 			<View style={styles.setting}>
 				<View style={styles.settingLabel}>
@@ -71,26 +70,34 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		alignItems: 'center',
-		margin: 10
+		padding: 10
 	},
-	settingComponent: {
-		margin: 0,
-		flex: 1,
+	testBorder: {
+		borderWidth: 1,
+		borderColor: 'red',
 	},
-	settingLabel: {
-		margin: 0,
-		flex: 1
-	},
-	setting: {
+	searchRadiusWrapper: {
 		flexDirection: 'row',
-		alignItems: 'center',
-		margin: 10
+		height: 50,
+		alignItems: 'left',
+		margin: 10,
+	},
+	searchRadiusLabel: {
+		flex: 1,
+		justifyContent: 'center',
+	},
+	searchRadiusSlider:{
+		flex: 1,
+		justifyContent: 'center',
+	},
+	dropdownWrapper: {
+		
 	},
 	dropdown: {
-		backgroundColor: colors.darkGray
+		backgroundColor: colors.lightGray,
 	},
 	text: {
 		fontSize: 15,
-		color: colors.lightGray,
-	}
+		color: colors.darkGray,
+	},
 });
