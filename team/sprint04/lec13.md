@@ -1,6 +1,6 @@
 Mentor: Anushka Lodha
 
-Meeting Time: Lec 10 2/26/24
+Meeting Time: Lec 13 2/28/24
 
 Type of Meeting: Daily Scrum
 
@@ -10,6 +10,7 @@ Absent: none
 
 Scribed Discussion:
 
+<<<<<<< HEAD
 Alex: Did nothing. Will figure out getting firebase working with expo properly. Blocker is a dependency issue in expo.
 
 Justin: Did nothing. Will organize the backend. No blockers.
@@ -24,3 +25,18 @@ Kevin: Did nothing. Will be able to push geopoint objects to database. Blockers,
 
 Kendrick: For my daily scrum just been working on the account page. Got the posts working kinda and gonna move onto writing to the database for the profile, no blockers
 
+=======
+Alex: Worked on chat. Try to have chat deloyed soon. Blockers with expo
+
+Justin: Redesigned the post page. Trying to figure out how to post photos to database. No blockers
+
+Victor: Will continue to add more to the settings page and changing user info. No blockers
+
+Baimin: Exploring the firebase and rewriting service functions. No Blockers
+
+Zixiao: Still working on navigation. Some blockers with nav
+
+Kevin: Working on the modal and design documentation. Blockers modal
+
+Kendrick: Got my post section on account page working. Going to work on making profile picture uploadable to database. No Blockers
+>>>>>>> 50eea9c9c63f79e43d0c29f6a27cf9fdb695b3cb
