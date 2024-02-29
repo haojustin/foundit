@@ -1,4 +1,4 @@
-  import { TouchableOpacity, StyleSheet, Button, TextInput} from 'react-native';
+  import { TouchableOpacity, StyleSheet, Button, TextInput, Appearance, StatusBar} from 'react-native';
   import { Dimensions } from 'react-native';
   import { FlatList } from 'react-native';    // OPtimizing Runtime and Memory for a list of things
   import React, { useEffect, useState } from 'react'
@@ -35,6 +35,11 @@
     useEffect(() => {
       handleSearch()
     }, [searchQuery]);
+
+	useEffect(() => {
+		Appearance.setColorScheme('light');
+		StatusBar.setBarStyle('dark-content');
+	}, []);
 
     return (
       <View style={styles.container}>
