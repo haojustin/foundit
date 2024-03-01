@@ -6,8 +6,15 @@ const addUserData = (userId) => {
   return db.collection('users').add(userId);
 };
 
-const getUserData = () => {
-  return db.collection('users').get();
+const getUserData = async (name) => {
+  const users = db.collection("users");
+  const specificUser = await users.where("name", "==", name.toLowerCase()).get();
+  let user = null;
+  specificUser.forEach(doc => {
+    user = doc.data();
+    user.id = doc.id
+  })
+  return user;
 };
 
 const addPosts = (userId, postData) => {
