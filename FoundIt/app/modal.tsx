@@ -1,11 +1,28 @@
+import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Platform, StyleSheet } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
+import { getLocation } from './(tabs)/postfolder/locationUtil.js';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 
 export default function ModalScreen() {
+
+  useEffect(() => {
+    handleLocationFetch(); // Fetch location when component mounts
+  }, []);
+
+  const handleLocationFetch = async () => {
+    try {
+      const { latitude, longitude } = await getLocation();
+      console.log('Current Location:', { latitude, longitude });
+    } catch (error) {
+      console.error('Error fetching location:', error);
+    }
+  };
+
+
   return (
     <View style={styles.container}>
       <MapView
