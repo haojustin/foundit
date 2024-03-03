@@ -3,12 +3,13 @@ import { ScrollView, StyleSheet, TextInput, TouchableOpacity, Image, View, Text,
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Video } from 'expo-av';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { getLocation } from './locationUtil'; 
+import { getLocation } from './locationUtil';
+import {addUserData, getUserData , getPosts, addPost, uploadMediaAsync} from '../../../services/firebaseService.js'
 
 export default function Post() {
     const navigation = useNavigation();
+    const [uploading, setUploading] = useState(false);
     const route = useRoute();
-    const [currentIndex, setCurrentIndex] = useState(0);
 
     const media = route.params?.media;
     const mediaArray = media || [];
@@ -17,32 +18,52 @@ export default function Post() {
     const [description, setDescription] = useState('');
     const [reward, setReward] = useState('');
     const [lostFound, setLostFound] = useState('lost');
+    const [location, setLocation] = useState({ latitude: null, longitude: null });
 
-    useLayoutEffect(() => {
-        navigation.setOptions({
-            headerLeft: () => (
-                <TouchableOpacity style={{ marginLeft: 10 }}>
-                    <Text style={{ color: colors.blue, fontSize: 18 }}>Back</Text>
-                </TouchableOpacity>
-            ),
-            headerLeftContainerStyle: {
-                paddingLeft: 10,
-            },
-        });
-    }, [navigation]);
+    const userId = "currentUser's ID";
+    const username = "currentUser's Username";
 
-    // Function to fetch user's location
-    const handleLocationFetch = async () => {
-        try {
-            const { latitude, longitude } = await getLocation();
-            console.log('Latitude:', latitude);
-            console.log('Longitude:', longitude);
-            // Do something with latitude and longitude, such as storing in state or sending to server
-        } catch (error) {
-            console.error('Error fetching location:', error);
-            // Handle errors gracefully
+    useEffect(() => {
+        if (route.params?.selectedLocation) {
+          setLocation(route.params.selectedLocation);
         }
-    };
+        console.log("Selected media:", mediaArray);
+      }, [route.params, mediaArray]);
+
+    const handleAddLocation = () => {
+        navigation.navigate('modal');
+      };
+
+    const handleSubmit = async () => {
+        console.log("test");
+
+        setUploading(true);
+        uploadMediaAsync(mediaArray.map(media => media.uri))
+          .then(mediaUrls => {
+            const postData = {
+              title,
+              description,
+              reward,
+              lostFound,
+              location,
+              media: mediaUrls,
+            };
+            return addPost(userId, username, postData);
+          })
+          .then(postRef => {
+            console.log('Post added with ID:', postRef.id);
+            // Handle successful post submission
+          })
+          .catch(error => {
+            console.error('Failed to submit post:', error);
+            // Handle submission errors
+          })
+          .finally(() => {
+            setUploading(false);
+            navigation.goBack();
+          });
+      };
+
 
     return (
 
@@ -78,12 +99,20 @@ export default function Post() {
             {/* Additional photo upload and location indication */}
             <TouchableOpacity style={styles.additionalButton} onPress={() => {navigation.navigate('postfolder/two');}}>
                 <Icon name="camera-plus" size={24} color={colors.lightGray} />
-                <Text style={styles.text}>Add photos</Text>
+                <Text style={styles.text}>Add Media</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.additionalButton}>
+            <TouchableOpacity style={styles.additionalButton} onPress={handleAddLocation}>
                 <Icon name="map-marker" size={24} color={colors.lightGray} />
-                <Text style={styles.text}>{lostFound === 'lost' ? 'Where did you lose it?' : 'Where did you find it?'}</Text>
+                <Text style={styles.text}>Add Location</Text>
             </TouchableOpacity>
+
+            {/* Display the selected location */}
+            {location && (
+                <View style={styles.locationDisplay}>
+                    <Text style={styles.locationText}>Latitude: {location.latitude}</Text>
+                    <Text style={styles.locationText}>Longitude: {location.longitude}</Text>
+                </View>
+            )}
 
             {lostFound === 'found' && (
                 <View style={styles.tipContainer}>
@@ -118,7 +147,7 @@ export default function Post() {
                 </View>
             )}
 
-            <TouchableOpacity style={styles.post} onPress={() => {/* Post submission logic here */}}>
+            <TouchableOpacity style={styles.post} onPress={handleSubmit}>
                 <Text style={styles.text}>Post</Text>
             </TouchableOpacity>
         </ScrollView>
@@ -159,6 +188,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#f0f0f0',
         borderRadius: 10,
         marginVertical: 5,
+    },
+    locationDisplay: {
+        marginTop: 10,
+        padding: 10,
+        backgroundColor: '#f0f0f0',
+        borderRadius: 10,
+    },
+    locationText: {
+        fontSize: 14,
+        color: colors.darkGray,
     },
     tipContainer: {
         backgroundColor: '#f0f0f0',

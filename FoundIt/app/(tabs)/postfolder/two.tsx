@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { View, Image, StyleSheet, TouchableOpacity, SafeAreaView, StatusBar, Text, TouchableWithoutFeedback, Modal, GestureResponderEvent, ScrollView, Dimensions, } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
@@ -37,6 +37,23 @@ const CameraPage: React.FC = () => {
       }
   })();
   }, []);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+        headerLeft: () => (
+            <TouchableOpacity
+                style={{ marginLeft: 10 }}
+                onPress={() => navigateToPost()}
+            >
+                <Text style={{ fontSize: 18 }}>Back</Text>
+            </TouchableOpacity>
+        ),
+        headerLeftContainerStyle: {
+            paddingLeft: 10,
+        },
+    });
+}, [navigation]);
+
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({

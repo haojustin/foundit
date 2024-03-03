@@ -23,21 +23,7 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const Stack = createNativeStackNavigator();
 
-  function MyStack() {
-    return (
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-        }}
-      >
-        <Stack.Screen name="/postfolder/post" component={Post} />
-        <Stack.Screen name="/postfolder/two" component= {CameraPage}/>
-      </Stack.Navigator>
-    );
-  }
 
 	return (
     <Tabs

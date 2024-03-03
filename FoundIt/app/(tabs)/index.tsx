@@ -4,12 +4,10 @@
   import React, { useEffect, useState } from 'react'
   import Icon from 'react-native-vector-icons/MaterialIcons';           //React Native Vector Icons
   import ElegantHeader from "react-native-elegant-header";
-
-  
   import EditScreenInfo from '@/components/EditScreenInfo';
   import { Text, View } from '@/components/Themed';
 
-  import {addUserData, getUserData , getPosts, addPosts} from '../../services/firebaseService.js'
+  import {addUserData, getUserData , getPosts, addPost, uploadMediaAsync} from '../../services/firebaseService.js'
 
 
   const screenWidth = Dimensions.get('screen').width;
@@ -59,7 +57,7 @@
               <Icon name="search" size={30} color="black" />
             </TouchableOpacity>
           </View>
-          
+
         </View>
 
         <FlatList
@@ -76,7 +74,7 @@
           )}
           keyExtractor={(item) => item.id.toString()} // Assuming each post has a unique id
         />
-        
+
       </View>
     );
   }
@@ -118,15 +116,15 @@
       backgroundColor: 'pink',
       margin: 0,
       borderRadius: 15,
-      borderWidth: 1, 
+      borderWidth: 1,
       borderColor: 'black',
       padding: 10,
-      
+
       shadowColor: '#000',        // Color of the shadow
       shadowOffset: { width: 5, height: 5}, // x, y offset of the shadow
       shadowOpacity: 0.25,        // Opacity of the shadow
       shadowRadius: 4,         // Blur radius of the shadow
-      elevation: 5, 
+      elevation: 5,
     },
     inblocktitle:{
       fontSize: 18,
@@ -151,7 +149,7 @@
       height: 40,
       color: "white",
 
-      borderColor: 'gray',    
+      borderColor: 'gray',
       backgroundColor: "#A3A3A3",
       borderWidth: 2,
       borderRadius: 10,
@@ -162,7 +160,7 @@
       height: 35,
       backgroundColor : "cyan",
       borderRadius: 9,
-      borderWidth: 2, 
+      borderWidth: 2,
       borderColor: 'gray',
       padding: 2
     }
