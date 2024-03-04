@@ -183,7 +183,7 @@ const CameraPage: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
       <TouchableWithoutFeedback onPress={(evt) => handleTap(evt)}>
         <View style={{ flex: 1 }}>
           <Camera style={styles.camera} type={type} flashMode={flashMode} autoFocus={autoFocus} ref={cameraRef}>

@@ -70,7 +70,7 @@ async function getPosts(content) {
       });
   }
   return results;
-}
+};
 
 const uploadMediaAsync = async (uris) => {
   console.log("Uploading media URIs:", uris);

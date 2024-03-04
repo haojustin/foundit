@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image, TouchableOpacity, StyleSheet, TextInput, Dimensions, FlatList, RefreshControl } from 'react-native';
+import { Image, TouchableOpacity, StyleSheet, TextInput, Dimensions, FlatList, RefreshControl, Appearance, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ElegantHeader from "react-native-elegant-header";
 import { Text, View } from '@/components/Themed';
@@ -24,14 +24,20 @@ export default function TabOneScreen() {
     }
   };
 
-  useEffect(() => {
-    handleSearch();
-  }, [searchQuery]);
-
+  
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     handleSearch().then(() => setRefreshing(false));
   }, []);
+
+    useEffect(() => {
+      handleSearch()
+    }, [searchQuery]);
+
+	useEffect(() => {
+		Appearance.setColorScheme('light');
+		StatusBar.setBarStyle('dark-content');
+	}, []);
 
   return (
     <View style={styles.container}>
