@@ -54,14 +54,12 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <AntDesign name="home" size={24} color="black" />,
           headerRight: () => (
             <Link href="/modal" asChild>
-			<View testID="map">
               <Pressable>
                 {({ pressed }) => (
                   <SimpleLineIcons name="location-pin" size={24} color={Colors[colorScheme ?? 'light'].text}
                   style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}/>
                 )}
               </Pressable>
-			</View>
             </Link>
           ),
         }}
