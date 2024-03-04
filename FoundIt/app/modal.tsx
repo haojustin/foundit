@@ -1,45 +1,68 @@
-import React, { useEffect } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { Platform, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Button, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import { getLocation } from './(tabs)/postfolder/locationUtil.js';
-
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+import { useNavigation } from '@react-navigation/native';
+import { getLocation, LocationData } from './(tabs)/postfolder/locationUtil';
 
 export default function ModalScreen() {
+  const navigation = useNavigation();
+  const [currentLocation, setCurrentLocation] = useState<LocationData | null>(null);
+  const [pinLocation, setPinLocation] = useState<LocationData | null>(null);
+  const [locationLoaded, setLocationLoaded] = useState<boolean>(false);
 
   useEffect(() => {
-    handleLocationFetch(); // Fetch location when component mounts
+    handleLocationFetch();
   }, []);
 
   const handleLocationFetch = async () => {
     try {
-      const { latitude, longitude } = await getLocation();
-      console.log('Current Location:', { latitude, longitude });
+      const location = await getLocation();
+      setCurrentLocation(location);
+      setPinLocation(location);
+      setLocationLoaded(true);
     } catch (error) {
       console.error('Error fetching location:', error);
     }
   };
 
+  const handlePress = (e: any) => {
+    const { latitude, longitude } = e.nativeEvent.coordinate;
+    setPinLocation({ latitude, longitude });
+  };
+
+  const confirmLocation = () => {
+    if (pinLocation) {
+      navigation.navigate('postfolder/post', { selectedLocation: pinLocation });
+    }
+  };
 
   return (
     <View style={styles.container}>
       <MapView
         style={styles.map}
-        initialRegion={{
-          latitude: 34.4133,
-          longitude: -119.86097,
+        region={locationLoaded && currentLocation ? {
+          latitude: currentLocation.latitude,
+          longitude: currentLocation.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
-        }}
+        } : undefined}
+        onPress={handlePress}
+        showsUserLocation={true}
       >
-        <Marker
-          coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
-          title="Marker Title"
-          description="Marker Description"
-        />
+        {pinLocation && (
+          <Marker
+            coordinate={pinLocation}
+            draggable
+            onDragEnd={(e) => setPinLocation(e.nativeEvent.coordinate)}
+            title="Selected Location"
+            description="Hold and drag to move pin"
+          />
+        )}
       </MapView>
+      {/* Wrapper view for the button */}
+      <View style={styles.buttonContainer}>
+        <Button title="Confirm Location" onPress={confirmLocation} />
+      </View>
     </View>
   );
 }
@@ -52,5 +75,11 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
+    marginBottom: 70, // Adjust this value to create space for the button
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 20, // Adjust the distance from the bottom
+    alignSelf: 'center',
   },
 });
