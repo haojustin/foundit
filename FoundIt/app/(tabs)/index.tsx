@@ -3,7 +3,9 @@
   import { FlatList } from 'react-native';    // OPtimizing Runtime and Memory for a list of things
   import React, { useEffect, useState } from 'react'
   import Icon from 'react-native-vector-icons/MaterialIcons';           //React Native Vector Icons
+  import ElegantHeader from "react-native-elegant-header";
 
+  
   import EditScreenInfo from '@/components/EditScreenInfo';
   import { Text, View } from '@/components/Themed';
 
@@ -16,20 +18,20 @@
 
 
   export default function TabOneScreen() {
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState<any[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const handleSearch = () => {
-      getPosts(searchQuery.toLowerCase())
-        .then(querySnapshot => {
-          const postsArray = querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          }));
-          setPosts(postsArray);
-        })
-        .catch(error => {
-          console.error("Error fetching posts:", error);
-        });
+      getPosts(searchQuery)
+          .then(results => {
+            const postsArray = results.map(result => ({
+                id: result.id,
+                ...result
+            }));
+            setPosts(postsArray);
+          })
+          .catch(error => {
+              console.error("Error fetching posts:", error);
+          });
     };
 
     useEffect(() => {
@@ -44,7 +46,9 @@
     return (
       <View style={styles.container}>
         <View style={styles.Body}>
-          <Text style={styles.title}>Recent Posts</Text>
+          <ElegantHeader
+            title = "Recent Posts"
+            />
         </View>
 
         <View style={styles.searchFunc}>

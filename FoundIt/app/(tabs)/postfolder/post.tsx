@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {db} from '../../../constants/firebaseConfig';
 import {serverTimestamp} from 'firebase/firestore';
 import {addPosts} from '../../../services/firebaseService.js'
+import { getLocation } from './locationUtil'; 
 
 export default function Post() {
     const navigation = useNavigation();
@@ -41,6 +42,18 @@ export default function Post() {
 			timeStamp: serverTimestamp(),
 		});
 	}
+    // Function to fetch user's location
+    const handleLocationFetch = async () => {
+        try {
+            const { latitude, longitude } = await getLocation();
+            console.log('Latitude:', latitude);
+            console.log('Longitude:', longitude);
+            // Do something with latitude and longitude, such as storing in state or sending to server
+        } catch (error) {
+            console.error('Error fetching location:', error);
+            // Handle errors gracefully
+        }
+    };
 
     return (
 
