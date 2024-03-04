@@ -1,6 +1,6 @@
 // firebaseService.js
 import db from '../constants/firebaseConfig'; // import the Firestore instance from your config file
-import { collection, query, where, getDocs, doc, getDoc, updateDoc} from "firebase/firestore";
+import { collection, query, where, getDocs, doc, getDoc, updateDoc, addDoc} from "firebase/firestore";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 
 
