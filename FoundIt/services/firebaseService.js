@@ -1,6 +1,6 @@
 // firebaseService.js
 import db from '../constants/firebaseConfig'; // import the Firestore instance from your config file
-import { collection, query, where, getDocs} from "firebase/firestore";
+import { collection, query, where, getDocs, doc, getDoc, updateDoc} from "firebase/firestore";
 
 const addUserData = (userId) => {
   return db.collection('users').add(userId);
@@ -16,6 +16,20 @@ const getUserData = async (name) => {
   })
   return user;
 };
+
+const getUserByDocId = async (docId) => {
+	const docRef = doc(db, "users", docId);
+	const docSnap = await getDoc(docRef);
+	return docSnap;
+};
+
+const changeUsername = async (docId, usernameState) =>
+{
+	const docRef = doc(db, "users", docId);
+	await updateDoc(docRef, {
+		Name: usernameState,
+	});
+}
 
 /*
 const addPosts = (userId, postData) => {
@@ -61,4 +75,4 @@ async function getPosts(content) {
   return results;
 }
 
-export { addUserData, getUserData , getPosts, addPosts};
+export { addUserData, getUserData , getPosts, addPosts, getUserByDocId, changeUsername};

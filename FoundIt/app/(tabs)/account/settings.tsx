@@ -1,8 +1,10 @@
 import { StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import {Slider} from '@miblanchard/react-native-slider';
-import React from 'react';
+import React, {useEffect} from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
+import {getUserByDocId, changeUsername} from '../../../services/firebaseService.js';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function Settings() {
 	const [searchSliderState, setSearchSliderState] = React.useState<number>(5);
@@ -14,7 +16,18 @@ export default function Settings() {
 		{label: 'Off', value: 'off'}
 	]);	
 	const [usernameState, setUsernameState] = React.useState("Current username");
+	const [johnSmithsId, setJohnSmithsId] = React.useState('2j9pC69JqbZ0MqUyYCV6');
 
+	const getUsername = async () => {
+		const docSnap = await getUserByDocId(johnSmithsId);
+		setUsernameState(docSnap.data().Name);
+	};
+	useFocusEffect(
+		React.useCallback(() => {
+			getUsername();
+		}, [])
+	);
+	
 	return (
 		<View style={[styles.container, styles.testBorder]}>
 			{/* Change username */}
@@ -30,7 +43,7 @@ export default function Settings() {
 						selectionColor={colors.lightGray}
 					/>
 				</View>
-				<TouchableOpacity style={[styles.changeNameButton, styles.testBorder]}>
+				<TouchableOpacity style={[styles.changeNameButton, styles.testBorder]} onPress={async () => {await changeUsername(johnSmithsId, usernameState);}}>
 					<Text style={styles.text}>Change</Text>
 				</TouchableOpacity>
 			</View>
@@ -144,7 +157,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	changeNameInput: {
-		flex: 3,
+		flex: 1,
 		height: 20,
 		justifyContent: 'center',
 		borderBottomWidth: 1,
