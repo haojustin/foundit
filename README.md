@@ -49,7 +49,7 @@ expo-camera for camera feature.
 
 ## Installation Steps
 
-1. Download the branch.
+1. Clone main.
 2. npm install -g expo-cli
 3. npm install -g eas-cli
 4. npm install
