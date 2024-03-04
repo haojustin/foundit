@@ -48,11 +48,11 @@ export default function Post() {
                                  .filter(tag => tag.length > 0);
 
             const postData = {
-                title,
-                description,
-                reward,
-                lostFound,
-                location,
+                title: title,
+                description: description,
+                reward: reward,
+                lostFound: lostFound,
+                location: location,
                 media: mediaUrls,
                 tags: tagArray, // Tags are now prepared for case-insensitive search
             };
@@ -68,7 +68,6 @@ export default function Post() {
             navigation.goBack();
         }
     };
-
 
     return (
 

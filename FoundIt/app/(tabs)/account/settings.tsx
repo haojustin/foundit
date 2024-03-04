@@ -1,8 +1,10 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import {Slider} from '@miblanchard/react-native-slider';
-import React from 'react';
+import React, {useEffect} from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
+import {getUserByDocId, changeUsername} from '../../../services/firebaseService.js';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function Settings() {
 	const [searchSliderState, setSearchSliderState] = React.useState<number>(5);
@@ -13,15 +15,44 @@ export default function Settings() {
 		{label: 'Email', value: 'email'},
 		{label: 'Off', value: 'off'}
 	]);	
+	const [usernameState, setUsernameState] = React.useState("Current username");
+	const [johnSmithsId, setJohnSmithsId] = React.useState('2j9pC69JqbZ0MqUyYCV6');
 
+	const getUsername = async () => {
+		const docSnap = await getUserByDocId(johnSmithsId);
+		setUsernameState(docSnap.data().Name);
+	};
+	useFocusEffect(
+		React.useCallback(() => {
+			getUsername();
+		}, [])
+	);
+	
 	return (
-		<View style={styles.container}>
+		<View style={[styles.container, styles.testBorder]}>
+			{/* Change username */}
+			<View style={[styles.changeNameWrapper, styles.testBorder]}>
+				<View style={[styles.changeNameLabel, styles.testBorder]}>
+					<Text style={styles.text}>Username:</Text>
+				</View>
+				<View style={[styles.testBorder, styles.changeNameInput]}>
+					<TextInput
+						style={styles.text}
+						onChangeText={setUsernameState}
+						value={usernameState}
+						selectionColor={colors.lightGray}
+					/>
+				</View>
+				<TouchableOpacity style={[styles.changeNameButton, styles.testBorder]} onPress={async () => {await changeUsername(johnSmithsId, usernameState);}}>
+					<Text style={styles.text}>Change</Text>
+				</TouchableOpacity>
+			</View>
 			{/* Search radius */}
-			<View style={styles.setting}>
-				<View style={styles.settingLabel}>
+			<View style={[styles.searchRadiusWrapper, styles.testBorder]}>
+				<View style={[styles.searchRadiusLabel, styles.testBorder]}>
 					<Text style={styles.text}>Search radius: {searchSliderState} mi</Text>
 				</View>
-				<View style={styles.settingComponent}>
+				<View style={[styles.searchRadiusSlider, styles.testBorder]}>
 					<Slider
 						minimumValue = {5}
 						value = {searchSliderState}
@@ -31,24 +62,24 @@ export default function Settings() {
 						maximumTrackTintColor = {colors.lightGray}
 						minimumTrackTintColor = {colors.darkGray}
 						thumbTintColor = {colors.darkGray}
+						itemSeparator = {true}
 					/>
 				</View>
 			</View>
-
 			{/* Notification method */}
-			<View style={styles.setting}>
-				<View style={styles.settingLabel}>
+			<View style={[styles.notifWrapper, styles.testBorder]}>
+				<View style={styles.notifLabel}>
 					<Text style={styles.text}>Notifications:</Text>
 				</View>
-				<View style={styles.settingComponent} testID="dropdown">
+				<View style={[styles.notifDropdownWrapper, styles.testBorder]} testID="dropdown">
 					<DropDownPicker 
-						style = {styles.dropdown} 
+						style = {styles.notifDropdown} 
 						labelStyle = {styles.text}
-						dropDownContainerStyle={styles.dropdown}
+						dropDownContainerStyle={styles.notifDropdown}
 						listItemLabelStyle={styles.text}
 
-						arrowIconStyle={{tintColor: colors.lightGray}}
-						tickIconStyle={{tintColor: colors.lightGray}}
+						arrowIconStyle={{tintColor: colors.darkGray}}
+						tickIconStyle={{tintColor: colors.darkGray}}
 												
 						open={notifOpen}
 						value={notifValue}
@@ -71,26 +102,76 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		alignItems: 'center',
-		margin: 10
-	},
-	settingComponent: {
-		margin: 0,
-		flex: 1,
-	},
-	settingLabel: {
-		margin: 0,
-		flex: 1
-	},
-	setting: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		margin: 10
-	},
-	dropdown: {
-		backgroundColor: colors.darkGray
+		padding: 10
 	},
 	text: {
 		fontSize: 15,
-		color: colors.lightGray,
-	}
+		color: colors.darkGray,
+	},
+	testBorder: {
+		borderWidth: 0,
+		borderColor: 'red',
+	},
+
+	searchRadiusWrapper: {
+		flexDirection: 'row',
+		height: 50,
+		margin: 10,
+	},
+	searchRadiusLabel: {
+		flex: 1,
+		justifyContent: 'center',
+	},
+	searchRadiusSlider:{
+		flex: 1,
+		justifyContent: 'center',
+	},
+
+	notifWrapper: {
+		flexDirection: 'row',
+		height: 50,
+		margin: 10,
+	},
+	notifLabel: {
+		flex: 1,
+		justifyContent: 'center',
+	},
+	notifDropdownWrapper: {
+		flex: 1,
+		alignSelf: 'center',
+	},
+	notifDropdown: {
+		backgroundColor: colors.lightGray,
+		borderRadius: 20,
+		minHeight: 40,
+		borderWidth: 0,
+	},
+
+	changeNameWrapper: {
+		flexDirection: 'row',
+		height: 50,
+		margin: 10,
+		alignItems: 'center',
+	},
+	changeNameLabel: {
+		justifyContent: 'center',
+	},
+	changeNameInput: {
+		flex: 1,
+		height: 20,
+		justifyContent: 'center',
+		borderBottomWidth: 1,
+		borderColor: colors.lightGray,
+		marginHorizontal: 10,
+		marginTop: 4,
+	},
+	changeNameButton: {
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
+		color: colors.darkGray,
+		backgroundColor: colors.lightGray,
+		borderRadius: 20,
+		height: 40,
+	},
 });
