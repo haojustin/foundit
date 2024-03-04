@@ -68,7 +68,9 @@ Tag bar at the bottom to switch between different pages.
 ## Known Problems
 
 Video functionality currently has bugs for both taking as well as uploading
+
 After uploading media if you set the location, the media get deleted so for now first set location
+
 Many features are hard coded now and will be implemented in the future.
 
 ## Contributing
