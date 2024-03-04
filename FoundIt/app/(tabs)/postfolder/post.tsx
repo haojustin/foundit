@@ -14,14 +14,17 @@ export default function Post() {
     const media = route.params?.media;
     const mediaArray = media || [];
 
+    const [tags, setTags] = useState('');
+
+
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [reward, setReward] = useState('');
     const [lostFound, setLostFound] = useState('lost');
     const [location, setLocation] = useState({ latitude: null, longitude: null });
 
-    const userId = "currentUser's ID";
-    const username = "currentUser's Username";
+    const userId = "0";
+    const username = "John Smith";
 
     useEffect(() => {
         if (route.params?.selectedLocation) {
@@ -34,35 +37,37 @@ export default function Post() {
         navigation.navigate('modal');
       };
 
-    const handleSubmit = async () => {
-        console.log("test");
-
+      const handleSubmit = async () => {
         setUploading(true);
-        uploadMediaAsync(mediaArray.map(media => media.uri))
-          .then(mediaUrls => {
+        try {
+            const mediaUrls = await uploadMediaAsync(mediaArray.map(media => media.uri));
+
+            // Ensure tags are trimmed, non-empty, and converted to lowercase
+            const tagArray = tags.split(',')
+                                 .map(tag => tag.trim().toLowerCase())
+                                 .filter(tag => tag.length > 0);
+
             const postData = {
-              title,
-              description,
-              reward,
-              lostFound,
-              location,
-              media: mediaUrls,
+                title,
+                description,
+                reward,
+                lostFound,
+                location,
+                media: mediaUrls,
+                tags: tagArray, // Tags are now prepared for case-insensitive search
             };
-            return addPost(userId, username, postData);
-          })
-          .then(postRef => {
+
+            const postRef = await addPost(userId, username, postData);
             console.log('Post added with ID:', postRef.id);
             // Handle successful post submission
-          })
-          .catch(error => {
+        } catch (error) {
             console.error('Failed to submit post:', error);
             // Handle submission errors
-          })
-          .finally(() => {
+        } finally {
             setUploading(false);
             navigation.goBack();
-          });
-      };
+        }
+    };
 
 
     return (
@@ -95,7 +100,6 @@ export default function Post() {
                     <Text style={styles.text}>Found</Text>
                 </TouchableOpacity>
             </View>
-
             {/* Additional photo upload and location indication */}
             <TouchableOpacity style={styles.additionalButton} onPress={() => {navigation.navigate('postfolder/two');}}>
                 <Icon name="camera-plus" size={24} color={colors.lightGray} />
@@ -130,6 +134,15 @@ export default function Post() {
                     placeholder="Description"
                     placeholderTextColor={colors.darkGray}
                     multiline={true}
+                />
+            </View>
+            <View style={styles.tagInputContainer}>
+                <TextInput
+                    style={styles.tagInput}
+                    onChangeText={setTags}
+                    value={tags}
+                    placeholder="Enter tags (comma-separated)"
+                    placeholderTextColor={colors.lightGray}
                 />
             </View>
 
@@ -170,9 +183,11 @@ const styles = StyleSheet.create({
     },
     mediaPreview: {
         width: '100%',
-        height: Dimensions.get('window').width, // Maintain aspect ratio
+        height: Dimensions.get('window').width * (3/4),
+        resizeMode: 'contain', // or 'cover'
         marginBottom: 20,
     },
+
     title: {
         fontSize: 22,
         color: '#333',
@@ -275,5 +290,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 20,
+    },
+    tagInputContainer: {
+        marginTop: 10,
+      },
+    tagInput: {
+        fontSize: 16,
+        backgroundColor: '#fff',
+        padding: 15,
+        borderRadius: 10,
+        color: '#333',
     },
 });

@@ -39,34 +39,36 @@ const addPost = async (userId, username, postData) => {
 
 async function getPosts(content) {
   const results = [];
-  if (content == ""){
-    const defaultSearch = db.collection("posts").get();
-    (await defaultSearch).forEach(doc => {
-      const data = doc.data();
-      data.id = doc.id;
-      results.push(data);
-      return results
-    });
+  const contentLower = content.toLowerCase();
+
+  if (content === "") {
+      const defaultSearch = await db.collection("posts").get();
+      defaultSearch.forEach(doc => {
+          const data = doc.data();
+          data.id = doc.id;
+          results.push(data);
+      });
+  } else {
+      // Search by title and tags using case-insensitive queries
+      const byName = db.collection("posts").where("name", "==", contentLower);
+      const byTag = db.collection("posts").where("tags", "array-contains", contentLower);
+
+      const [snapshot1, snapshot2] = await Promise.all([byName.get(), byTag.get()]);
+
+      snapshot1.forEach(doc => {
+          const data = doc.data();
+          data.id = doc.id;
+          results.push(data);
+      });
+
+      snapshot2.forEach(doc => {
+          if (!results.some(result => result.id === doc.id)) {
+              const data = doc.data();
+              data.id = doc.id;
+              results.push(data);
+          }
+      });
   }
-  const byName = db.collection("posts").where("name", "==", content.toLowerCase());
-  const byTag = db.collection("posts").where("Tag", "==", content);
-
-  const [snapshot1, snapshot2] = await Promise.all([byName.get(), byTag.get()]);
-
-  snapshot1.forEach(doc => {
-    const data = doc.data();
-    data.id = doc.id;
-    results.push(data);
-  });
-
-  snapshot2.forEach(doc => {
-    if (!results.some(result => result.id === doc.id)) {
-      const data = doc.data();
-      data.id = doc.id;
-      results.push(data);
-    }
-  });
-
   return results;
 }
 
