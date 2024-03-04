@@ -23,21 +23,7 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const Stack = createNativeStackNavigator();
 
-  function MyStack() {
-    return (
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-        }}
-      >
-        <Stack.Screen name="/postfolder/post" component={Post} />
-        <Stack.Screen name="/postfolder/two" component= {CameraPage}/>
-      </Stack.Navigator>
-    );
-  }
 
 	return (
     <Tabs
@@ -54,20 +40,18 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <AntDesign name="home" size={24} color="black" />,
           headerRight: () => (
             <Link href="/modal" asChild>
-			<View testID="map">
               <Pressable>
                 {({ pressed }) => (
                   <SimpleLineIcons name="location-pin" size={24} color={Colors[colorScheme ?? 'light'].text}
                   style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}/>
                 )}
               </Pressable>
-			</View>
             </Link>
           ),
         }}
       />
       <Tabs.Screen
-        name="postfolder/two"
+        name="postfolder/post"
         options={{
           title: 'Post',
           tabBarIcon: ({ color }) => <AntDesign name="camerao" size={24} color="black" />,
@@ -78,7 +62,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="postfolder/post"
+        name="postfolder/two"
         options={{
           title: "Post",
           href : null
