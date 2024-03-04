@@ -3,30 +3,72 @@ import { ScrollView, StyleSheet, TextInput, TouchableOpacity, Image, View, Text,
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Video } from 'expo-av';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { getLocation } from './locationUtil';
+import {addUserData, getUserData , getPosts, addPost, uploadMediaAsync} from '../../../services/firebaseService.js'
 
 export default function Post() {
     const navigation = useNavigation();
+    const [uploading, setUploading] = useState(false);
     const route = useRoute();
 
     const media = route.params?.media;
+    const mediaArray = media || [];
+
+    const [tags, setTags] = useState('');
+
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [reward, setReward] = useState('');
     const [lostFound, setLostFound] = useState('lost');
+    const [location, setLocation] = useState({ latitude: null, longitude: null });
 
-    useLayoutEffect(() => {
-        navigation.setOptions({
-            headerLeft: () => (
-                <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 10 }}>
-                    <Text style={{ color: colors.blue, fontSize: 18 }}>Back</Text>
-                </TouchableOpacity>
-            ),
-            headerLeftContainerStyle: {
-                paddingLeft: 10,
-            },
-        });
-    }, [navigation]);
+    const userId = "0";
+    const username = "John Smith";
+
+    useEffect(() => {
+        if (route.params?.selectedLocation) {
+          setLocation(route.params.selectedLocation);
+        }
+        console.log("Selected media:", mediaArray);
+      }, [route.params, mediaArray]);
+
+    const handleAddLocation = () => {
+        navigation.navigate('modal');
+      };
+
+      const handleSubmit = async () => {
+        setUploading(true);
+        try {
+            const mediaUrls = await uploadMediaAsync(mediaArray.map(media => media.uri));
+
+            // Ensure tags are trimmed, non-empty, and converted to lowercase
+            const tagArray = tags.split(',')
+                                 .map(tag => tag.trim().toLowerCase())
+                                 .filter(tag => tag.length > 0);
+
+            const postData = {
+                title,
+                description,
+                reward,
+                lostFound,
+                location,
+                media: mediaUrls,
+                tags: tagArray, // Tags are now prepared for case-insensitive search
+            };
+
+            const postRef = await addPost(userId, username, postData);
+            console.log('Post added with ID:', postRef.id);
+            // Handle successful post submission
+        } catch (error) {
+            console.error('Failed to submit post:', error);
+            // Handle submission errors
+        } finally {
+            setUploading(false);
+            navigation.goBack();
+        }
+    };
+
 
     return (
 
@@ -39,19 +81,13 @@ export default function Post() {
                 placeholderTextColor={colors.darkGray}
             />
             {/* Media preview */}
-            {media?.uri && (
-                media.type === 'image' ? (
-                    <Image source={{ uri: media.uri }} style={styles.mediaPreview} />
+            {mediaArray.map((item: { type: string; uri: any; }, index: React.Key | null | undefined) => (
+                item.type === 'image' ? (
+                    <Image key={index} source={{ uri: item.uri }} style={styles.mediaPreview} />
                 ) : (
-                    <Video
-                        source={{ uri: media.uri }}
-                        style={styles.mediaPreview}
-                        useNativeControls
-                        resizeMode="contain"
-                        isLooping
-                    />
+                    <Video key={index} source={{ uri: item.uri }} style={styles.mediaPreview} useNativeControls resizeMode="contain" isLooping />
                 )
-            )}
+            ))}
             <View style={styles.lostFoundWrapper}>
                 <TouchableOpacity
                     style={lostFound === 'lost' ? styles.lostFoundButtonSelected : styles.lostFoundButton}
@@ -64,16 +100,23 @@ export default function Post() {
                     <Text style={styles.text}>Found</Text>
                 </TouchableOpacity>
             </View>
-
             {/* Additional photo upload and location indication */}
-            <TouchableOpacity style={styles.additionalButton}>
+            <TouchableOpacity style={styles.additionalButton} onPress={() => {navigation.navigate('postfolder/two');}}>
                 <Icon name="camera-plus" size={24} color={colors.lightGray} />
-                <Text style={styles.text}>Add more photos</Text>
+                <Text style={styles.text}>Add Media</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.additionalButton}>
+            <TouchableOpacity style={styles.additionalButton} onPress={handleAddLocation}>
                 <Icon name="map-marker" size={24} color={colors.lightGray} />
-                <Text style={styles.text}>{lostFound === 'lost' ? 'Where did you lose it?' : 'Where did you find it?'}</Text>
+                <Text style={styles.text}>Add Location</Text>
             </TouchableOpacity>
+
+            {/* Display the selected location */}
+            {location && (
+                <View style={styles.locationDisplay}>
+                    <Text style={styles.locationText}>Latitude: {location.latitude}</Text>
+                    <Text style={styles.locationText}>Longitude: {location.longitude}</Text>
+                </View>
+            )}
 
             {lostFound === 'found' && (
                 <View style={styles.tipContainer}>
@@ -93,6 +136,15 @@ export default function Post() {
                     multiline={true}
                 />
             </View>
+            <View style={styles.tagInputContainer}>
+                <TextInput
+                    style={styles.tagInput}
+                    onChangeText={setTags}
+                    value={tags}
+                    placeholder="Enter tags (comma-separated)"
+                    placeholderTextColor={colors.lightGray}
+                />
+            </View>
 
             {lostFound === 'lost' && (
                 <View style={styles.rewardWrapper}>
@@ -108,7 +160,7 @@ export default function Post() {
                 </View>
             )}
 
-            <TouchableOpacity style={styles.post} onPress={() => {/* Post submission logic here */}}>
+            <TouchableOpacity style={styles.post} onPress={handleSubmit}>
                 <Text style={styles.text}>Post</Text>
             </TouchableOpacity>
         </ScrollView>
@@ -131,9 +183,11 @@ const styles = StyleSheet.create({
     },
     mediaPreview: {
         width: '100%',
-        height: Dimensions.get('window').width, // Maintain aspect ratio
+        height: Dimensions.get('window').width * (3/4),
+        resizeMode: 'contain', // or 'cover'
         marginBottom: 20,
     },
+
     title: {
         fontSize: 22,
         color: '#333',
@@ -149,6 +203,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#f0f0f0',
         borderRadius: 10,
         marginVertical: 5,
+    },
+    locationDisplay: {
+        marginTop: 10,
+        padding: 10,
+        backgroundColor: '#f0f0f0',
+        borderRadius: 10,
+    },
+    locationText: {
+        fontSize: 14,
+        color: colors.darkGray,
     },
     tipContainer: {
         backgroundColor: '#f0f0f0',
@@ -226,5 +290,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 20,
+    },
+    tagInputContainer: {
+        marginTop: 10,
+      },
+    tagInput: {
+        fontSize: 16,
+        backgroundColor: '#fff',
+        padding: 15,
+        borderRadius: 10,
+        color: '#333',
     },
 });

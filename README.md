@@ -49,11 +49,11 @@ expo-camera for camera feature.
 
 ## Installation Steps
 
-1. Download the branch.
+1. Clone main.
 2. npm install -g expo-cli
 3. npm install -g eas-cli
 4. npm install
-5. npm install react-native-maps
+5. npm install @babel/preset-react @miblanchard/react-native-slider @react-native-community/geolocation @react-navigation/native @react-native-firebase/app @react-native-firebase/auth @react-native-vector-icons @react-native-maps @react-native-elegant-header
 6. npx expo start
 7. s
 8. Use your phone to scan the Expo Go QR code.
@@ -66,6 +66,10 @@ Profile page to view user information and settings.
 Tag bar at the bottom to switch between different pages.
 
 ## Known Problems
+
+Video functionality currently has bugs for both taking as well as uploading
+
+After uploading media if you set the location, the media get deleted so for now first set location
 
 Many features are hard coded now and will be implemented in the future.
 
