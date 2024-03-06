@@ -2,16 +2,25 @@
 import db from '../constants/firebaseConfig'; // import the Firestore instance from your config file
 import { collection, query, where, getDocs, doc, getDoc, updateDoc, addDoc} from "firebase/firestore";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import { NativeModules } from 'react-native';
 
 
 const addUserData = (userId) => {
   return db.collection('users').add(userId);
 };
 
+const getUserId = async (name) => {
+  const users = db.collection("users");
+  const specificUser = await users.where("Name", "==", name).get();
+  specificUser.forEach(doc => {
+    userId = doc.id;
+  });
+  return userId;
+};
+
 const getUserData = async (name) => {
   const users = db.collection("users");
-  const specificUser = await users.where("name", "==", name.toLowerCase()).get();
-  let user = null;
+  const specificUser = await users.where("Name", "==", name).get();
   specificUser.forEach(doc => {
     user = doc.data();
     user.id = doc.id
@@ -42,7 +51,6 @@ const addPost = async (userId, username, postData) => {
       username,
       postTime: new Date(), // Firestore timestamp for the post creation time
     });
-    console.log("Post added with ID: ", postRef.id);
     return postRef;
   } catch (error) {
     console.error("Error adding document: ", error);
@@ -106,6 +114,5 @@ const uploadMediaAsync = async (uris) => {
     throw new Error("Failed to upload media");
   }
 };
-
 
 export { addUserData, getUserData , getPosts, addPost, uploadMediaAsync, getUserByDocId, changeUsername};
