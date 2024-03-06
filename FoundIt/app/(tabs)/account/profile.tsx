@@ -1,16 +1,38 @@
 import { StyleSheet, Image, Button, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {getUserByDocId} from '../../../services/firebaseService.js';
+import { useFocusEffect } from '@react-navigation/native';
 
-export default function TabOneScreen() {
+export default function TabOneScreen({ navigation }) {
+	const [johnSmithsId, setJohnSmithsId] = React.useState('2j9pC69JqbZ0MqUyYCV6');
+	const [user, setUser] = React.useState({});
+
+	const getUser = async () => {
+		const docSnap = await getUserByDocId(johnSmithsId);
+		setUser(docSnap.data());
+		console.log(user);
+	};
+	useFocusEffect(
+		React.useCallback(() => {
+			getUser();
+		}, [])
+	);
+	/*
+	useEffect(() => {
+		getUser();
+	}, []);
+	*/
+
+
   return (
         <View style={styles.profile}>
             <View>
               <Image style={styles.profileImage}
               source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1024px-Default_pfp.svg.png' }}/>
             </View>
-          <Text style={styles.profileName} >John Smith</Text>
+          <Text style={styles.profileName} >{user.Name}</Text>
           <Text>UCSB Student</Text>
         </View>
   );
