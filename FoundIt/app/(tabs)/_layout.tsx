@@ -83,6 +83,15 @@ export default function TabLayout() {
               </Pressable>
             </Link>
           ),
+          headerLeft: () => (
+            <Link href="/account/Login" asChild>
+              <Pressable>
+                {({ pressed }) => (
+                  <AntDesign name="login" size={24} color="black" style={{ marginLeft: 15, opacity: pressed ? 0.5 : 1 }}/>
+                )}
+              </Pressable>
+            </Link>
+          ),
         }}
       />
       <Tabs.Screen
@@ -91,6 +100,28 @@ export default function TabLayout() {
           title: "Settings",
           tabBarIcon: ({ color }) => <AntDesign name="setting" size={24} color="black" />,
           href : null
+        }}
+      />
+      <Tabs.Screen
+        name="account/Login"
+        options={{
+          title: "Login",
+          tabBarIcon: ({ color }) => <AntDesign name="login" size={24} color={color} />,
+          href: null
+        }}
+      />
+      <Tabs.Screen
+        name="account/Forgot"
+        options={{
+          title: "Forgot Password",
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="account/Signup"
+        options={{
+          title: "Sign Up",
+          href: null,
         }}
       />
     </Tabs>
