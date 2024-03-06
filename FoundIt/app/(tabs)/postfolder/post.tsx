@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useId } from 'react';
 import { ScrollView, StyleSheet, TextInput, TouchableOpacity, Image, View, Text, Dimensions } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Video } from 'expo-av';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getLocation } from './locationUtil';
-import {addUserData, getUserData , getPosts, addPost, uploadMediaAsync} from '../../../services/firebaseService.js'
+import {getUserId, addUserData, getUserData , getPosts, addPost, uploadMediaAsync} from '../../../services/firebaseService.js'
 
 export default function Post() {
     const navigation = useNavigation();
@@ -23,7 +23,7 @@ export default function Post() {
     const [lostFound, setLostFound] = useState('lost');
     const [location, setLocation] = useState({ latitude: null, longitude: null });
 
-    const userId = "0";
+    
     const username = "John Smith";
 
     useEffect(() => {
@@ -41,6 +41,8 @@ export default function Post() {
         setUploading(true);
         try {
             const mediaUrls = await uploadMediaAsync(mediaArray.map(media => media.uri));
+            const userId = await getUserId(username);
+            const userInfo = await getUserData(username);
 
             // Ensure tags are trimmed, non-empty, and converted to lowercase
             const tagArray = tags.split(',')
