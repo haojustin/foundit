@@ -1,6 +1,6 @@
 // firebaseService.js
 import db from '../constants/firebaseConfig'; // import the Firestore instance from your config file
-import { collection, query, where, getDocs, doc, addDoc} from "firebase/firestore";
+import { collection, query, where, getDocs, doc, getDoc, updateDoc, addDoc} from "firebase/firestore";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import { NativeModules } from 'react-native';
 
@@ -26,6 +26,20 @@ const getUserData = async (name) => {
     user.id = doc.id
   })
   return user;
+};
+
+const getUserByDocId = async (docId) => {
+	const docRef = doc(db, "users", docId);
+	const docSnap = await getDoc(docRef);
+	return docSnap;
+};
+
+const changeUsername = async (docId, usernameState) =>
+{
+	const docRef = doc(db, "users", docId);
+	await updateDoc(docRef, {
+		Name: usernameState,
+	});
 };
 
 const addPost = async (userId, username, postData) => {
@@ -58,7 +72,7 @@ async function getPosts(content) {
       });
   } else {
       // Search by title and tags using case-insensitive queries
-      const byName = db.collection("posts").where("name", "==", contentLower);
+      const byName = db.collection("posts").where("username", "==", contentLower);
       const byTag = db.collection("posts").where("tags", "array-contains", contentLower);
 
       const [snapshot1, snapshot2] = await Promise.all([byName.get(), byTag.get()]);
@@ -78,7 +92,7 @@ async function getPosts(content) {
       });
   }
   return results;
-}
+};
 
 const uploadMediaAsync = async (uris) => {
   console.log("Uploading media URIs:", uris);
@@ -101,5 +115,4 @@ const uploadMediaAsync = async (uris) => {
   }
 };
 
-
-export {getUserId, addUserData, getUserData , getPosts, addPost, uploadMediaAsync};
+export { addUserData, getUserData , getPosts, addPost, uploadMediaAsync, getUserByDocId, changeUsername};
