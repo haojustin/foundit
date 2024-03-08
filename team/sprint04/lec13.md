@@ -39,4 +39,8 @@ Zixiao: Still working on navigation. Some blockers with nav
 Kevin: Working on the modal and design documentation. Blockers modal
 
 Kendrick: Got my post section on account page working. Going to work on making profile picture uploadable to database. No Blockers
+<<<<<<< HEAD
+>>>>>>> f768989dce835b847773fac78df41c337cf3f5c3
+=======
 >>>>>>> 50eea9c9c63f79e43d0c29f6a27cf9fdb695b3cb
+>>>>>>> 2a4f5d6d3a40cdec2ddfb613ae7556f47d2a4e04

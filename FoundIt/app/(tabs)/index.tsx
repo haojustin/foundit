@@ -14,15 +14,21 @@ export default function TabOneScreen() {
   const handleSearch = async () => {
     try {
       const results = await getPosts(searchQuery);
-      const postsArray = results.map(result => ({
-        id: result.id,
-        ...result
+      const postsArray = await Promise.all(results.map(async (result) => {
+        const { latitude, longitude } = result.location;
+        const address = await fetchAddress(latitude, longitude);
+        return {
+          id: result.id,
+          address,
+          ...result
+        };
       }));
       setPosts(postsArray);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
   };
+  
 
   
   const onRefresh = React.useCallback(() => {
@@ -38,6 +44,27 @@ export default function TabOneScreen() {
 		Appearance.setColorScheme('light');
 		StatusBar.setBarStyle('dark-content');
 	}, []);
+
+  // Function to fetch address from Google Geocoding API
+  const fetchAddress = async (latitude, longitude) => {
+    console.log("fetchAddress");
+    try {
+      console.log("latitude", latitude);
+      console.log("longitude", longitude);
+      const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyBCs6VRQAtgywJkLYMSQR2B5We3kAIwUUo`);
+      const data = await response.json();
+      console.log("waiting on response");
+      if (data.results && data.results.length > 0) {
+        console.log("success fetchAddress");
+        return data.results[0].formatted_address;
+      }
+    } catch (error) {
+      console.log("error");
+      console.error('Error fetching address:', error);
+    }
+    console.log("return null");
+    return null;
+  };
 
   return (
     <View style={styles.container}>
@@ -64,7 +91,7 @@ export default function TabOneScreen() {
             )}
             <Text style={[styles.inblocktext, item.lostFound === 'lost' ? styles.lostTextBackground : styles.foundTextBackground]}>{item.description}</Text>
             {item.lostFound === 'lost' && item.reward && <Text style={styles.rewardText}>Reward: ${item.reward}</Text>}
-            {item.location && <Text style={styles.locationText}>Location: Lat {item.location.latitude}, Long {item.location.longitude}</Text>}
+            {item.address && <Text style={styles.locationText}>Location: {item.address}</Text>}
             <Text style={styles.inblocktext}>Date: {new Date(item.postTime?.seconds * 1000).toLocaleDateString("en-US")}</Text>
             <Text style={styles.inblockstatus}>{item.lostFound === 'lost' ? 'Lost' : 'Found'}</Text>
           </View>
