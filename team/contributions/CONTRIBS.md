@@ -14,6 +14,7 @@ I am mostly responsible for the current post page and features, Victor additiona
 
 ## Baimin Wang
 
+I am responsible for the homepage features. Justin did some modification on it during the week. We reorganized the code structure and the display structure of the posts. Added service functions that's used to get posts data, get user data, get userID, etc. Fixed the issue that posting new content on phone will generate USERID = 0 in backends, which may be a blockage for searching some posts by content or by userID. I also helped cleaned out posting page conding, making USERID an asynchronous variable and updating with different users.
 
 
 ## Kendrick Lee
