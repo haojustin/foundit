@@ -22,6 +22,8 @@ I am mostly responsible for the current post page and features, Victor additiona
 
 ## Kevin Lavelle
 
+I am responsible for creating the map functions. When the user opens the app and tries to post, the device should ask the user for permissions 
+to access geolocation and other sensitive data. I am responsible for reverse geocoding latitude and longitude coordinates to transalte it to a street address. Justin helped me with moving an interactive pin around for the user to create their own location. This weekend, I will be adding code for users to filter posts by location. 
 
 
 ## Zixiao Jin
