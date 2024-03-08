@@ -4,7 +4,7 @@
 
 Start
 - any new stuff should follow design guidelines
-- 
+- make sure to pull and check that it doesn't break anything before merge
 
 What went well
 - Continue communicating on Discord
