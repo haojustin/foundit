@@ -5,6 +5,7 @@ but the number is inflated due to automated changes in certain files due to inst
 
 ## Justin Hao
 
+I am mostly responsible for the current post page and features, Victor additionally worked on the post and was the vision behind the general UI. I worked to create the main features of posting such as the camera (and all associated features), uploading photos, pinning location, and tagging items within a post. I worked on Firebase services such as uploading media, updating getPost, and addPost with all needed data. I also helped clean out the UI of the home page, making the preview for the post look better while also adding photos. Worked with Kevin a little on the location modal to improve functionality such as pin dropping, user current location, and saving pin drop location across the application.
 
 
 ## Alex Castelein
