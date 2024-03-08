@@ -16,7 +16,7 @@ Justin:
 
 Victor: Improved UI for home page for new guidelines, will continue with other pages. No blockers 
 
-Baimin: 
+Baimin: Posts have user ID now, will continue working on firebase stuff. No blockers
 
 Zixiao: Created user manual, will work on passing user info from firebase to app. No blockers 
 
