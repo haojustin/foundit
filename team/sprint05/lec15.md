@@ -12,15 +12,15 @@ Scribed Discussion:
 
 Alex: Prepped for retro, will get chat implemented over weekened. Blockers: trouble getting project running
 
-Justin: Worked won implementing video media. Going to finish. Blockers: was busy.
+Justin: 
 
-Victor: Fixed and merged change username branch. Will make the UI consistent across the application. Blockers: none.
+Victor: Improved UI for home page for new guidelines, will continue with other pages. No blockers 
 
-Baimin: Just finished updating service functions, now posting can show correct userID. Will keep on updating firebase services. Blockers: none.
+Baimin: 
 
-Zixiao: Merged sign-in, sign-up, and forgot password in but it does not pass any user info to the app yet. Will figure it out. Blockers: none.
+Zixiao: Created user manual, will work on passing user info from firebase to app. No blockers 
 
-Kevin: Got address functionalities. Will do search locations. Blockers: how to use google services.
+Kevin: Did google keys to find coordinate point, will sort posts on homepage by location if user wants. No blockers 
 
-Kendrick: Just fixed the post section with new format. Will work on changing the profile picture to display and post to database. Blockers: waiting on login.
+Kendrick: Updated my post section, working on profile picture change. No blockers 
 
