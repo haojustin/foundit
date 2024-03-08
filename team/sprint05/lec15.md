@@ -10,7 +10,7 @@ Absent: none
 
 Scribed Discussion:
 
-Alex: 
+Alex: Prepped for retro, will get chat implemented over weekened. Blockers: trouble getting project running
 
 Justin: Worked won implementing video media. Going to finish. Blockers: was busy.
 
