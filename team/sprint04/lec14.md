@@ -10,7 +10,7 @@ Absent: none
 
 Scribed Discussion:
 
-Alex: 
+Alex: Did nothing, will continue working on chat. Blockers: busy
 
 Justin: Worked won implementing video media. Going to finish. Blockers: was busy.
 
