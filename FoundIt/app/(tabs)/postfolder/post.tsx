@@ -5,6 +5,7 @@ import { Video } from 'expo-av';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getLocation } from './locationUtil';
 import {getUserId, addUserData, getUserData , getPosts, addPost, uploadMediaAsync} from '../../../services/firebaseService.js'
+import {CUSTOMCOLORS} from '../../../constants/CustomColors'
 
 export default function Post() {
     const navigation = useNavigation();
@@ -72,99 +73,118 @@ export default function Post() {
     };
 
     return (
+        <View style={[styles.container, styles.testBorder]}>
+			<ScrollView>
+				<TextInput
+					style={[styles.testBorder, styles.title]}
+					onChangeText={setTitle}
+					value={title}
+					placeholder="Title"
+					placeholderTextColor={CUSTOMCOLORS.lightGray}
+					cursorColor={CUSTOMCOLORS.lightPurple}
+					selectionColor={CUSTOMCOLORS.lightPurple}
+				/>
 
-        <ScrollView style={styles.container}>
-            <TextInput
-                style={styles.title}
-                onChangeText={setTitle}
-                value={title}
-                placeholder="Title"
-                placeholderTextColor={colors.darkGray}
-            />
-            {/* Media preview */}
-            {mediaArray.map((item: { type: string; uri: any; }, index: React.Key | null | undefined) => (
-                item.type === 'image' ? (
-                    <Image key={index} source={{ uri: item.uri }} style={styles.mediaPreview} />
-                ) : (
-                    <Video key={index} source={{ uri: item.uri }} style={styles.mediaPreview} useNativeControls resizeMode="contain" isLooping />
-                )
-            ))}
-            <View style={styles.lostFoundWrapper}>
-                <TouchableOpacity
-                    style={lostFound === 'lost' ? styles.lostFoundButtonSelected : styles.lostFoundButton}
-                    onPress={() => setLostFound('lost')}>
-                    <Text style={styles.text}>Lost</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={lostFound === 'found' ? styles.lostFoundButtonSelected : styles.lostFoundButton}
-                    onPress={() => setLostFound('found')}>
-                    <Text style={styles.text}>Found</Text>
-                </TouchableOpacity>
-            </View>
-            {/* Additional photo upload and location indication */}
-            <TouchableOpacity style={styles.additionalButton} onPress={() => {navigation.navigate('postfolder/two');}}>
-                <Icon name="camera-plus" size={24} color={colors.lightGray} />
-                <Text style={styles.text}>Add Media</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.additionalButton} onPress={handleAddLocation}>
-                <Icon name="map-marker" size={24} color={colors.lightGray} />
-                <Text style={styles.text}>Add Location</Text>
-            </TouchableOpacity>
+				
+				<View style={[styles.testBorder, styles.lostFoundWrapper]}>
+					<TouchableOpacity
+						style={[styles.lostFoundButton, lostFound === 'lost' ? styles.lostFoundButtonSelected : styles.lostFoundButton]}
+						onPress={() => setLostFound('lost')}>
+						<Text style={styles.darkPurpleText}>Lost</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={[styles.lostFoundButton, lostFound === 'lost' ? styles.lostFoundButton : styles.lostFoundButtonSelected]}
+						onPress={() => setLostFound('found')}>
+						<Text style={styles.darkPurpleText}>Found</Text>
+					</TouchableOpacity>
+				</View>
 
-            {/* Display the selected location */}
-            {location && (
-                <View style={styles.locationDisplay}>
-                    <Text style={styles.locationText}>Latitude: {location.latitude}</Text>
-                    <Text style={styles.locationText}>Longitude: {location.longitude}</Text>
-                </View>
-            )}
+				<View style={styles.divider}></View>
 
-            {lostFound === 'found' && (
-                <View style={styles.tipContainer}>
-                    <Text style={styles.tip}>
-                        Tip: Leave out one identifying detail about the item so you can ask a claimant about it to confirm it is really theirs.
-                    </Text>
-                </View>
-            )}
+				{/* Additional photo upload and location indication */}
+				<TouchableOpacity style={[styles.testBorder, styles.additionalButton]} onPress={() => {navigation.navigate('postfolder/two');}}>
+					<Icon name="camera-plus" size={25} color={CUSTOMCOLORS.darkPurple} />
+					<Text style={styles.darkPurpleText}> Add Media</Text>
+				</TouchableOpacity>
 
-            <View style={styles.descriptionScrollView}>
-                <TextInput
-                    style={styles.description}
-                    onChangeText={setDescription}
-                    value={description}
-                    placeholder="Description"
-                    placeholderTextColor={colors.darkGray}
-                    multiline={true}
-                />
-            </View>
-            <View style={styles.tagInputContainer}>
-                <TextInput
-                    style={styles.tagInput}
-                    onChangeText={setTags}
-                    value={tags}
-                    placeholder="Enter tags (comma-separated)"
-                    placeholderTextColor={colors.lightGray}
-                />
-            </View>
+				{/* Media preview */}
+				{mediaArray.map((item: { type: string; uri: any; }, index: React.Key | null | undefined) => (
+					item.type === 'image' ? (
+						<View style={[styles.testBorder, styles.mediaPreviewWrapper]}>
+							<Image key={index} source={{ uri: item.uri }} style={styles.mediaPreview} resizeMode="cover"/>
+						</View>
+					) : (
+						<View style={[styles.testBorder, styles.mediaPreviewWrapper]}>
+							<Video key={index} source={{ uri: item.uri }} style={styles.mediaPreview} useNativeControls resizeMode="cover" isLooping />
+						</View>
+					)
+				))}
 
-            {lostFound === 'lost' && (
-                <View style={styles.rewardWrapper}>
-                    <Text style={[styles.text, { alignSelf: 'center' }]}>Reward: $</Text>
-                    <TextInput
-                        style={styles.reward}
-                        onChangeText={setReward}
-                        value={reward}
-                        placeholder='0'
-                        placeholderTextColor={colors.darkGray}
-                        keyboardType='numeric'
-                    />
-                </View>
-            )}
+				<TouchableOpacity style={[styles.testBorder, styles.additionalButton]} onPress={handleAddLocation}>
+					<Icon name="map-marker" size={25} color={CUSTOMCOLORS.darkPurple} />
+					<Text style={styles.darkPurpleText}> Add Location</Text>
+				</TouchableOpacity>
 
-            <TouchableOpacity style={styles.post} onPress={handleSubmit}>
-                <Text style={styles.text}>Post</Text>
-            </TouchableOpacity>
-        </ScrollView>
+				{/* Display the selected location */}
+				{location && (
+					<View style={[styles.testBorder, styles.locationDisplay]}>
+						<Text style={styles.locationText}>Latitude: {location.latitude}</Text>
+						<Text style={styles.locationText}>Longitude: {location.longitude}</Text>
+					</View>
+				)}
+
+				<View style={styles.divider}></View>
+
+				{lostFound === 'found' && (
+					<Text style={[styles.testBorder, styles.tipText]}>
+						Tip: Leave out one identifying detail about the item so you can ask a claimant about it to confirm it is really theirs.
+					</Text>
+				)}
+
+				<View style={[styles.testBorder, styles.descriptionScrollView]}>
+					<TextInput
+						style={[styles.testBorder, styles.description]}
+						onChangeText={setDescription}
+						value={description}
+						placeholder="Description"
+						placeholderTextColor={colors.lightGray}
+						multiline={true}
+						cursorColor={CUSTOMCOLORS.lightPurple}
+						selectionColor={CUSTOMCOLORS.lightPurple}
+					/>
+				</View>
+
+				<TextInput
+					style={[styles.testBorder, styles.tagInput]}
+					onChangeText={setTags}
+					value={tags}
+					placeholder="Enter tags (comma-separated)"
+					placeholderTextColor={colors.lightGray}
+					cursorColor={CUSTOMCOLORS.lightPurple}
+					selectionColor={CUSTOMCOLORS.lightPurple}
+				/>
+
+				{lostFound === 'lost' && (
+					<View style={[styles.testBorder, styles.rewardWrapper]}>
+						<Text style={[styles.text, { alignSelf: 'center' }]}>Reward: $</Text>
+						<TextInput
+							style={styles.reward}
+							onChangeText={setReward}
+							value={reward}
+							placeholder='0'
+							placeholderTextColor={CUSTOMCOLORS.lightGray}
+							keyboardType='numeric'
+							cursorColor={CUSTOMCOLORS.lightPurple}
+							selectionColor={CUSTOMCOLORS.lightPurple}
+						/>
+					</View>
+				)}
+
+				<TouchableOpacity style={[styles.testBorder, styles.post]} onPress={handleSubmit}>
+					<Text style={[styles.text, styles.postText]}>Post</Text>
+				</TouchableOpacity>
+			</ScrollView>
+		</View>
     );
 }
 
@@ -179,127 +199,148 @@ const colors = {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: CUSTOMCOLORS.offWhite,
         padding: 10,
     },
-    mediaPreview: {
-        width: '100%',
-        height: Dimensions.get('window').width * (3/4),
-        resizeMode: 'contain', // or 'cover'
-        marginBottom: 20,
+	testBorder: {
+		borderWidth: 0,
+		borderColor: 'red',
+	},
+	text: {
+        fontSize: 15,
+        color: CUSTOMCOLORS.darkGray,
     },
-
+	darkPurpleText: {
+		fontSize: 15,
+		color: CUSTOMCOLORS.darkPurple,
+	},
+	divider: {
+		borderBottomWidth: 1,
+		borderColor: CUSTOMCOLORS.lightPurple,
+		marginVertical: 10,
+	},
+    
     title: {
-        fontSize: 22,
-        color: '#333',
+        fontSize: 20,
+        color: CUSTOMCOLORS.darkGray,
+		margin: 10,
+		fontWeight: 'bold',
         marginBottom: 15,
         borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
-        paddingBottom: 10,
+        borderColor: CUSTOMCOLORS.darkPurple,
+		height: 40,
     },
-    additionalButton: {
+
+	lostFoundWrapper: {
         flexDirection: 'row',
-        alignItems: 'center',
-        padding: 10,
-        backgroundColor: '#f0f0f0',
-        borderRadius: 10,
-        marginVertical: 5,
-    },
-    locationDisplay: {
-        marginTop: 10,
-        padding: 10,
-        backgroundColor: '#f0f0f0',
-        borderRadius: 10,
-    },
-    locationText: {
-        fontSize: 14,
-        color: colors.darkGray,
-    },
-    tipContainer: {
-        backgroundColor: '#f0f0f0',
-        borderRadius: 10,
-        padding: 10,
-        marginVertical: 10,
-    },
-    tip: {
-        fontSize: 14,
-        color: '#666',
-        fontStyle: 'italic',
-    },
-    lostFoundWrapper: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginBottom: 20,
+		marginBottom: 10,
     },
     lostFoundButton: {
         flex: 1,
-        paddingVertical: 10,
+		height: 40,
         borderRadius: 20,
         borderWidth: 1,
-        borderColor: '#ccc',
+        borderColor: CUSTOMCOLORS.lightPurple,
         justifyContent: 'center',
         alignItems: 'center',
-        marginHorizontal: 5,
+        marginHorizontal: 10,
     },
     lostFoundButtonSelected: {
-        backgroundColor: '#8ABED1',
+        backgroundColor: CUSTOMCOLORS.veryLightPurple,
         borderColor: 'transparent',
-        flex: 1,
-        paddingVertical: 10,
-        borderRadius: 20,
-        justifyContent: 'center',
+    },
+
+    additionalButton: {
+        flexDirection: 'row',
         alignItems: 'center',
-        marginHorizontal: 5,
+		margin: 10,
+		height: 40,
+		backgroundColor: CUSTOMCOLORS.veryLightPurple,
+		borderRadius: 20,
+		paddingHorizontal: 10,
     },
-    text: {
-        fontSize: 16,
-        color: '#333',
+	mediaPreviewWrapper: {
+        margin: 10,
+	},
+	mediaPreview: {
+        width: 'auto',
+        //height: Dimensions.get('window').width * (3/4),
+		height: undefined,
+		aspectRatio: 1,
+		borderRadius: 10,
     },
-    divider: {
-        borderBottomColor: '#ccc',
-        borderBottomWidth: 1,
-        marginVertical: 20,
+
+    locationDisplay: {
+        margin: 10,
+		marginTop: 0,
     },
+    locationText: {
+        fontSize: 13,
+        color: CUSTOMCOLORS.lightGray,
+    },
+
+    tipText: {
+        fontSize: 14,
+        color: CUSTOMCOLORS.lightGray,
+        fontStyle: 'italic',
+		margin: 10,
+		marginBottom: 0,
+    },
+    
     descriptionScrollView: {
         maxHeight: 200,
-        marginVertical: 20,
+		margin: 10,
     },
     description: {
-        fontSize: 16,
+        fontSize: 15,
         backgroundColor: '#fff',
-        padding: 15,
         borderRadius: 10,
-        textAlignVertical: 'top', // Ensure text aligns top for multiline input
+		borderWidth: 1,
+		borderColor: CUSTOMCOLORS.lightPurple,
+		color: CUSTOMCOLORS.darkGray,
+		padding: 10,
     },
+
+	tagInput: {
+		fontSize: 15,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+		borderWidth: 1,
+		borderColor: CUSTOMCOLORS.lightPurple,
+		color: CUSTOMCOLORS.darkGray,
+		margin: 10,
+		height: 50,
+		paddingHorizontal: 10,
+    },
+
     rewardWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginVertical: 20,
+		margin: 10,
     },
     reward: {
-        fontSize: 16,
+        fontSize: 15,
         flex: 1,
         backgroundColor: '#fff',
-        padding: 15,
         borderRadius: 10,
         marginLeft: 10,
+		color: CUSTOMCOLORS.darkGray,
+		borderWidth: 1,
+		borderColor: CUSTOMCOLORS.lightPurple,
+		height: 50,
+		paddingHorizontal: 10,
     },
+
     post: {
-        paddingVertical: 12,
-        backgroundColor: '#4CAF50',
-        borderRadius: 20,
+        borderRadius: 25,
+		height: 50,
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 20,
+		margin: 10,
+		backgroundColor: CUSTOMCOLORS.darkPurple,
     },
-    tagInputContainer: {
-        marginTop: 10,
-      },
-    tagInput: {
-        fontSize: 16,
-        backgroundColor: '#fff',
-        padding: 15,
-        borderRadius: 10,
-        color: '#333',
-    },
+	postText: {
+		color: CUSTOMCOLORS.veryLightPurple,
+		fontWeight: 'bold',	
+	}
 });
