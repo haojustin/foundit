@@ -14,6 +14,7 @@ import { auth, authdb } from "../../../constants/firebaseConfig";
 import { Entypo } from "@expo/vector-icons";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link } from 'expo-router';
+import { useUser } from '../../../constants/UserContext';
 
 const { width, height } = Dimensions.get("window");
 let top;
@@ -28,18 +29,25 @@ export default function Login({ navigation }: { navigation: any }) {
   const [password, setPassword] = useState<any>("");
   const [loading, setLoading] = useState<boolean>(false);
 
+  const { setUser } = useUser();
+
   const handleSignin = async () => {
     setLoading(true);
-    await
-    signInWithEmailAndPassword(auth, email.trim(), password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        setLoading(false);
-        alert("Login to FoundIt");
-      })
-      .catch((err: any) => {
-        alert(err.meassage);
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email.trim(), password);
+      const user = userCredential.user;
+  
+      setUser({
+        displayName: user.displayName || user.email,
+        email: user.email,
       });
+  
+      setLoading(false);
+      alert("Login successfully to FoundIt!");
+    } catch (err: any) {
+      setLoading(false);
+      alert(err.message);
+    }
   };
 
   return (

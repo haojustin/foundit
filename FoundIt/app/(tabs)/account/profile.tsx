@@ -7,11 +7,13 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Dimensions } from 'react-native';
 import {addUserData, getUserData , getPosts, addPost} from '../../../services/firebaseService.js'
 import { FlatList } from 'react-native';
+import { useUser } from '../../../constants/UserContext';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
 export default function TabOneScreen({}) {
+  const { user: currentUser } = useUser();
   const [posts, setPosts] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [refreshing, setRefreshing] = useState(false);
@@ -33,6 +35,7 @@ export default function TabOneScreen({}) {
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     handleSearch().then(() => setRefreshing(false));
+    console.log(currentUser)
   }, []);
 
     useEffect(() => {
@@ -62,8 +65,10 @@ export default function TabOneScreen({}) {
           <Image style={styles.profileImage}
             source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1024px-Default_pfp.svg.png' }}/>
         </TouchableOpacity>
-      </View>
-      <Text style={styles.profileName} >John Smith</Text>
+        </View>
+        <Text style={styles.profileName}>
+          {currentUser?.displayName || 'Guest User'}
+        </Text>
       <View style={styles.divider}>
       <View style={styles.hrLine} />
       <Text style={styles.dividerText}>My Post</Text>
