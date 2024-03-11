@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Image, TouchableOpacity, StyleSheet, TextInput, Dimensions, FlatList, RefreshControl, Appearance, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import ElegantHeader from "react-native-elegant-header";
 import { Text, View } from '@/components/Themed';
+import {CUSTOMCOLORS} from '../../constants/CustomColors';
 
 import { getPosts } from '../../services/firebaseService';
 
@@ -67,33 +67,55 @@ export default function TabOneScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <ElegantHeader title="Recent Posts" />
-      <View style={styles.searchFunc}>
+    <View style={[styles.container, styles.testBorder]}>
+      <Text style={[styles.recentPostsHeader, styles.testBorder]}>Recent Posts</Text>
+      <View style={[styles.searchFunc, styles.testBorder]}>
         <TextInput
           style={styles.searchBar}
-          placeholder="Search Tags..."
-          placeholderTextColor="white"
+          placeholder="Search tags"
+          placeholderTextColor={CUSTOMCOLORS.lightGray}
           value={searchQuery}
           onChangeText={setSearchQuery}
+		  cursorColor={CUSTOMCOLORS.lightPurple}
+		  selectionColor={CUSTOMCOLORS.lightPurple}
         />
+		{/*
         <TouchableOpacity onPress={handleSearch} style={styles.searhIconBackground}>
-          <Icon name="search" size={30} color="black" />
+          <Icon name="search" size={30} color={CUSTOMCOLORS.darkPurple} />
         </TouchableOpacity>
+		*/}
       </View>
+
+	  <View style={styles.divider}></View>
+
       <FlatList
         data={posts}
+		style={[styles.flatList, styles.testBorder]}
+		showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
-          <View style={[styles.block, item.lostFound === 'lost' ? styles.lostItemBackground : styles.foundItemBackground]}>
-            <Text style={styles.inblocktitle}>{item.title}</Text>
+          //<View style={[styles.block, item.lostFound === 'lost' ? styles.lostItemBackground : styles.foundItemBackground, styles.testBorder]}>
+          <View style={[styles.testBorder, styles.block, item.lostFound === 'returned' ? styles.returnedItemBackground : styles.block, item.lostFound === 'lost' ? styles.lostItemBorder : styles.foundItemBorder]}>
+			<View style={[styles.testBorder, styles.titleWrapper]}>
+				<Text style={[styles.testBorder, styles.inblocktitle]}>{item.title}</Text>
+				<Text style={[styles.testBorder, styles.inblockstatus, 
+					item.lostFound === 'returned' ? 
+						styles.statusReturnedBackground : (item.lostFound === 'lost' ? 
+							styles.statusLostBackground : styles.statusFoundBackground
+						)]}>
+							{item.lostFound === 'returned' ? 'Returned' : (item.lostFound === 'lost' ? 'Lost' : 'Found')}
+				</Text>
+			</View>
             {item.media && item.media.length > 0 && (
-              <Image source={{ uri: item.media[0] }} style={styles.postImage} resizeMode="cover" />
+              <Image source={{ uri: item.media[0] }} style={[styles.testBorder, styles.postImage]} resizeMode="cover" />
             )}
-            <Text style={[styles.inblocktext, item.lostFound === 'lost' ? styles.lostTextBackground : styles.foundTextBackground]}>{item.description}</Text>
-            {item.lostFound === 'lost' && item.reward && <Text style={styles.rewardText}>Reward: ${item.reward}</Text>}
-            {item.address && <Text style={styles.locationText}>Location: {item.address}</Text>}
+            {/*<Text style={[styles.inblocktext, item.lostFound === 'lost' ? styles.lostTextBackground : styles.foundTextBackground]}>{item.description}</Text>*/}
+            <Text style={[styles.testBorder, styles.inblocktext]}>{item.description.trim()}</Text>
+
+			<View style={styles.divider}></View>
+
+            {item.lostFound === 'lost' && item.reward && <Text style={styles.inblocktext}>Reward: ${item.reward}</Text>}
+            {item.address && <Text style={styles.inblocktext}>Location: {item.address}</Text>}
             <Text style={styles.inblocktext}>Date: {new Date(item.postTime?.seconds * 1000).toLocaleDateString("en-US")}</Text>
-            <Text style={styles.inblockstatus}>{item.lostFound === 'lost' ? 'Lost' : 'Found'}</Text>
           </View>
         )}
         keyExtractor={item => item.id.toString()}
@@ -106,62 +128,118 @@ export default function TabOneScreen() {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#f5f5f5',
+      backgroundColor: CUSTOMCOLORS.offWhite,
+	  padding: 10,
     },
+	testBorder: {
+		borderWidth: 0,
+		borderColor: 'red',
+	},
+	divider: {
+		borderBottomWidth: 1,
+		borderColor: CUSTOMCOLORS.lightPurple,
+		marginVertical: 10,
+	},
+
+	recentPostsHeader: {
+		alignSelf: 'center',
+		fontWeight: 'bold',
+		color: CUSTOMCOLORS.darkGray,
+		fontSize: 20,
+		margin: 10,
+	},
+
     searchFunc: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginHorizontal: 10,
-      marginBottom: 10,
+		margin: 10,
+		height: 40,
+		backgroundColor: 'transparent',
+		alignSelf: 'center',
+	  width: '80%',
     },
     searchBar: {
       flex: 1,
-      height: 40,
-      backgroundColor: "#A3A3A3",
-      borderWidth: 2,
-      borderColor: 'gray',
-      borderRadius: 10,
-      paddingLeft: 15,
-      marginRight: 10,
-      color: "white",
+      height: 30,
+      borderBottomWidth: 1,
+      borderColor: CUSTOMCOLORS.darkPurple,
+	  paddingHorizontal: 5,
+	  fontSize: 15,
     },
     searhIconBackground: {
-      backgroundColor: "cyan",
-      borderRadius: 9,
-      borderWidth: 2,
-      borderColor: 'gray',
-      padding: 2,
+      backgroundColor: CUSTOMCOLORS.lightPurple,
+	  height: 40,
+	  width: 40,
+      borderRadius: 20,
       justifyContent: 'center',
       alignItems: 'center',
     },
+
+	flatList: {
+		margin: 10,
+	},
     block: {
-      backgroundColor: '#ffffff',
-      padding: 15,
+      backgroundColor: CUSTOMCOLORS.veryLightPurple,
+      padding: 10,
       borderRadius: 10,
       marginVertical: 5,
-      marginHorizontal: 10,
+	  //borderWidth: 1,
+	  /*
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.23,
       shadowRadius: 2.62,
       elevation: 4,
+	  */
     },
+
+	titleWrapper: {
+		//flexDirection: 'row',
+		alignItems: 'flex-start',
+		backgroundColor: 'transparent',
+		marginBottom: 5,
+	},
+	inblocktitle: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      marginHorizontal: 5,
+	  color: CUSTOMCOLORS.darkGray,
+	  flexShrink: 1,
+    },
+	inblockstatus: {
+      fontSize: 15,
+      fontWeight: 'bold',
+      color: CUSTOMCOLORS.darkGray,
+	  margin: 5,
+	  borderRadius: 20,
+	  paddingVertical: 1,
+	  paddingHorizontal: 10,
+    },
+	statusLostBackground: {
+		backgroundColor: CUSTOMCOLORS.lostRed,
+	},
+	statusFoundBackground: {
+		backgroundColor: CUSTOMCOLORS.foundYellow,
+	},
+	statusReturnedBackground: {
+		backgroundColor: CUSTOMCOLORS.returnedGreen,
+	},
     postImage: {
-      width: '100%',
+      width: 'auto',
       height: undefined,
       aspectRatio: 1,
       borderRadius: 10,
-      marginBottom: 10,
-      resizeMode: 'cover',
-    },
-
-    inblocktitle: {
-      fontSize: 20,
-      fontWeight: 'bold',
-      marginBottom: 5,
     },
     inblocktext: {
+      fontSize: 15,
+      margin: 5,
+	  color: CUSTOMCOLORS.darkGray,
+    },
+	/*
+	rewardText: {
       fontSize: 16,
+      color: '#FFA500',
+      fontWeight: 'bold',
       marginBottom: 5,
     },
     lostItemBackground: {
@@ -180,24 +258,24 @@ export default function TabOneScreen() {
       padding: 5,
       borderRadius: 5,
     },
+	*/
+	lostItemBorder: {
+		borderColor: CUSTOMCOLORS.lostRed,
+	},
+	foundItemBorder: {
+		borderColor: CUSTOMCOLORS.foundYellow,
+	},
+	returnedItemBorder: {
+		borderColor: CUSTOMCOLORS.returnedGreen,
+	},
     postContent: {
       flex: 1,
     },
-    inblockstatus: {
-      fontSize: 14,
-      fontWeight: 'bold',
-      color: '#4D96FF',
-      alignSelf: 'flex-end',
-    },
+    
     locationText: {
       fontSize: 14,
       color: '#777',
       marginBottom: 5,
     },
-    rewardText: {
-      fontSize: 16,
-      color: '#FFA500',
-      fontWeight: 'bold',
-      marginBottom: 5,
-    },
+    
   });
