@@ -19,6 +19,7 @@ I am responsible for the homepage features. Justin did some modification on it d
 
 ## Kendrick Lee
 
+I am mostly responsible for the account page, which includes my post section and profile picture. I also worked on integrating the taskbar and icons, as well as moving the settings page from the taskbar to integrating it into the account page instead. I also spent time bug fixing for the modal for the aps and worked on some of the firebase storage.
 
 
 ## Kevin Lavelle
