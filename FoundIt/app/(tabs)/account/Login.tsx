@@ -15,6 +15,7 @@ import { Entypo } from "@expo/vector-icons";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link } from 'expo-router';
 import { useUser } from '../../../constants/UserContext';
+import { fetchUserData } from '../../../constants/authService';
 
 const { width, height } = Dimensions.get("window");
 let top;
@@ -35,18 +36,19 @@ export default function Login({ navigation }: { navigation: any }) {
     setLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email.trim(), password);
-      const user = userCredential.user;
-  
-      setUser({
-        displayName: user.displayName || user.email,
-        email: user.email,
-      });
-  
+      
+      // Fetch user data from Firestore after login
+      await fetchUserData(userCredential.user.uid, setUser);
+
       setLoading(false);
       alert("Login successfully to FoundIt!");
-    } catch (err: any) {
+    } catch (err) {
       setLoading(false);
-      alert(err.message);
+      if (err instanceof Error) {
+        alert(err.message);
+      } else {
+        console.log(err);
+      }
     }
   };
 
