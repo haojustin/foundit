@@ -115,4 +115,4 @@ const uploadMediaAsync = async (uris) => {
   }
 };
 
-export { addUserData, getUserData , getPosts, addPost, uploadMediaAsync, getUserByDocId, changeUsername};
+export {getUserId, addUserData, getUserData , getPosts, addPost, uploadMediaAsync, getUserByDocId, changeUsername};
