@@ -3,6 +3,7 @@ import { Image, TouchableOpacity, StyleSheet, TextInput, Dimensions, FlatList, R
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Text, View } from '@/components/Themed';
 import {CUSTOMCOLORS} from '../../constants/CustomColors';
+import { getLocation } from './postfolder/locationUtil';
 
 import { getPosts } from '../../services/firebaseService';
 
@@ -10,6 +11,8 @@ export default function TabOneScreen() {
   const [posts, setPosts] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [refreshing, setRefreshing] = useState(false);
+  const [userLocation, setUserLocation] = useState({ latitude: 0, longitude: 0 });
+
 
   const handleSearch = async () => {
     try {
@@ -40,7 +43,12 @@ export default function TabOneScreen() {
       handleSearch()
     }, [searchQuery]);
 
-	useEffect(() => {
+    useEffect(() => {
+      // Fetch user's location
+      getLocation()
+        .then(location => setUserLocation(location))
+        .catch(error => console.error("Error fetching user location:", error));
+
 		Appearance.setColorScheme('light');
 		StatusBar.setBarStyle('dark-content');
 	}, []);
@@ -65,6 +73,32 @@ export default function TabOneScreen() {
     console.log("return null");
     return null;
   };
+
+  // Function to calculate distance between two coordinates
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Radius of the Earth in km
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+    return distance; // Distance in km
+  };
+
+  useEffect(() => {
+    // Sort posts based on distance from user's location
+    if (userLocation.latitude !== 0 && userLocation.longitude !== 0) {
+      const sortedPosts = [...posts].sort((postA, postB) => {
+        const distanceA = calculateDistance(userLocation.latitude, userLocation.longitude, postA.location.latitude, postA.location.longitude);
+        const distanceB = calculateDistance(userLocation.latitude, userLocation.longitude, postB.location.latitude, postB.location.longitude);
+        return distanceA - distanceB;
+      });
+      setPosts(sortedPosts);
+    }
+  }, [userLocation]);
 
   return (
     <View style={[styles.container, styles.testBorder]}>
