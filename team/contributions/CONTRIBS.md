@@ -10,7 +10,7 @@ I am mostly responsible for the current post page and features, Victor additiona
 
 ## Alex Castelein
 
-
+My main responsibility is the chat page. I worked on making a UI for the chat and making sure messages can be sent between users using firebase services. I was also resposible for leasing retro 3 and 
 
 ## Baimin Wang
 
