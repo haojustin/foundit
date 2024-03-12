@@ -49,7 +49,7 @@ export default function Signup({ navigation }: { navigation: any }) {
       });
 
       setUser({
-        uid: user.uid,
+        id: user.uid,
         displayName: username,
         email: email,
       });
