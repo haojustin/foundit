@@ -44,7 +44,7 @@ export default function TabOneScreen() {
       // Sort posts based on user's location
     const sortedPosts = [...postsArray].sort((postA, postB) => {
       if (userLocation !== null) {
-        //console.log("reached inner handleSearch");
+        console.log("reached inner handleSearch");
         // Assigning latitude and longitude values for postA and postB if they are null
         const postALatitude = postA.location.latitude !== null ? postA.location.latitude : 180;
         const postALongitude = postA.location.longitude !== null ? postA.location.longitude : 180;
@@ -53,7 +53,18 @@ export default function TabOneScreen() {
 
         const distanceA = calculateDistance(userLocation.latitude, userLocation.longitude, postALatitude, postALongitude);
         const distanceB = calculateDistance(userLocation.latitude, userLocation.longitude, postBLatitude, postBLongitude);
-        //console.log(distanceA - distanceB);
+        console.log(distanceA - distanceB);
+        return distanceA - distanceB;
+      }
+      else {
+        // If userLocation is null, calculate distance from default location (34.4133, -119.8610)
+        const postALatitude = postA.location.latitude !== null ? postA.location.latitude : 34.4133;
+        const postALongitude = postA.location.longitude !== null ? postA.location.longitude : -119.8610;
+        const postBLatitude = postB.location.latitude !== null ? postB.location.latitude : 34.4133;
+        const postBLongitude = postB.location.longitude !== null ? postB.location.longitude : -119.8610;
+    
+        const distanceA = calculateDistance(34.4133, -119.8610, postALatitude, postALongitude);
+        const distanceB = calculateDistance(34.4133, -119.8610, postBLatitude, postBLongitude);
         return distanceA - distanceB;
       }
       return 0;
