@@ -63,9 +63,7 @@ export default function TabOneScreen() {
       console.error("Error fetching posts:", error);
     }
   };
-  
-
-  
+    
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     handleSearch().then(() => setRefreshing(false));
@@ -143,8 +141,8 @@ export default function TabOneScreen() {
           placeholderTextColor={CUSTOMCOLORS.lightGray}
           value={searchQuery}
           onChangeText={setSearchQuery}
-		  cursorColor={CUSTOMCOLORS.lightPurple}
-		  selectionColor={CUSTOMCOLORS.lightPurple}
+		      cursorColor={CUSTOMCOLORS.lightPurple}
+		      selectionColor={CUSTOMCOLORS.lightPurple}
         />
 		{/*
         <TouchableOpacity onPress={handleSearch} style={styles.searhIconBackground}>
@@ -157,8 +155,8 @@ export default function TabOneScreen() {
 
       <FlatList
         data={posts}
-		style={[styles.flatList, styles.testBorder]}
-		showsVerticalScrollIndicator={false}
+		    style={[styles.flatList, styles.testBorder]}
+		    showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
           //<View style={[styles.block, item.lostFound === 'lost' ? styles.lostItemBackground : styles.foundItemBackground, styles.testBorder]}>
           <View style={[styles.testBorder, styles.block, item.lostFound === 'returned' ? styles.returnedItemBackground : styles.block, item.lostFound === 'lost' ? styles.lostItemBorder : styles.foundItemBorder]}>
