@@ -14,6 +14,8 @@ import { auth, authdb } from "../../../constants/firebaseConfig";
 import { Entypo } from "@expo/vector-icons";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link } from 'expo-router';
+import { useUser } from '../../../constants/UserContext';
+import { fetchUserData } from '../../../constants/authService';
 
 const { width, height } = Dimensions.get("window");
 let top;
@@ -28,18 +30,26 @@ export default function Login({ navigation }: { navigation: any }) {
   const [password, setPassword] = useState<any>("");
   const [loading, setLoading] = useState<boolean>(false);
 
+  const { setUser } = useUser();
+
   const handleSignin = async () => {
     setLoading(true);
-    await
-    signInWithEmailAndPassword(auth, email.trim(), password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        setLoading(false);
-        alert("Login to FoundIt");
-      })
-      .catch((err: any) => {
-        alert(err.meassage);
-      });
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email.trim(), password);
+      
+      // Fetch user data from Firestore after login
+      await fetchUserData(userCredential.user.uid, setUser);
+
+      setLoading(false);
+      alert("Login successfully to FoundIt!");
+    } catch (err) {
+      setLoading(false);
+      if (err instanceof Error) {
+        alert(err.message);
+      } else {
+        console.log(err);
+      }
+    }
   };
 
   return (
