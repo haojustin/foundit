@@ -3,6 +3,7 @@ import { Image, TouchableOpacity, StyleSheet, TextInput, Dimensions, FlatList, R
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Text, View } from '@/components/Themed';
 import {CUSTOMCOLORS} from '../../constants/CustomColors';
+import { LocationData, getLocation } from './postfolder/locationUtil';
 
 import { getPosts } from '../../services/firebaseService';
 
@@ -10,6 +11,22 @@ export default function TabOneScreen() {
   const [posts, setPosts] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [refreshing, setRefreshing] = useState(false);
+  const [userLocation, setUserLocation] = useState<LocationData | null>(null);
+  const [loading, setLoading] = useState(true); // State to track loading status
+
+  useEffect(() => {
+    // Fetch user's location
+    console.log("HERE before get location");
+    getLocation()
+      .then(location => {
+        setUserLocation(location);
+      })
+      .catch(error => {
+        console.error("Error fetching user location:", error);
+        // Optionally, you can handle the error here by setting userLocation to a default value or displaying an error message.
+      });
+  }, []);
+
 
   const handleSearch = async () => {
     try {
@@ -23,7 +40,36 @@ export default function TabOneScreen() {
           ...result
         };
       }));
-      setPosts(postsArray);
+
+      // Sort posts based on user's location
+    const sortedPosts = [...postsArray].sort((postA, postB) => {
+      if (userLocation !== null) {
+        console.log("reached inner handleSearch");
+        // Assigning latitude and longitude values for postA and postB if they are null
+        const postALatitude = postA.location.latitude !== null ? postA.location.latitude : 180;
+        const postALongitude = postA.location.longitude !== null ? postA.location.longitude : 180;
+        const postBLatitude = postB.location.latitude !== null ? postB.location.latitude : 180;
+        const postBLongitude = postB.location.longitude !== null ? postB.location.longitude : 180;
+
+        const distanceA = calculateDistance(userLocation.latitude, userLocation.longitude, postALatitude, postALongitude);
+        const distanceB = calculateDistance(userLocation.latitude, userLocation.longitude, postBLatitude, postBLongitude);
+        console.log(distanceA - distanceB);
+        return distanceA - distanceB;
+      }
+      else {
+        // If userLocation is null, calculate distance from default location (34.4133, -119.8610)
+        const postALatitude = postA.location.latitude !== null ? postA.location.latitude : 34.4133;
+        const postALongitude = postA.location.longitude !== null ? postA.location.longitude : -119.8610;
+        const postBLatitude = postB.location.latitude !== null ? postB.location.latitude : 34.4133;
+        const postBLongitude = postB.location.longitude !== null ? postB.location.longitude : -119.8610;
+    
+        const distanceA = calculateDistance(34.4133, -119.8610, postALatitude, postALongitude);
+        const distanceB = calculateDistance(34.4133, -119.8610, postBLatitude, postBLongitude);
+        return distanceA - distanceB;
+      }
+      return 0;
+    });
+      setPosts(sortedPosts);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -38,7 +84,8 @@ export default function TabOneScreen() {
       handleSearch()
     }, [searchQuery]);
 
-	useEffect(() => {
+    useEffect(() => {
+
 		Appearance.setColorScheme('light');
 		StatusBar.setBarStyle('dark-content');
 	}, []);
@@ -63,6 +110,37 @@ export default function TabOneScreen() {
     console.log("return null");
     return null;
   };
+
+  // Function to calculate distance between two coordinates
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Radius of the Earth in km
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+    return distance; // Distance in km
+  };
+
+  /*
+  useEffect(() => {
+    // Sort posts based on distance from user's location
+    if (userLocation !== null) {
+    console.log("userLocation", userLocation.latitude + " " + userLocation.longitude);
+      console.log("reached");
+    if (userLocation.latitude !== 0 && userLocation.longitude !== 0) {
+      const sortedPosts = [...posts].sort((postA, postB) => {
+        const distanceA = calculateDistance(userLocation.latitude, userLocation.longitude, postA.location.latitude, postA.location.longitude);
+        const distanceB = calculateDistance(userLocation.latitude, userLocation.longitude, postB.location.latitude, postB.location.longitude);
+        return distanceA - distanceB;
+      });
+      setPosts(sortedPosts);
+    }
+  }
+  }, [userLocation]); */
 
   return (
     <View style={[styles.container, styles.testBorder]}>
