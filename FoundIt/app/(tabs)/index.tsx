@@ -3,7 +3,7 @@ import { Image, TouchableOpacity, StyleSheet, TextInput, Dimensions, FlatList, R
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Text, View } from '@/components/Themed';
 import {CUSTOMCOLORS} from '../../constants/CustomColors';
-import { getLocation } from './postfolder/locationUtil';
+import { LocationData, getLocation } from './postfolder/locationUtil';
 
 import { getPosts } from '../../services/firebaseService';
 
@@ -11,7 +11,21 @@ export default function TabOneScreen() {
   const [posts, setPosts] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [refreshing, setRefreshing] = useState(false);
-  const [userLocation, setUserLocation] = useState({ latitude: 0, longitude: 0 });
+  const [userLocation, setUserLocation] = useState<LocationData | null>(null);
+  const [loading, setLoading] = useState(true); // State to track loading status
+
+  useEffect(() => {
+    // Fetch user's location
+    console.log("HERE before get location");
+    getLocation()
+      .then(location => {
+        setUserLocation(location);
+      })
+      .catch(error => {
+        console.error("Error fetching user location:", error);
+        // Optionally, you can handle the error here by setting userLocation to a default value or displaying an error message.
+      });
+  }, []);
 
 
   const handleSearch = async () => {
@@ -26,7 +40,25 @@ export default function TabOneScreen() {
           ...result
         };
       }));
-      setPosts(postsArray);
+
+      // Sort posts based on user's location
+    const sortedPosts = [...postsArray].sort((postA, postB) => {
+      if (userLocation !== null) {
+        //console.log("reached inner handleSearch");
+        // Assigning latitude and longitude values for postA and postB if they are null
+        const postALatitude = postA.location.latitude !== null ? postA.location.latitude : 180;
+        const postALongitude = postA.location.longitude !== null ? postA.location.longitude : 180;
+        const postBLatitude = postB.location.latitude !== null ? postB.location.latitude : 180;
+        const postBLongitude = postB.location.longitude !== null ? postB.location.longitude : 180;
+
+        const distanceA = calculateDistance(userLocation.latitude, userLocation.longitude, postALatitude, postALongitude);
+        const distanceB = calculateDistance(userLocation.latitude, userLocation.longitude, postBLatitude, postBLongitude);
+        //console.log(distanceA - distanceB);
+        return distanceA - distanceB;
+      }
+      return 0;
+    });
+      setPosts(sortedPosts);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -44,10 +76,6 @@ export default function TabOneScreen() {
     }, [searchQuery]);
 
     useEffect(() => {
-      // Fetch user's location
-      getLocation()
-        .then(location => setUserLocation(location))
-        .catch(error => console.error("Error fetching user location:", error));
 
 		Appearance.setColorScheme('light');
 		StatusBar.setBarStyle('dark-content');
@@ -88,8 +116,12 @@ export default function TabOneScreen() {
     return distance; // Distance in km
   };
 
+  /*
   useEffect(() => {
     // Sort posts based on distance from user's location
+    if (userLocation !== null) {
+    console.log("userLocation", userLocation.latitude + " " + userLocation.longitude);
+      console.log("reached");
     if (userLocation.latitude !== 0 && userLocation.longitude !== 0) {
       const sortedPosts = [...posts].sort((postA, postB) => {
         const distanceA = calculateDistance(userLocation.latitude, userLocation.longitude, postA.location.latitude, postA.location.longitude);
@@ -98,7 +130,8 @@ export default function TabOneScreen() {
       });
       setPosts(sortedPosts);
     }
-  }, [userLocation]);
+  }
+  }, [userLocation]); */
 
   return (
     <View style={[styles.container, styles.testBorder]}>
