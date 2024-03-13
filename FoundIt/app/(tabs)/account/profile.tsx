@@ -73,29 +73,28 @@ export default function TabOneScreen({}) {
 
 
   return (
-    <View style={styles.profile}>
-            <View>
-        <TouchableOpacity style={styles.imageBackground}>
-          <Image style={styles.profileImage}
-            source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1024px-Default_pfp.svg.png' }}/>
-        </TouchableOpacity>
-        </View>
-        <Text style={styles.profileName}>
-          {currentUser?.displayName || 'Guest User'}
-        </Text>
-      <View style={styles.divider}>
-      <View style={styles.hrLine} />
-      <Text style={styles.dividerText}>My Post</Text>
-      <View style={styles.hrLine} />
-    </View>
-      <View style={[styles.container, styles.testBorder]}>
-      <FlatList
-        data={posts}
+	<View style={[styles.testBorder, styles.container]}>
+		<TouchableOpacity style={[styles.testBorder, styles.imageButton]}>
+			<Image style={[styles.testBorder, styles.profileImage]}
+				source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1024px-Default_pfp.svg.png' }}/>
+		</TouchableOpacity>
+
+		<Text style={[styles.testBorder, styles.profileName]}>
+			{currentUser?.displayName || 'Guest User'}
+		</Text>
+
+		<View style={[styles.testBorder, styles.divider]}>
+			<View style={styles.hrLine} />
+			<Text style={[styles.testBorder, styles.dividerText]}>My Posts</Text>
+			<View style={styles.hrLine} />
+		</View>
+
+	  <FlatList
+		data={posts}
 		style={[styles.flatList, styles.testBorder]}
 		showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => (
-          //<View style={[styles.block, item.lostFound === 'lost' ? styles.lostItemBackground : styles.foundItemBackground, styles.testBorder]}>
-          <View style={[styles.testBorder, styles.block, item.lostFound === 'returned' ? styles.returnedItemBackground : styles.block, item.lostFound === 'lost' ? styles.lostItemBorder : styles.foundItemBorder]}>
+		renderItem={({ item }) => (
+		  <View style={[styles.testBorder, styles.block, item.lostFound === 'returned' ? styles.returnedItemBackground : styles.block, item.lostFound === 'lost' ? styles.lostItemBorder : styles.foundItemBorder]}>
 			<View style={[styles.testBorder, styles.titleWrapper]}>
 				<Text style={[styles.testBorder, styles.inblocktitle]}>{item.title}</Text>
 				<Text style={[styles.testBorder, styles.inblockstatus, 
@@ -106,33 +105,74 @@ export default function TabOneScreen({}) {
 							{item.lostFound === 'returned' ? 'Returned' : (item.lostFound === 'lost' ? 'Lost' : 'Found')}
 				</Text>
 			</View>
-            {item.media && item.media.length > 0 && (
-              <Image source={{ uri: item.media[0] }} style={[styles.testBorder, styles.postImage]} resizeMode="cover" />
-            )}
-            {/*<Text style={[styles.inblocktext, item.lostFound === 'lost' ? styles.lostTextBackground : styles.foundTextBackground]}>{item.description}</Text>*/}
-            <Text style={[styles.testBorder, styles.inblocktext]}>{item.description.trim()}</Text>
+			{item.media && item.media.length > 0 && (
+			  <Image source={{ uri: item.media[0] }} style={[styles.testBorder, styles.postImage]} resizeMode="cover" />
+			)}
+			{/*<Text style={[styles.inblocktext, item.lostFound === 'lost' ? styles.lostTextBackground : styles.foundTextBackground]}>{item.description}</Text>*/}
+			<Text style={[styles.testBorder, styles.inblocktext]}>{item.description.trim()}</Text>
 
 			<View style={styles.divider}></View>
 
-            {item.lostFound === 'lost' && item.reward && <Text style={styles.inblocktext}>Reward: ${item.reward}</Text>}
-            {item.address && <Text style={styles.inblocktext}>Location: {item.address}</Text>}
-            <Text style={styles.inblocktext}>Date: {new Date(item.postTime?.seconds * 1000).toLocaleDateString("en-US")}</Text>
-          </View>
-        )}
-        keyExtractor={item => item.id.toString()}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-      />
-      </View>
-    </View>
+			{item.lostFound === 'lost' && item.reward && <Text style={styles.inblocktext}>Reward: ${item.reward}</Text>}
+			{item.address && <Text style={styles.inblocktext}>Location: {item.address}</Text>}
+			<Text style={styles.inblocktext}>Date: {new Date(item.postTime?.seconds * 1000).toLocaleDateString("en-US")}</Text>
+		  </View>
+		)}
+		keyExtractor={item => item.id.toString()}
+		refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+	  />
+	</View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: CUSTOMCOLORS.offWhite,
-  padding: 10,
-  },
+	container: {
+		flex: 1,
+		backgroundColor: CUSTOMCOLORS.offWhite,
+		padding: 10,
+	},
+	testBorder: {
+		borderWidth: 0,
+		borderColor: 'red',
+	},
+
+	imageButton : {
+		alignSelf: 'center',
+		margin: 10,
+	},
+	profileImage: {
+		width: 130,
+		height: 130,
+		borderRadius: 130/2,
+	},
+	
+	profileName: {
+		margin: 10,
+		fontSize: 25,
+		fontWeight: 'bold',
+		alignSelf: 'center',
+		color: CUSTOMCOLORS.darkGray,
+	},
+
+	divider: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginVertical: 10,
+		backgroundColor: 'transparent',
+	},
+	hrLine: {
+		flex: 1,
+		backgroundColor: CUSTOMCOLORS.lightPurple,
+		height: 1,
+	},
+	dividerText: {
+		color: CUSTOMCOLORS.darkPurple,
+		textAlign: 'center',
+		fontSize: 20,
+		paddingHorizontal: 10,
+		marginBottom: 5,
+	},
+
   title: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -149,46 +189,16 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     backgroundColor: CUSTOMCOLORS.offWhite,
   },
-  profileName: {
-    marginTop: 20,
-    fontSize: 25,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
+  
   profileBio:{
     marginTop: 8,
     fontSize: 17,
     color: "#989898",
     textAlign: 'center',
   },
-  profileImage: {
-    width: 130,
-    height: 130,
-    borderWidth: 1,
-    borderRadius: 130/2,
-    overlayColor: CUSTOMCOLORS.offWhite,
-  },
-  imageBackground : {
-    backgroundColor: CUSTOMCOLORS.offWhite,
-  },
-  divider: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 10,
-    backgroundColor: CUSTOMCOLORS.offWhite,
-  },
-  hrLine: {
-    width: screenWidth / 3,
-    backgroundColor: 'black',
-    height: 1,
-  },
-  dividerText: {
-    color: 'black',
-    textAlign: 'center',
-    fontSize: 21,
-    paddingHorizontal: 10,
-    paddingBottom: 10,
-  },
+  
+  
+  
   lostItemBackground: {
     backgroundColor: '#FFEEEE',
   },
@@ -278,9 +288,5 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     marginVertical: 5,
-  },
-  testBorder: {
-    borderWidth: 0,
-    borderColor: 'red',
   },
 });

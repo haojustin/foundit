@@ -208,7 +208,7 @@ export default function TabOneScreen() {
 	  padding: 10,
     },
 	testBorder: {
-		borderWidth: 0,
+		borderWidth: 1,
 		borderColor: 'red',
 	},
 	divider: {
