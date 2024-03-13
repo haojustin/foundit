@@ -39,19 +39,6 @@ const CameraPage: React.FC = () => {
   })();
   }, []);
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-        headerLeft: () => (
-            <TouchableOpacity
-				style={{paddingLeft: 10}}
-                onPress={() => navigateToPost()}
-            >
-				<Icon name="keyboard-backspace" size={30} color={CUSTOMCOLORS.darkPurple} />
-            </TouchableOpacity>
-        ),
-    });
-}, [navigation]);
-
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -233,7 +220,7 @@ const CameraPage: React.FC = () => {
       horizontal={true}
       pagingEnabled={true}
       showsHorizontalScrollIndicator={false}
-      style={{ flex: 1 }}
+      style={[styles.testBorder, styles.container]}
     >
       {media.map((item, index) => (
         item.type === 'image' ? (
@@ -254,12 +241,15 @@ const CameraPage: React.FC = () => {
         )
       ))}
     </ScrollView>
-    <TouchableOpacity style={styles.closeButton} onPress={() => setFullScreenPreviewVisible(false)}>
-      <Icon name="close" size={30} color={CUSTOMCOLORS.darkPurple} />
-    </TouchableOpacity>
-    <TouchableOpacity style={styles.nextButton} onPress={() => navigateToPost()}>
-      <Text style={styles.nextButtonText}>Next</Text>
-    </TouchableOpacity>
+    
+	<View style={[styles.testBorder, styles.backNextButtonsWrapper]}>
+		<TouchableOpacity style={styles.closeButton} onPress={() => setFullScreenPreviewVisible(false)}>
+			<Icon name="close" size={50} color={CUSTOMCOLORS.darkPurple} />
+		</TouchableOpacity>
+		<TouchableOpacity style={styles.nextButton} onPress={() => navigateToPost()}>
+			<Icon name="arrow-right" size={50} color={CUSTOMCOLORS.darkPurple} />
+		</TouchableOpacity>
+	</View>
   </Modal>
 )}
 
@@ -270,10 +260,10 @@ const CameraPage: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: CUSTOMCOLORS.offWhite,
   },
 	testBorder: {
-		borderWidth: 1,
+		borderWidth: 0,
 		borderColor: 'red',
 	},
   fullScreen: {
@@ -337,22 +327,20 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 8,
   },
+  backNextButtonsWrapper: {
+	  flexDirection: 'row',
+	  backgroundColor: CUSTOMCOLORS.offWhite,
+	  paddingVertical: 10,
+  },
   closeButton: {
-    position: 'absolute',
-    top: 40,
-    left: 20,
     zIndex: 30,
+	flex: 1,
+	alignItems: 'center',
   },
   nextButton: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-	height: 50,
-    backgroundColor: CUSTOMCOLORS.darkPurple,
-    borderRadius: 25,
-	width: 100,
-	justifyContent: 'center',
-	alignItems: 'center',
+	  zIndex: 30,
+	  flex: 1,
+	  alignItems: 'center',
   },
   nextButtonText: {
     color: CUSTOMCOLORS.lightPurple,

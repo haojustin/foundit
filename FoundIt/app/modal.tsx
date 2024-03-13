@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Button, View } from 'react-native';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
+import { StyleSheet, Button, View, TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
 import { getLocation, LocationData } from './(tabs)/postfolder/locationUtil';
@@ -9,6 +9,20 @@ export default function ModalScreen() {
   const [currentLocation, setCurrentLocation] = useState<LocationData | null>(null);
   const [pinLocation, setPinLocation] = useState<LocationData | null>(null);
   const [locationLoaded, setLocationLoaded] = useState<boolean>(false);
+
+	useLayoutEffect(() => {
+		navigation.setOptions({
+			headerLeft: () => (
+				<TouchableOpacity
+					style={{paddingLeft: 10}}
+					onPress={() => navigateToPost()}
+				>
+					<Icon name="keyboard-backspace" size={30} color={CUSTOMCOLORS.darkPurple} />
+				</TouchableOpacity>
+			),
+		});
+	}, [navigation]);
+
 
   useEffect(() => {
     handleLocationFetch();

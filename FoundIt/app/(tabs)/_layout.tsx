@@ -68,7 +68,7 @@ export default function TabLayout() {
           name="postfolder/two"
           options={{
             title: "Post",
-            href : null
+            href : null,
           }}
         />
 
