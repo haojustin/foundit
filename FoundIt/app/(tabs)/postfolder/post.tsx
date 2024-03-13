@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getLocation } from './locationUtil';
 import {getUserId, addUserData, getUserData , getPosts, addPost, uploadMediaAsync} from '../../../services/firebaseService.js'
 import {CUSTOMCOLORS} from '../../../constants/CustomColors'
+import { useUser } from '../../../constants/UserContext';
 
 export default function Post() {
     const navigation = useNavigation();
@@ -19,13 +20,13 @@ export default function Post() {
 
 
     const [title, setTitle] = useState('');
+	const { user: currentUser } = useUser();
     const [description, setDescription] = useState('');
     const [reward, setReward] = useState('');
     const [lostFound, setLostFound] = useState('lost');
     const [location, setLocation] = useState({ latitude: null, longitude: null });
 
     
-    const username = "John Smith";
 
     useEffect(() => {
         if (route.params?.selectedLocation) {
@@ -42,8 +43,10 @@ export default function Post() {
         setUploading(true);
         try {
             const mediaUrls = await uploadMediaAsync(mediaArray.map(media => media.uri));
-            const userId = await getUserId(username);
-            const userInfo = await getUserData(username);
+            const userId = currentUser?.id || '0';
+			const username = currentUser?.displayName || 'Guest User';
+			console.log(userId);
+			console.log(username);
 
             // Ensure tags are trimmed, non-empty, and converted to lowercase
             const tagArray = tags.split(',')
