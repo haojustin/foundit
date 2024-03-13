@@ -12,6 +12,7 @@ export const fetchUserData = async (uid, setUser) => {
       email: userData.Email,
       displayName: userData.Name,
       id: uid,
+      icon: userData.media,
     });
   } else {
     console.log("No user found in Firestore with UID:", uid);

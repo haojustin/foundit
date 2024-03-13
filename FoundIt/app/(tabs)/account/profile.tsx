@@ -77,7 +77,7 @@ export default function TabOneScreen({}) {
             <View>
         <TouchableOpacity style={styles.imageBackground}>
           <Image style={styles.profileImage}
-            source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1024px-Default_pfp.svg.png' }}/>
+            source={{uri: currentUser.icon || 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1024px-Default_pfp.svg.png' }}/>
         </TouchableOpacity>
         </View>
         <Text style={styles.profileName}>
