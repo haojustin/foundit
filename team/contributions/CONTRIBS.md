@@ -10,7 +10,7 @@ I am mostly responsible for the current post page and features, Victor additiona
 
 ## Alex Castelein
 
-
+My main responsibility is the chat page. I worked on making a UI for the chat and making sure messages can be sent between users using firebase services. I was also resposible for leasing retro 3 and 
 
 ## Baimin Wang
 
@@ -30,4 +30,4 @@ to access geolocation and other sensitive data. I am responsible for reverse geo
 
 ## Zixiao Jin
 
-I am responsible for the authentication services. I created the sign-in page, sign-up page, and forgot password page and users can access them from the profile page. The authentication I'm using is the Firebase email auth. Users can create an account with any emails they have, a password, a username, and a phone number. Users can then log in with the email and password. User can also change their password using the forgot password function which will send an email of changing password to the email they used for FoundIt.
+I am responsible for the authentication services. I created the sign-in page, sign-up page, and forgot password page and users can access them from the profile page. The authentication I'm using is the Firebase email auth. Users can create an account with any emails they have, a password, a username, and a phone number. Users can then log in with the email and password. User can also change their password using the forgot password function which will send an email of changing password to the email they used for FoundIt. After the user signed in, the name shown on the profile page will be the username. User ID and email are also passed in from Firebase to the app.

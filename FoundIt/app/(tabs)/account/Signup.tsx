@@ -16,6 +16,8 @@ import { Entypo } from "@expo/vector-icons";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { Link } from 'expo-router';
+import { useUser } from '../../../constants/UserContext';
+import { fetchUserData } from '../../../constants/authService';
 
 const { width, height } = Dimensions.get("window");
 let top;
@@ -31,24 +33,38 @@ export default function Signup({ navigation }: { navigation: any }) {
   const [username, setUsername] = useState<string>("");
   const [phone, setPhone] = useState<number | string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const { setUser } = useUser();
 
   const handleSignup = async () => {
     setLoading(true);
-    await createUserWithEmailAndPassword(auth, email.trim(), password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        setLoading(false);
-        setDoc(doc(authdb, "users", user.uid), {
-          Name: username,
-          Email: email,
-          PhoneNumber: phone,
-          CreatedAt: new Date().toUTCString(),
-        });
-      })
-      .then(() => alert("Account for FoundIt created successfully"))
-      .catch((err: any) => {
-        alert(err.meassage);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email.trim(), password);
+      const user = userCredential.user;
+
+      await setDoc(doc(authdb, "users", user.uid), {
+        Name: username,
+        Email: email,
+        PhoneNumber: phone,
+        CreatedAt: new Date().toISOString(),
       });
+
+      setUser({
+        id: user.uid,
+        displayName: username,
+        email: email,
+      });
+
+      setLoading(false);
+      alert("Account for FoundIt created successfully");
+    } catch (err) {
+      setLoading(false);
+      if (err instanceof Error) {
+        alert(err.message);
+      } else {
+        console.error('Error during sign up:', err);
+        alert('An error occurred during sign up.');
+      }
+    }
   };
 
   return (
@@ -100,17 +116,15 @@ export default function Signup({ navigation }: { navigation: any }) {
             onChangeText={(text) => setPassword(text)}
           />
         </View>
-        {/* Forgot Password */}
-
         {/* Login Button */}
         <View style={styles.loginButton}>
-          <TouchableOpacity onPress={handleSignup}>
+          <TouchableOpacity onPress={handleSignup} style={{ justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
             <Text style={styles.loginButtonText}>
               {loading ? "Creating account..." : "Create Account"}
             </Text>
           </TouchableOpacity>
         </View>
-
+        {/* Login */}
         <View style={styles.signupGroup}>
           <Text style={styles.new}>Already have an account?</Text>
           <Link href="/account/Login" asChild>
