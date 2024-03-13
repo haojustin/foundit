@@ -45,8 +45,6 @@ export default function Post() {
             const mediaUrls = await uploadMediaAsync(mediaArray.map(media => media.uri));
             const userId = currentUser?.id || '0';
 			const username = currentUser?.displayName || 'Guest User';
-			console.log(userId);
-			console.log(username);
 
             // Ensure tags are trimmed, non-empty, and converted to lowercase
             const tagArray = tags.split(',')
