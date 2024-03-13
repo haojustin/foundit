@@ -72,10 +72,10 @@ async function getPosts(content) {
       });
   } else {
       // Search by title and tags using case-insensitive queries
-      const byName = db.collection("posts").where("username", "==", contentLower);
+      const byId = db.collection("posts").where("userId", "==", content);
       const byTag = db.collection("posts").where("tags", "array-contains", contentLower);
 
-      const [snapshot1, snapshot2] = await Promise.all([byName.get(), byTag.get()]);
+      const [snapshot1, snapshot2] = await Promise.all([byId.get(), byTag.get()]);
 
       snapshot1.forEach(doc => {
           const data = doc.data();

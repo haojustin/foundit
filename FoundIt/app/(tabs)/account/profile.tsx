@@ -19,7 +19,8 @@ export default function TabOneScreen({}) {
 
   const handleSearch = async () => {
     try {
-      const results = await getPosts('john smith');
+      const results = await getPosts(currentUser?.id || '0');
+      console.log(results)
       const postsArray = await Promise.all(results.map(async (result) => {
         const { latitude, longitude } = result.location;
         const address = await fetchAddress(latitude, longitude);
@@ -35,15 +36,16 @@ export default function TabOneScreen({}) {
     }
   };
   
+  
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     handleSearch().then(() => setRefreshing(false));
     console.log(currentUser)
   }, []);
 
-    useEffect(() => {
-      handleSearch()
-    }, [searchQuery]);
+  useEffect(() => {
+    handleSearch(); // Call handleSearch when the component mounts or currentUser.id changes
+  }, [currentUser?.id, searchQuery]);
 
 	useEffect(() => {
 		Appearance.setColorScheme('light');
