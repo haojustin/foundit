@@ -186,7 +186,7 @@ const CameraPage: React.FC = () => {
       <StatusBar barStyle="dark-content" />
       <TouchableWithoutFeedback onPress={(evt) => handleTap(evt)}>
         <View style={{ flex: 1 }}>
-          <Camera style={styles.camera} type={type} flashMode={flashMode} autoFocus={autoFocus} ref={cameraRef}>
+          <Camera style={styles.camera} type={type} flashMode={flashMode} autoFocus={autoFocus} ref={cameraRef} ratio="16:9">
             <TouchableOpacity style={styles.flashButton} onPress={toggleFlashMode}>
               <Icon name={flashMode === Camera.Constants.FlashMode.on ? "flash" : "flash-off"} size={24} color="white" />
             </TouchableOpacity>
