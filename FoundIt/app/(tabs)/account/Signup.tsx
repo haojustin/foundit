@@ -116,17 +116,15 @@ export default function Signup({ navigation }: { navigation: any }) {
             onChangeText={(text) => setPassword(text)}
           />
         </View>
-        {/* Forgot Password */}
-
         {/* Login Button */}
         <View style={styles.loginButton}>
-          <TouchableOpacity onPress={handleSignup}>
+          <TouchableOpacity onPress={handleSignup} style={{ justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
             <Text style={styles.loginButtonText}>
               {loading ? "Creating account..." : "Create Account"}
             </Text>
           </TouchableOpacity>
         </View>
-
+        {/* Login */}
         <View style={styles.signupGroup}>
           <Text style={styles.new}>Already have an account?</Text>
           <Link href="/account/Login" asChild>
