@@ -16,7 +16,7 @@ export const getLocation = async (): Promise<LocationData> => {
   }
   console.log("permission granted");
 
-  let { coords } = await Location.getCurrentPositionAsync({});
+  let { coords } = await Location.getLastKnownPositionAsync();
   console.log("coords: ", coords);
   return {
     latitude: coords.latitude,
