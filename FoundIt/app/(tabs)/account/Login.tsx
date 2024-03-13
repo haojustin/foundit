@@ -90,17 +90,15 @@ export default function Login({ navigation }: { navigation: any }) {
         </View>
         {/* Login Button */}
         <View style={styles.loginButton}>
-          <TouchableOpacity onPress={handleSignin}>
+          <TouchableOpacity onPress={handleSignin} style={{ justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
             <Text style={styles.loginButtonText}>
-              {
-                loading ? "Loading" : "Login"
-              }
+              {loading ? "Loading" : "Login"}
             </Text>
           </TouchableOpacity>
         </View>
-
+        {/* Sign Up */}
         <View style={styles.signupGroup}>
-        <Text style={styles.new}>New here?</Text>
+          <Text style={styles.new}>New here?</Text>
           <Link href="/account/Signup" asChild>
             <TouchableOpacity>
               <Text style={styles.signup}>Sign Up</Text>
