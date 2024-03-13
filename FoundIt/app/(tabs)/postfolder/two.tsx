@@ -7,6 +7,7 @@ import { Video } from 'expo-av';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ParamListBase } from '@react-navigation/native';
+import { CUSTOMCOLORS } from '../../../constants/CustomColors';
 
 
 const CameraPage: React.FC = () => {
@@ -42,15 +43,12 @@ const CameraPage: React.FC = () => {
     navigation.setOptions({
         headerLeft: () => (
             <TouchableOpacity
-                style={{ marginLeft: 10 }}
+				style={{paddingLeft: 10}}
                 onPress={() => navigateToPost()}
             >
-                <Text style={{ fontSize: 18 }}>Back</Text>
+				<Icon name="keyboard-backspace" size={30} color={CUSTOMCOLORS.darkPurple} />
             </TouchableOpacity>
         ),
-        headerLeftContainerStyle: {
-            paddingLeft: 10,
-        },
     });
 }, [navigation]);
 
@@ -182,11 +180,11 @@ const CameraPage: React.FC = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container]}>
       <StatusBar barStyle="dark-content" />
       <TouchableWithoutFeedback onPress={(evt) => handleTap(evt)}>
         <View style={{ flex: 1 }}>
-          <Camera style={styles.camera} type={type} flashMode={flashMode} autoFocus={autoFocus} ref={cameraRef}>
+          <Camera style={[styles.testBorder, styles.camera]} type={type} flashMode={flashMode} autoFocus={autoFocus} ref={cameraRef}>
             <TouchableOpacity style={styles.flashButton} onPress={toggleFlashMode}>
               <Icon name={flashMode === Camera.Constants.FlashMode.on ? "flash" : "flash-off"} size={24} color="white" />
             </TouchableOpacity>
@@ -257,7 +255,7 @@ const CameraPage: React.FC = () => {
       ))}
     </ScrollView>
     <TouchableOpacity style={styles.closeButton} onPress={() => setFullScreenPreviewVisible(false)}>
-      <Icon name="close" size={30} color="white" />
+      <Icon name="close" size={30} color={CUSTOMCOLORS.darkPurple} />
     </TouchableOpacity>
     <TouchableOpacity style={styles.nextButton} onPress={() => navigateToPost()}>
       <Text style={styles.nextButtonText}>Next</Text>
@@ -274,6 +272,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'black',
   },
+	testBorder: {
+		borderWidth: 1,
+		borderColor: 'red',
+	},
   fullScreen: {
     flex: 1,
     width: '100%',
@@ -282,6 +284,7 @@ const styles = StyleSheet.create({
   camera: {
     flex: 1,
     justifyContent: 'flex-end',
+	resizeMode: 'contain',
   },
   flashButton: {
     position: 'absolute',
@@ -344,12 +347,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: 20,
-    padding: 10,
-    backgroundColor: '#77c3ec',
-    borderRadius: 20,
+	height: 50,
+    backgroundColor: CUSTOMCOLORS.darkPurple,
+    borderRadius: 25,
+	width: 100,
+	justifyContent: 'center',
+	alignItems: 'center',
   },
   nextButtonText: {
-    color: 'white',
+    color: CUSTOMCOLORS.lightPurple,
     fontSize: 18,
   },
   fullScreenImage: {

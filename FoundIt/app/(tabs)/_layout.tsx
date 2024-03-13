@@ -13,6 +13,7 @@ import { createNativeStackNavigator, CardStyleInterpolators } from '@react-navig
 import CameraPage from './postfolder/two';
 import { Camera } from 'expo-camera';
 import { UserProvider } from '../../constants/UserContext';
+import { CUSTOMCOLORS } from '@/constants/CustomColors';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -39,7 +40,7 @@ export default function TabLayout() {
           name="index"
           options={{
             title: 'Home',
-            tabBarIcon: ({ color }) => <AntDesign name="home" size={24} color="black" />,
+            tabBarIcon: ({ color }) => <AntDesign name="home" size={24} color={CUSTOMCOLORS.darkPurple} />,
             headerRight: () => (
               <Link href="/modal" asChild>
                 <Pressable>
@@ -56,7 +57,7 @@ export default function TabLayout() {
           name="postfolder/post"
           options={{
             title: 'Post',
-            tabBarIcon: ({ color }) => <AntDesign name="camerao" size={24} color="black" />,
+            tabBarIcon: ({ color }) => <AntDesign name="camerao" size={24} color={CUSTOMCOLORS.darkPurple} />,
             headerRight: () => (
               <Link href="/(tabs)/postfolder/post" asChild>
               </Link>
@@ -75,7 +76,7 @@ export default function TabLayout() {
           name="account/profile"
           options={{
             title: "Profile",
-            tabBarIcon: ({ color }) => <AntDesign name="user" size={24} color="black" />,
+            tabBarIcon: ({ color }) => <AntDesign name="user" size={24} color={CUSTOMCOLORS.darkPurple} />,
             headerRight: () => (
               <Link href="/(tabs)/account/settings" asChild>
                 <Pressable>
