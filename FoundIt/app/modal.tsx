@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react';
-import { StyleSheet, Button, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Button, View, TouchableOpacity, Text } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
 import { getLocation, LocationData } from './(tabs)/postfolder/locationUtil';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {CUSTOMCOLORS} from '../constants/CustomColors'
 
 export default function ModalScreen() {
   const navigation = useNavigation();
@@ -14,7 +16,7 @@ export default function ModalScreen() {
 		navigation.setOptions({
 			headerLeft: () => (
 				<TouchableOpacity
-					style={{paddingLeft: 10}}
+					style={{marginRight: 10}}
 					onPress={() => navigateToPost()}
 				>
 					<Icon name="keyboard-backspace" size={30} color={CUSTOMCOLORS.darkPurple} />
@@ -49,11 +51,14 @@ export default function ModalScreen() {
       navigation.navigate('postfolder/post', { selectedLocation: pinLocation });
     }
   };
+  const navigateToPost = () => {
+      navigation.navigate('postfolder/post');
+	};
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.testBorder, styles.container]}>
       <MapView
-        style={styles.map}
+        style={[styles.testBorder, styles.map]}
         region={locationLoaded && currentLocation ? {
           latitude: currentLocation.latitude,
           longitude: currentLocation.longitude,
@@ -74,9 +79,9 @@ export default function ModalScreen() {
         )}
       </MapView>
       {/* Wrapper view for the button */}
-      <View style={styles.buttonContainer}>
-        <Button title="Confirm Location" onPress={confirmLocation} />
-      </View>
+		<TouchableOpacity style={[styles.testBorder, styles.confirmLocation]} onPress={confirmLocation}>
+			<Text style={[styles.text, styles.confirmLocationText]}>Confirm Location</Text>
+		</TouchableOpacity>
     </View>
   );
 }
@@ -87,13 +92,35 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
+	testBorder: {
+		borderWidth: 0,
+		borderColor: 'red',
+	},
+	text: {
+		fontSize: 15,
+		color: CUSTOMCOLORS.darkGray,
+	},
   map: {
     ...StyleSheet.absoluteFillObject,
-    marginBottom: 70, // Adjust this value to create space for the button
   },
   buttonContainer: {
     position: 'absolute',
     bottom: 20, // Adjust the distance from the bottom
     alignSelf: 'center',
   },
+  confirmLocation: {
+	borderRadius: 25,
+	height: 50,
+	alignItems: 'center',
+	justifyContent: 'center',
+	backgroundColor: CUSTOMCOLORS.darkPurple,
+	position: 'absolute',
+	bottom: 20,
+	alignSelf: 'center',
+	paddingHorizontal: 15,
+  },
+  confirmLocationText: {
+	color: CUSTOMCOLORS.veryLightPurple,
+	fontWeight: 'bold',	
+  }
 });

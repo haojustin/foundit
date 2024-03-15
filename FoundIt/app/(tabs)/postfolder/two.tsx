@@ -39,6 +39,18 @@ const CameraPage: React.FC = () => {
   })();
   }, []);
 
+	useLayoutEffect(() => {
+		navigation.setOptions({
+			headerLeft: () => (
+				<TouchableOpacity
+					style={{paddingLeft: 10}}
+					onPress={() => navigateToPost()}
+				>
+					<Icon name="keyboard-backspace" size={30} color={CUSTOMCOLORS.darkPurple} />
+				</TouchableOpacity>
+			),
+		});
+	}, [navigation]);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -171,7 +183,7 @@ const CameraPage: React.FC = () => {
       <StatusBar barStyle="dark-content" />
       <TouchableWithoutFeedback onPress={(evt) => handleTap(evt)}>
         <View style={{ flex: 1 }}>
-          <Camera style={[styles.testBorder, styles.camera]} type={type} flashMode={flashMode} autoFocus={autoFocus} ref={cameraRef}>
+          <Camera style={[styles.testBorder, styles.camera]} type={type} flashMode={flashMode} autoFocus={autoFocus} ref={cameraRef} ratio="16:9">
             <TouchableOpacity style={styles.flashButton} onPress={toggleFlashMode}>
               <Icon name={flashMode === Camera.Constants.FlashMode.on ? "flash" : "flash-off"} size={24} color="white" />
             </TouchableOpacity>

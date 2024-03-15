@@ -2,24 +2,38 @@ import { StyleSheet, Image, Button, TouchableOpacity, SafeAreaView, ScrollView, 
 import { Text, View } from '@/components/Themed';
 import React, {useEffect, useState} from 'react';
 import { Dimensions } from 'react-native';
-import {addUserData, getUserData , getPosts, addPost} from '../../../services/firebaseService.js'
+import {addUserData, getUserData , getPosts, addPost, getUserByDocId} from '../../../services/firebaseService.js'
 import { useUser } from '../../../constants/UserContext';
 import { FlatList,  Appearance, StatusBar  } from 'react-native';
 import {CUSTOMCOLORS} from '../../../constants/CustomColors';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
 export default function TabOneScreen({}) {
-  const { user: currentUser } = useUser();
+  const { user: currentUser, setCurrentUser } = useUser();
   const [posts, setPosts] = useState<any[]>([]);
   const [searchQuery] = useState('');
   const [refreshing, setRefreshing] = useState(false);
+	const [usernameState, setUsernameState] = React.useState();
+	const [johnSmithsId, setJohnSmithsId] = React.useState('2j9pC69JqbZ0MqUyYCV6');
+
+	const getUsername = async () => {
+		const docSnap = await getUserByDocId(currentUser?.id || johnSmithsId);
+		setUsernameState(currentUser? docSnap.data().Name : "");
+	};
+	useFocusEffect(
+		React.useCallback(() => {
+			getUsername();
+		}, [])
+	);
 
   const handleSearch = async () => {
     try {
-      const results = await getPosts('john smith');
+      const results = await getPosts(currentUser?.id || '0');
+      console.log(results)
       const postsArray = await Promise.all(results.map(async (result) => {
         const { latitude, longitude } = result.location;
         const address = await fetchAddress(latitude, longitude);
@@ -35,15 +49,16 @@ export default function TabOneScreen({}) {
     }
   };
   
+  
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     handleSearch().then(() => setRefreshing(false));
     console.log(currentUser)
   }, []);
 
-    useEffect(() => {
-      handleSearch()
-    }, [searchQuery]);
+  useEffect(() => {
+    handleSearch(); // Call handleSearch when the component mounts or currentUser.id changes
+  }, [currentUser?.id, searchQuery]);
 
 	useEffect(() => {
 		Appearance.setColorScheme('light');
@@ -76,7 +91,7 @@ export default function TabOneScreen({}) {
 	<View style={[styles.testBorder, styles.container]}>
 		<TouchableOpacity style={[styles.testBorder, styles.imageButton]}>
 			<Image style={[styles.testBorder, styles.profileImage]}
-				source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1024px-Default_pfp.svg.png' }}/>
+				source={{uri: currentUser.icon || 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1024px-Default_pfp.svg.png' }}/>
 		</TouchableOpacity>
 
 		<Text style={[styles.testBorder, styles.profileName]}>
@@ -88,39 +103,38 @@ export default function TabOneScreen({}) {
 			<Text style={[styles.testBorder, styles.dividerText]}>My Posts</Text>
 			<View style={styles.hrLine} />
 		</View>
+		<FlatList
+			data={posts}
+			style={[styles.flatList, styles.testBorder]}
+			showsVerticalScrollIndicator={false}
+			renderItem={({ item }) => (
+			  <View style={[styles.testBorder, styles.block, item.lostFound === 'returned' ? styles.returnedItemBackground : styles.block, item.lostFound === 'lost' ? styles.lostItemBorder : styles.foundItemBorder]}>
+				<View style={[styles.testBorder, styles.titleWrapper]}>
+					<Text style={[styles.testBorder, styles.inblocktitle]}>{item.title}</Text>
+					<Text style={[styles.testBorder, styles.inblockstatus, 
+						item.lostFound === 'returned' ? 
+							styles.statusReturnedBackground : (item.lostFound === 'lost' ? 
+								styles.statusLostBackground : styles.statusFoundBackground
+							)]}>
+								{item.lostFound === 'returned' ? 'Returned' : (item.lostFound === 'lost' ? 'Lost' : 'Found')}
+					</Text>
+				</View>
+				{item.media && item.media.length > 0 && (
+				  <Image source={{ uri: item.media[0] }} style={[styles.testBorder, styles.postImage]} resizeMode="cover" />
+				)}
+				{/*<Text style={[styles.inblocktext, item.lostFound === 'lost' ? styles.lostTextBackground : styles.foundTextBackground]}>{item.description}</Text>*/}
+				<Text style={[styles.testBorder, styles.inblocktext]}>{item.description.trim()}</Text>
 
-	  <FlatList
-		data={posts}
-		style={[styles.flatList, styles.testBorder]}
-		showsVerticalScrollIndicator={false}
-		renderItem={({ item }) => (
-		  <View style={[styles.testBorder, styles.block, item.lostFound === 'returned' ? styles.returnedItemBackground : styles.block, item.lostFound === 'lost' ? styles.lostItemBorder : styles.foundItemBorder]}>
-			<View style={[styles.testBorder, styles.titleWrapper]}>
-				<Text style={[styles.testBorder, styles.inblocktitle]}>{item.title}</Text>
-				<Text style={[styles.testBorder, styles.inblockstatus, 
-					item.lostFound === 'returned' ? 
-						styles.statusReturnedBackground : (item.lostFound === 'lost' ? 
-							styles.statusLostBackground : styles.statusFoundBackground
-						)]}>
-							{item.lostFound === 'returned' ? 'Returned' : (item.lostFound === 'lost' ? 'Lost' : 'Found')}
-				</Text>
-			</View>
-			{item.media && item.media.length > 0 && (
-			  <Image source={{ uri: item.media[0] }} style={[styles.testBorder, styles.postImage]} resizeMode="cover" />
+				<View style={styles.divider}></View>
+
+				{item.lostFound === 'lost' && item.reward && <Text style={styles.inblocktext}>Reward: ${item.reward}</Text>}
+				{item.address && <Text style={styles.inblocktext}>Location: {item.address}</Text>}
+				<Text style={styles.inblocktext}>Date: {new Date(item.postTime?.seconds * 1000).toLocaleDateString("en-US")}</Text>
+			  </View>
 			)}
-			{/*<Text style={[styles.inblocktext, item.lostFound === 'lost' ? styles.lostTextBackground : styles.foundTextBackground]}>{item.description}</Text>*/}
-			<Text style={[styles.testBorder, styles.inblocktext]}>{item.description.trim()}</Text>
-
-			<View style={styles.divider}></View>
-
-			{item.lostFound === 'lost' && item.reward && <Text style={styles.inblocktext}>Reward: ${item.reward}</Text>}
-			{item.address && <Text style={styles.inblocktext}>Location: {item.address}</Text>}
-			<Text style={styles.inblocktext}>Date: {new Date(item.postTime?.seconds * 1000).toLocaleDateString("en-US")}</Text>
-		  </View>
-		)}
-		keyExtractor={item => item.id.toString()}
-		refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-	  />
+			keyExtractor={item => item.id.toString()}
+			refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+		/>
 	</View>
   );
 }

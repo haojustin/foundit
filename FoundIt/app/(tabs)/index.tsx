@@ -30,6 +30,9 @@ export default function TabOneScreen() {
 
   const handleSearch = async () => {
     try {
+      const userLocationData = await getLocation();
+      setUserLocation(userLocationData);
+      console.log("userLocationData", userLocationData);
       const results = await getPosts(searchQuery);
       const postsArray = await Promise.all(results.map(async (result) => {
         const { latitude, longitude } = result.location;
@@ -43,7 +46,7 @@ export default function TabOneScreen() {
 
       // Sort posts based on user's location
     const sortedPosts = [...postsArray].sort((postA, postB) => {
-      if (userLocation !== null) {
+      if (userLocationData.latitude !== null && userLocationData.longitude !== null) {
         console.log("reached inner handleSearch");
         // Assigning latitude and longitude values for postA and postB if they are null
         const postALatitude = postA.location.latitude !== null ? postA.location.latitude : 180;
@@ -51,17 +54,18 @@ export default function TabOneScreen() {
         const postBLatitude = postB.location.latitude !== null ? postB.location.latitude : 180;
         const postBLongitude = postB.location.longitude !== null ? postB.location.longitude : 180;
 
-        const distanceA = calculateDistance(userLocation.latitude, userLocation.longitude, postALatitude, postALongitude);
-        const distanceB = calculateDistance(userLocation.latitude, userLocation.longitude, postBLatitude, postBLongitude);
+        const distanceA = calculateDistance(userLocationData.latitude, userLocationData.longitude, postALatitude, postALongitude);
+        const distanceB = calculateDistance(userLocationData.latitude, userLocationData.longitude, postBLatitude, postBLongitude);
         console.log(distanceA - distanceB);
         return distanceA - distanceB;
       }
       else {
+        console.log("AT ELSE STATEMENT");
         // If userLocation is null, calculate distance from default location (34.4133, -119.8610)
-        const postALatitude = postA.location.latitude !== null ? postA.location.latitude : 34.4133;
-        const postALongitude = postA.location.longitude !== null ? postA.location.longitude : -119.8610;
-        const postBLatitude = postB.location.latitude !== null ? postB.location.latitude : 34.4133;
-        const postBLongitude = postB.location.longitude !== null ? postB.location.longitude : -119.8610;
+        const postALatitude = postA.location.latitude !== null ? postA.location.latitude : 180;
+        const postALongitude = postA.location.longitude !== null ? postA.location.longitude : 180;
+        const postBLatitude = postB.location.latitude !== null ? postB.location.latitude : 180;
+        const postBLongitude = postB.location.longitude !== null ? postB.location.longitude : 180;
     
         const distanceA = calculateDistance(34.4133, -119.8610, postALatitude, postALongitude);
         const distanceB = calculateDistance(34.4133, -119.8610, postBLatitude, postBLongitude);

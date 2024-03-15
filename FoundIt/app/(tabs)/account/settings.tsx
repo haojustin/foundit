@@ -5,8 +5,11 @@ import React, {useEffect} from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {getUserByDocId, changeUsername} from '../../../services/firebaseService.js';
 import { useFocusEffect } from '@react-navigation/native';
+import {CUSTOMCOLORS} from '../../../constants/CustomColors';
+import { useUser } from '../../../constants/UserContext';
 
 export default function Settings() {
+	const { user: currentUser } = useUser();
 	const [searchSliderState, setSearchSliderState] = React.useState<number>(5);
 	const [notifOpen, setNotifOpen] = React.useState(false);
 	const [notifValue, setNotifValue] = React.useState('push');
@@ -15,12 +18,12 @@ export default function Settings() {
 		{label: 'Email', value: 'email'},
 		{label: 'Off', value: 'off'}
 	]);	
-	const [usernameState, setUsernameState] = React.useState("Current username");
+	const [usernameState, setUsernameState] = React.useState();
 	const [johnSmithsId, setJohnSmithsId] = React.useState('2j9pC69JqbZ0MqUyYCV6');
 
 	const getUsername = async () => {
-		const docSnap = await getUserByDocId(johnSmithsId);
-		setUsernameState(docSnap.data().Name);
+		const docSnap = await getUserByDocId(currentUser?.id || johnSmithsId);
+		setUsernameState(currentUser? docSnap.data().Name : "");
 	};
 	useFocusEffect(
 		React.useCallback(() => {
@@ -41,10 +44,11 @@ export default function Settings() {
 						onChangeText={setUsernameState}
 						value={usernameState}
 						selectionColor={colors.lightGray}
+						cursorColor={CUSTOMCOLORS.lightPurple}
 					/>
 				</View>
-				<TouchableOpacity style={[styles.changeNameButton, styles.testBorder]} onPress={async () => {await changeUsername(johnSmithsId, usernameState);}}>
-					<Text style={styles.text}>Change</Text>
+				<TouchableOpacity style={[styles.changeNameButton, styles.testBorder]} onPress={async () => {await changeUsername(currentUser?.id || johnSmithsId, usernameState);}}>
+					<Text style={[styles.text, styles.darkPurpleText]}>Change</Text>
 				</TouchableOpacity>
 			</View>
 			{/* Search radius */}
@@ -59,9 +63,9 @@ export default function Settings() {
 						step = {5}
 						maximumValue = {50}
 						onValueChange = {value => setSearchSliderState(value)}
-						maximumTrackTintColor = {colors.lightGray}
-						minimumTrackTintColor = {colors.darkGray}
-						thumbTintColor = {colors.darkGray}
+						maximumTrackTintColor = {CUSTOMCOLORS.lightPurple}
+						minimumTrackTintColor = {CUSTOMCOLORS.darkPurple}
+						thumbTintColor = {CUSTOMCOLORS.darkPurple}
 						itemSeparator = {true}
 					/>
 				</View>
@@ -74,12 +78,12 @@ export default function Settings() {
 				<View style={[styles.notifDropdownWrapper, styles.testBorder]} testID="dropdown">
 					<DropDownPicker 
 						style = {styles.notifDropdown} 
-						labelStyle = {styles.text}
+						labelStyle = {[styles.text, styles.darkPurpleText]}
 						dropDownContainerStyle={styles.notifDropdown}
-						listItemLabelStyle={styles.text}
+						listItemLabelStyle={[styles.text, styles.darkPurpleText]}
 
-						arrowIconStyle={{tintColor: colors.darkGray}}
-						tickIconStyle={{tintColor: colors.darkGray}}
+						arrowIconStyle={{tintColor: CUSTOMCOLORS.darkPurple}}
+						tickIconStyle={{tintColor: CUSTOMCOLORS.darkPurple}}
 												
 						open={notifOpen}
 						value={notifValue}
@@ -108,9 +112,39 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		color: colors.darkGray,
 	},
+	darkPurpleText: {
+		color: CUSTOMCOLORS.darkPurple,
+	},
 	testBorder: {
 		borderWidth: 0,
 		borderColor: 'red',
+	},
+
+	changeNameWrapper: {
+		flexDirection: 'row',
+		height: 50,
+		margin: 10,
+		alignItems: 'center',
+	},
+	changeNameLabel: {
+		justifyContent: 'center',
+	},
+	changeNameInput: {
+		flex: 1,
+		height: 20,
+		justifyContent: 'center',
+		borderBottomWidth: 1,
+		borderColor: CUSTOMCOLORS.darkPurple,
+		marginHorizontal: 10,
+		marginTop: 4,
+	},
+	changeNameButton: {
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: CUSTOMCOLORS.veryLightPurple,
+		borderRadius: 20,
+		height: 40,
 	},
 
 	searchRadiusWrapper: {
@@ -119,7 +153,7 @@ const styles = StyleSheet.create({
 		margin: 10,
 	},
 	searchRadiusLabel: {
-		flex: 1,
+		flex: 2,
 		justifyContent: 'center',
 	},
 	searchRadiusSlider:{
@@ -141,37 +175,9 @@ const styles = StyleSheet.create({
 		alignSelf: 'center',
 	},
 	notifDropdown: {
-		backgroundColor: colors.lightGray,
+		backgroundColor: CUSTOMCOLORS.veryLightPurple,
 		borderRadius: 20,
 		minHeight: 40,
 		borderWidth: 0,
-	},
-
-	changeNameWrapper: {
-		flexDirection: 'row',
-		height: 50,
-		margin: 10,
-		alignItems: 'center',
-	},
-	changeNameLabel: {
-		justifyContent: 'center',
-	},
-	changeNameInput: {
-		flex: 1,
-		height: 20,
-		justifyContent: 'center',
-		borderBottomWidth: 1,
-		borderColor: colors.lightGray,
-		marginHorizontal: 10,
-		marginTop: 4,
-	},
-	changeNameButton: {
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center',
-		color: colors.darkGray,
-		backgroundColor: colors.lightGray,
-		borderRadius: 20,
-		height: 40,
 	},
 });

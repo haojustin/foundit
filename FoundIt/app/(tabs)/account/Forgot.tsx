@@ -13,6 +13,7 @@ import Colors from "../../../constants/Colors_1";
 import { auth, authdb } from "../../../constants/firebaseConfig";
 import { Feather } from "@expo/vector-icons";
 import { sendPasswordResetEmail } from "firebase/auth";
+import {CUSTOMCOLORS} from '../../../constants/CustomColors'
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState<string>("");
@@ -23,51 +24,41 @@ export default function ForgotPassword() {
       .catch((error: any) => console.log(error.message));
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.imageContainer}>
-        <Image
-          source={require("../../../assets/images/forgot.png")}
-          style={{ width: 300, height: 220 }}
-        />
-      </View>
-
+    <View style={[styles.testBorder, styles.container]}>
       <ScrollView
         style={styles.formContainer}
         showsVerticalScrollIndicator={false}
       >
-        <View>
-          <Text style={styles.text}>Forgot your password?</Text>
-        </View>
-        <View style={styles.emailContainer}>
-          <Feather
-            name="mail"
-            size={20}
-            color="gray"
-            style={{ marginLeft: 15 }}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Enter email address here"
+		<Image
+          source={require("../../../assets/images/forgot.png")}
+          style={[styles.testBorder, styles.mediaPreview]}
+		  resizeMode="contain"
+        />
+
+        <Text style={[styles.testBorder, styles.forgotHeader]}>Forgot your password?</Text>
+        <TextInput
+            style={[styles.testBorder, styles.text, styles.input]}
+            placeholder="Email"
             autoCapitalize="none"
-            autoCorrect={false}
+			autoCorrect={false}
             secureTextEntry={false}
             value={email}
             onChangeText={(text) => setEmail(text)}
-          />
-        </View>
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          onPress={handlePassword}
-        >
-          <View>
-            <Text style={styles.send}>Send password reset link</Text>
-          </View>
+			placeholderTextColor={CUSTOMCOLORS.lightGray}
+			cursorColor={CUSTOMCOLORS.lightPurple}
+			selectionColor={CUSTOMCOLORS.lightPurple}
+        />
+
+		<TouchableOpacity onPress={handlePassword} style={[styles.testBorder, styles.loginButton]}>
+            <Text style={[styles.testBorder, styles.loginButtonText]}>
+				Send password reset link
+            </Text>
         </TouchableOpacity>
-        <View style={styles.spam}>
-          <Text style={{ fontSize: 12, color: "#000", fontWeight: "400" }}>
-            Check your email spam folder to find password reset link
-          </Text>
-        </View>
+
+
+        <Text style={[styles.testBorder, styles.tipText]}>
+            Tip: If you don't see the email, try checking your spam folder.
+        </Text>
       </ScrollView>
     </View>
   );
@@ -76,13 +67,65 @@ export default function ForgotPassword() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    marginHorizontal: 15,
-    marginTop: "4%",
+	padding: 10,
+	backgroundColor: CUSTOMCOLORS.offWhite,
   },
-  imageContainer: {
-    marginTop: 55,
-  },
+	testBorder: {
+		borderWidth: 0,
+		borderColor: 'red',
+	},
+	text: {
+        fontSize: 15,
+        color: CUSTOMCOLORS.darkGray,
+    },
+
+	mediaPreview: {
+		width: 'auto',
+		//height: Dimensions.get('window').width * (3/4),
+		height: undefined,
+		aspectRatio: (330/220),
+	},
+
+	forgotHeader: {
+		fontSize: 20,
+		fontWeight: "bold",
+		color: CUSTOMCOLORS.darkGray,
+		fontWeight: "bold",
+		margin: 10,
+	},
+	input: {
+		margin: 10,
+		height: 50,
+		backgroundColor: 'white',
+		borderWidth: 1,
+		borderColor: CUSTOMCOLORS.lightPurple,
+		borderRadius: 10,
+		paddingHorizontal: 10,
+	},
+
+	loginButton: {
+		margin: 10,
+		marginTop: 20,
+		height: 50,
+		backgroundColor: CUSTOMCOLORS.darkPurple,
+		borderRadius: 25,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	loginButtonText: {
+		fontSize: 15,
+		fontWeight: "bold",
+		color: CUSTOMCOLORS.veryLightPurple,
+	},
+
+	tipText: {
+        fontSize: 14,
+        color: CUSTOMCOLORS.lightGray,
+        fontStyle: 'italic',
+		margin: 10,
+		marginTop: 0,
+    },
+
   emailContainer: {
     marginTop: 15,
     width: "100%",
@@ -93,14 +136,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  input: {
-    flex: 1,
-    color: Colors.dark,
-    fontSize: 16,
-    paddingHorizontal: 7,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+  
   buttonContainer: {
     marginTop: "5%",
     width: "100%",
@@ -119,16 +155,8 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontSize: 18,
   },
-  spam: {
-    marginTop: 3,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  text: {
-    fontSize: 17,
-    fontWeight: "bold",
-  },
+  
+  
   formContainer: {
     width: "100%",
   },

@@ -16,6 +16,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link } from 'expo-router';
 import { useUser } from '../../../constants/UserContext';
 import { fetchUserData } from '../../../constants/authService';
+import {CUSTOMCOLORS} from '../../../constants/CustomColors'
 
 const { width, height } = Dimensions.get("window");
 let top;
@@ -53,160 +54,130 @@ export default function Login({ navigation }: { navigation: any }) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.loginHeader}>
-        <Text style={styles.loginHeaderText}>Sign in to FoundIt</Text>
-      </View>
+    <View style={[styles.testBorder, styles.container]}>
+		{/*<Text style={[styles.testBorder, styles.loginHeaderText]}>Sign in to FoundIt</Text>*/}
 
-      <View style={styles.loginContainer}>
         {/* Email */}
-        <View style={styles.emailContainer}>
-          <Text style={styles.emailText}>Email</Text>
-          <TextInput
-            style={styles.emailInput}
-            placeholder="Enter your email"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-          />
-        </View>
+		<Text style={[styles.testBorder, styles.inputHeader]}>Email</Text>
+		<TextInput
+			style={[styles.testBorder, styles.text, styles.input]}
+			placeholder="Email"
+			value={email}
+			onChangeText={(text) => setEmail(text)}
+			placeholderTextColor={CUSTOMCOLORS.lightGray}
+			cursorColor={CUSTOMCOLORS.lightPurple}
+			selectionColor={CUSTOMCOLORS.lightPurple}
+		/>
+
         {/* Password */}
-        <View style={styles.passwordContainer}>
-          <Text style={styles.passwordText}>Password</Text>
-          <TextInput
-            style={styles.passwordInput}
-            placeholder="Enter your password"
+        <Text style={[styles.testBorder, styles.inputHeader]}>Password</Text>
+        <TextInput
+            style={[styles.testBorder, styles.text, styles.input]}
+            placeholder="Password"
             value={password}
             secureTextEntry={true}
             onChangeText={(text) => setPassword(text)}
-          />
-        </View>
+			placeholderTextColor={CUSTOMCOLORS.lightGray}
+			cursorColor={CUSTOMCOLORS.lightPurple}
+			selectionColor={CUSTOMCOLORS.lightPurple}
+        />
+
         {/* Forgot Password */}
-        <View style={styles.forgotContainer}>
+        <View style={[styles.testBorder, styles.forgotContainer]}>
           <Link href="/account/Forgot" asChild>
             <TouchableOpacity>
-              <Text style={styles.forgotText}>Forgot Password?</Text>
+              <Text style={[styles.testBorder, styles.linkText]}>Forgot Password?</Text>
             </TouchableOpacity>
           </Link>
         </View>
+
         {/* Login Button */}
-        <View style={styles.loginButton}>
-          <TouchableOpacity onPress={handleSignin} style={{ justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
-            <Text style={styles.loginButtonText}>
-              {loading ? "Loading" : "Login"}
+        <TouchableOpacity onPress={handleSignin} style={[styles.testBorder, styles.loginButton]}>
+            <Text style={[styles.testBorder, styles.loginButtonText]}>
+				{loading ? "Loading" : "Login"}
             </Text>
-          </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
+
         {/* Sign Up */}
-        <View style={styles.signupGroup}>
-          <Text style={styles.new}>New here?</Text>
+        <View style={[styles.testBorder, styles.signupWrapper]}>
+          <Text style={[styles.testBorder, styles.newHere]}>New here? </Text>
           <Link href="/account/Signup" asChild>
             <TouchableOpacity>
-              <Text style={styles.signup}>Sign Up</Text>
+              <Text style={[styles.testBorder, styles.linkText]}>Sign Up</Text>
             </TouchableOpacity>
           </Link>
         </View>
-      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginHorizontal: 15,
-    marginTop: height * 0.01,
-  },
-  arrowContainer: {
-    width: 40,
-    height: 40,
-    borderTopLeftRadius: 8,
-    borderBottomRightRadius: 8,
-    backgroundColor: Colors.primary,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  loginHeader: {
-    marginTop: 20,
-  },
-  loginHeaderText: {
-    fontSize: 36,
-    fontWeight: "bold",
-  },
-  loginContainer: {
-    marginTop: 20,
-  },
-  emailContainer: {
-    marginTop: 20,
-  },
-  emailText: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  emailInput: {
-    marginTop: 10,
-    width: "100%",
+	container: {
+		flex: 1,
+		padding: 10,
+		backgroundColor: CUSTOMCOLORS.offWhite,		
+	},
+	testBorder: {
+		borderWidth: 0,
+		borderColor: 'red',
+	},
+	text: {
+        fontSize: 15,
+        color: CUSTOMCOLORS.darkGray,
+    },
+
+	inputHeader: {
+		fontSize: 20,
+		color: CUSTOMCOLORS.darkGray,
+		fontWeight: "bold",
+		margin: 10,
+		marginBottom: 0,
+	},
+  input: {
+	margin: 10,
     height: 50,
-    backgroundColor: Colors.light,
+    backgroundColor: 'white',
     borderWidth: 1,
-    borderColor: Colors.light,
-    borderRadius: 8,
-    paddingLeft: 10,
+    borderColor: CUSTOMCOLORS.lightPurple,
+    borderRadius: 10,
+    paddingHorizontal: 10,
   },
-  passwordContainer: {
-    marginTop: 20,
-  },
-  passwordText: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  passwordInput: {
-    marginTop: 10,
-    width: "100%",
-    height: 50,
-    backgroundColor: Colors.light,
-    borderRadius: 8,
-    paddingLeft: 10,
-    borderWidth: 1,
-    borderColor: Colors.light,
-  },
+
   forgotContainer: {
-    marginTop: 20,
+	margin: 10,
+	marginTop: 0,
     alignItems: "flex-end",
   },
-  forgotText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: Colors.primary,
+  linkText: {
+    fontSize: 15,
+    color: CUSTOMCOLORS.darkPurple,
+	fontWeight: 'bold',
   },
+
   loginButton: {
-    marginTop: 20,
-    width: "100%",
+	margin: 10,
+	marginTop: 20,
     height: 50,
-    backgroundColor: Colors.primary,
-    borderRadius: 8,
+    backgroundColor: CUSTOMCOLORS.darkPurple,
+    borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
   },
   loginButtonText: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "bold",
-    color: Colors.white,
+    color: CUSTOMCOLORS.veryLightPurple,
   },
-  signupGroup: {
+
+  signupWrapper: {
     flexDirection: "row",
-    marginTop: 10,
+    margin: 10,
+	marginTop: 0,
     justifyContent: "center",
     alignItems: "center",
   },
-  signup: {
-    color: Colors.primary,
-    fontSize: 16,
-    fontWeight: "bold",
-    marginRight: 5,
-  },
-  new: {
-    fontSize: 16,
-    fontWeight: "500",
-    marginRight: 5,
+  newHere: {
+    fontSize: 15,
+	color: CUSTOMCOLORS.darkGray,
   },
 });

@@ -1,7 +1,7 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
-import { Pressable, View } from 'react-native';
+import { Pressable, View, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -14,6 +14,7 @@ import CameraPage from './postfolder/two';
 import { Camera } from 'expo-camera';
 import { UserProvider } from '../../constants/UserContext';
 import { CUSTOMCOLORS } from '@/constants/CustomColors';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -81,7 +82,7 @@ export default function TabLayout() {
               <Link href="/(tabs)/account/settings" asChild>
                 <Pressable>
                   {({ pressed }) => (
-                    <AntDesign name="setting" size={24} color="black" style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}/>
+                    <AntDesign name="setting" size={24} color={CUSTOMCOLORS.darkPurple} style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}/>
                   )}
                 </Pressable>
               </Link>
@@ -90,9 +91,12 @@ export default function TabLayout() {
               <Link href="/account/Login" asChild>
                 <Pressable>
                   {({ pressed }) => (
-                    <AntDesign name="login" size={24} color="black" style={{ marginLeft: 15, opacity: pressed ? 0.5 : 1 }}/>
+					<View style={[styles.testBorder, styles.login]}>
+						<Text style={[styles.text, styles.loginText]}>Login</Text>
+					</View>
                   )}
                 </Pressable>
+				
               </Link>
             ),
           }}
@@ -102,7 +106,17 @@ export default function TabLayout() {
           options={{
             title: "Settings",
             tabBarIcon: ({ color }) => <AntDesign name="setting" size={24} color="black" />,
-            href : null
+            href : null,
+			headerLeft: () => (
+              <Link href="/account/profile" asChild>
+                <Pressable>
+                  {({ pressed }) => (
+					<Icon name="keyboard-backspace" size={30} color={CUSTOMCOLORS.darkPurple} style={[styles.backButton, {opacity: pressed ? 0.5 : 1 }]} />
+                  )}
+                </Pressable>
+				
+              </Link>
+            ),
           }}
         />
         <Tabs.Screen
@@ -110,7 +124,16 @@ export default function TabLayout() {
           options={{
             title: "Login",
             tabBarIcon: ({ color }) => <AntDesign name="login" size={24} color={color} />,
-            href: null
+            href: null,
+			headerLeft: () => (
+              <Link href="/account/profile" asChild>
+                <Pressable>
+                  {({ pressed }) => (
+					<Icon name="keyboard-backspace" size={30} color={CUSTOMCOLORS.darkPurple} style={[styles.backButton, {opacity: pressed ? 0.5 : 1 }]} />
+                  )}
+                </Pressable>
+              </Link>
+            ),
           }}
         />
         <Tabs.Screen
@@ -118,6 +141,16 @@ export default function TabLayout() {
           options={{
             title: "Forgot Password",
             href: null,
+			headerLeft: () => (
+              <Link href="/account/Login" asChild>
+                <Pressable>
+                  {({ pressed }) => (
+					<Icon name="keyboard-backspace" size={30} color={CUSTOMCOLORS.darkPurple} style={[styles.backButton, {opacity: pressed ? 0.5 : 1 }]} />
+                  )}
+                </Pressable>
+				
+              </Link>
+            ),
           }}
         />
         <Tabs.Screen
@@ -125,9 +158,53 @@ export default function TabLayout() {
           options={{
             title: "Sign Up",
             href: null,
+			headerLeft: () => (
+              <Link href="/account/Login" asChild>
+                <Pressable>
+                  {({ pressed }) => (
+					<Icon name="keyboard-backspace" size={30} color={CUSTOMCOLORS.darkPurple} style={[styles.backButton, {opacity: pressed ? 0.5 : 1 }]} />
+                  )}
+                </Pressable>
+				
+              </Link>
+            ),
           }}
         />
       </Tabs>
     </UserProvider>
   );
+	
 }
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: CUSTOMCOLORS.offWhite,
+		padding: 10,
+	},
+	testBorder: {
+		borderWidth: 0,
+		borderColor: 'red',
+	},
+	text: {
+		fontSize: 15,
+		color: CUSTOMCOLORS.darkGray,
+	},
+
+	login: {
+		borderRadius: 25,
+		height: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+		backgroundColor: CUSTOMCOLORS.veryLightPurple,
+		paddingHorizontal: 15,
+		marginLeft: 10,
+	},
+	loginText: {
+		color: CUSTOMCOLORS.darkPurple,
+		fontWeight: 'bold',
+	},
+	backButton: {
+		marginLeft: 10,
+	},
+});

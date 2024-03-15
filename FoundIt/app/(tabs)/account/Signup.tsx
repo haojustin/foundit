@@ -7,6 +7,7 @@ import {
   Platform,
   Dimensions,
   KeyboardAvoidingView,
+  ScrollView
 } from "react-native";
 import React, { useState } from "react";
 import Colors from "../../../constants/Colors_1";
@@ -18,6 +19,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { Link } from 'expo-router';
 import { useUser } from '../../../constants/UserContext';
 import { fetchUserData } from '../../../constants/authService';
+import {CUSTOMCOLORS} from '../../../constants/CustomColors'
 
 const { width, height } = Dimensions.get("window");
 let top;
@@ -67,174 +69,125 @@ export default function Signup({ navigation }: { navigation: any }) {
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.loginHeader}>
-        <Text style={styles.loginHeaderText}>Sign up now for FoundIt</Text>
-      </View>
+	return (
+		<View style={[styles.testBorder, styles.container]}>		
+			<ScrollView showsVerticalScrollIndicator={false}>
+				{/* Username */}
+				<Text style={[styles.testBorder, styles.inputHeader]}>Username</Text>
+				<TextInput
+					style={[styles.testBorder, styles.text, styles.input]}
+					placeholder="Username"
+					value={username}
+					onChangeText={(text) => setUsername(text)}
+					placeholderTextColor={CUSTOMCOLORS.lightGray}
+					cursorColor={CUSTOMCOLORS.lightPurple}
+					selectionColor={CUSTOMCOLORS.lightPurple}
+				/>
 
-      <KeyboardAvoidingView behavior="padding" style={styles.loginContainer}>
-        {/* Username */}
-        <View style={styles.emailContainer}>
-          <Text style={styles.emailText}>Username</Text>
-          <TextInput
-            style={styles.emailInput}
-            placeholder="Enter your name"
-            value={username}
-            onChangeText={(text) => setUsername(text)}
-          />
-        </View>
-        {/* Email */}
-        <View style={styles.emailContainer}>
-          <Text style={styles.emailText}>Email</Text>
-          <TextInput
-            style={styles.emailInput}
-            placeholder="Enter your email"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-          />
-        </View>
-        {/* Phone Number */}
-        <View style={styles.emailContainer}>
-          <Text style={styles.emailText}>Phone Number</Text>
-          <TextInput
-            style={styles.emailInput}
-            placeholder="Enter your phone number"
-            value={phone?.toString()}
-            keyboardType="numeric"
-            onChangeText={(text) => setPhone(text)}
-          />
-        </View>
-        {/* Password */}
-        <View style={styles.passwordContainer}>
-          <Text style={styles.passwordText}>Password</Text>
-          <TextInput
-            style={styles.passwordInput}
-            placeholder="Enter your password"
-            value={password}
-            secureTextEntry={true}
-            onChangeText={(text) => setPassword(text)}
-          />
-        </View>
-        {/* Login Button */}
-        <View style={styles.loginButton}>
-          <TouchableOpacity onPress={handleSignup} style={{ justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
-            <Text style={styles.loginButtonText}>
-              {loading ? "Creating account..." : "Create Account"}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        {/* Login */}
-        <View style={styles.signupGroup}>
-          <Text style={styles.new}>Already have an account?</Text>
-          <Link href="/account/Login" asChild>
-            <TouchableOpacity>
-              <Text style={styles.signup}>Login</Text>
-            </TouchableOpacity>
-          </Link>
-        </View>
-      </KeyboardAvoidingView>
-    </View>
+				{/* Email */}
+				<Text style={[styles.testBorder, styles.inputHeader]}>Email</Text>
+				<TextInput
+					style={[styles.testBorder, styles.text, styles.input]}
+					placeholder="Email"
+					value={email}
+					onChangeText={(text) => setEmail(text)}
+					placeholderTextColor={CUSTOMCOLORS.lightGray}
+					cursorColor={CUSTOMCOLORS.lightPurple}
+					selectionColor={CUSTOMCOLORS.lightPurple}
+				/>
+
+				{/* Phone Number */}
+				<Text style={[styles.testBorder, styles.inputHeader]}>Phone number</Text>
+				<TextInput
+					style={[styles.testBorder, styles.text, styles.input]}
+					placeholder="Phone number"
+					value={phone?.toString()}
+					keyboardType="numeric"
+					onChangeText={(text) => setPhone(text)}
+					placeholderTextColor={CUSTOMCOLORS.lightGray}
+					cursorColor={CUSTOMCOLORS.lightPurple}
+					selectionColor={CUSTOMCOLORS.lightPurple}
+				/>
+
+				{/* Password */}
+				<Text style={[styles.testBorder, styles.inputHeader]}>Password</Text>
+				<TextInput
+					style={[styles.testBorder, styles.text, styles.input]}
+					placeholder="Password"
+					value={password}
+					secureTextEntry={true}
+					onChangeText={(text) => setPassword(text)}
+					placeholderTextColor={CUSTOMCOLORS.lightGray}
+					cursorColor={CUSTOMCOLORS.lightPurple}
+					selectionColor={CUSTOMCOLORS.lightPurple}
+				/>
+
+				{/* Login Button */}
+				<TouchableOpacity onPress={handleSignup} style={[styles.testBorder, styles.loginButton]}>
+					<Text style={[styles.testBorder, styles.loginButtonText]}>
+						{loading ? "Creating account..." : "Create Account"}
+					</Text>
+				</TouchableOpacity>
+
+				{/*
+				<View style={styles.signupGroup}>
+				  <Text style={styles.new}>Already have an account?</Text>
+				  <Link href="/account/Login" asChild>
+					<TouchableOpacity>
+					  <Text style={styles.signup}>Login</Text>
+					</TouchableOpacity>
+				  </Link>
+				</View>
+				*/}
+			</ScrollView>
+		</View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginHorizontal: 15,
-    marginTop: height * 0.01,
-  },
-  arrowContainer: {
-    width: 40,
-    height: 40,
-    borderTopLeftRadius: 8,
-    borderBottomRightRadius: 8,
-    backgroundColor: Colors.primary,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  loginHeader: {
-    marginTop: 20,
-  },
-  loginHeaderText: {
-    fontSize: 36,
-    fontWeight: "bold",
-  },
-  loginContainer: {
-    marginTop: 20,
-  },
-  emailContainer: {
-    marginTop: 20,
-  },
-  emailText: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  emailInput: {
-    marginTop: 10,
-    width: "100%",
-    height: 50,
-    backgroundColor: Colors.light,
-    borderWidth: 1,
-    borderColor: Colors.light,
-    borderRadius: 8,
-    paddingLeft: 10,
-  },
-  passwordContainer: {
-    marginTop: 20,
-  },
-  passwordText: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  passwordInput: {
-    marginTop: 10,
-    width: "100%",
-    height: 50,
-    backgroundColor: Colors.light,
-    borderRadius: 8,
-    paddingLeft: 10,
-    borderWidth: 1,
-    borderColor: Colors.light,
-  },
-  forgotContainer: {
-    marginTop: 20,
-    alignItems: "flex-end",
-  },
-  forgotText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: Colors.primary,
-  },
-  loginButton: {
-    marginTop: 20,
-    width: "100%",
-    height: 50,
-    backgroundColor: Colors.primary,
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  loginButtonText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: Colors.white,
-  },
-  signupGroup: {
-    flexDirection: "row",
-    marginTop: 10,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  signup: {
-    color: Colors.primary,
-    fontSize: 16,
-    fontWeight: "bold",
-    marginRight: 5,
-  },
-  new: {
-    fontSize: 16,
-    fontWeight: "500",
-    marginRight: 5,
-  },
+  	container: {
+		flex: 1,
+		padding: 10,
+		backgroundColor: CUSTOMCOLORS.offWhite,		
+	},
+	testBorder: {
+		borderWidth: 0,
+		borderColor: 'red',
+	},
+	text: {
+        fontSize: 15,
+        color: CUSTOMCOLORS.darkGray,
+    },
+  
+	inputHeader: {
+		fontSize: 20,
+		color: CUSTOMCOLORS.darkGray,
+		fontWeight: "bold",
+		margin: 10,
+		marginBottom: 0,
+	},
+	input: {
+		margin: 10,
+		height: 50,
+		backgroundColor: 'white',
+		borderWidth: 1,
+		borderColor: CUSTOMCOLORS.lightPurple,
+		borderRadius: 10,
+		paddingHorizontal: 10,
+	},
+
+	loginButton: {
+		margin: 10,
+		marginTop: 20,
+		height: 50,
+		backgroundColor: CUSTOMCOLORS.darkPurple,
+		borderRadius: 25,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	loginButtonText: {
+		fontSize: 15,
+		fontWeight: "bold",
+		color: CUSTOMCOLORS.veryLightPurple,
+	},
 });
