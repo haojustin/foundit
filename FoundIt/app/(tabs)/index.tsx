@@ -6,6 +6,7 @@ import {CUSTOMCOLORS} from '../../constants/CustomColors';
 import { LocationData, getLocation } from './postfolder/locationUtil';
 
 import { getPosts } from '../../services/firebaseService';
+import Slider from '@react-native-community/slider';
 
 export default function TabOneScreen() {
   const [posts, setPosts] = useState<any[]>([]);
@@ -13,6 +14,8 @@ export default function TabOneScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [userLocation, setUserLocation] = useState<LocationData | null>(null);
   const [loading, setLoading] = useState(true); // State to track loading status
+  const [sliderVal, setSliderVal] = useState(3); // State to track selected radius
+  
 
   useEffect(() => {
     // Fetch user's location
@@ -26,6 +29,11 @@ export default function TabOneScreen() {
         // Optionally, you can handle the error here by setting userLocation to a default value or displaying an error message.
       });
   }, []);
+
+  // Watch for changes in sliderVal and trigger handleSearch
+  useEffect(() => {
+    handleSearch();
+  }, [sliderVal]);
 
 
   const handleSearch = async () => {
@@ -44,8 +52,35 @@ export default function TabOneScreen() {
         };
       }));
 
+      // Filter posts based on the selected radius
+    const filteredPosts = postsArray.filter(post => {
+      if (userLocationData.latitude !== null && userLocationData.longitude !== null) {
+        const distance = calculateDistance(userLocationData.latitude, userLocationData.longitude, post.location.latitude, post.location.longitude);
+        // Check if the post is within the selected radius
+        console.log("sliderVal", sliderVal);
+        switch (sliderVal) {
+          case 0:
+            return distance <= 1; // 1 mile
+          case 1:
+            return distance <= 2; // 2 miles
+          case 2:
+            return distance <= 5; // 5 miles
+          case 3:
+            return true; // All posts
+          default:
+            return true;
+        }
+      } else {
+        // If userLocation is null, show all posts
+        return true;
+      }
+    });
+
+    
+
+
       // Sort posts based on user's location
-    const sortedPosts = [...postsArray].sort((postA, postB) => {
+    const sortedPosts = [...filteredPosts].sort((postA, postB) => {
       if (userLocationData.latitude !== null && userLocationData.longitude !== null) {
         console.log("reached inner handleSearch");
         // Assigning latitude and longitude values for postA and postB if they are null
@@ -90,9 +125,9 @@ export default function TabOneScreen() {
 
     useEffect(() => {
 
-		Appearance.setColorScheme('light');
-		StatusBar.setBarStyle('dark-content');
-	}, []);
+    Appearance.setColorScheme('light');
+    StatusBar.setBarStyle('dark-content');
+  }, []);
 
   // Function to fetch address from Google Geocoding API
   const fetchAddress = async (latitude, longitude) => {
@@ -146,6 +181,30 @@ export default function TabOneScreen() {
   }
   }, [userLocation]); */
 
+  const handleSliderChange = (value: number) => {
+    let newRadius = -1;
+    // Here you can trigger the search based on the selected radius
+    switch (value) {
+      case 0:
+        newRadius = 0; 
+        break;
+      case 1:
+        newRadius = 1; 
+        break;
+      case 2:
+        newRadius = 2; 
+        break;
+      case 3:
+        newRadius = 3; 
+        break;
+      default:
+        break;
+      }
+      console.log("newRadius", newRadius);
+      setSliderVal(newRadius);
+    //handleSearch();
+    };
+
   return (
     <View style={[styles.container, styles.testBorder]}>
       <Text style={[styles.recentPostsHeader, styles.testBorder]}>Recent Posts</Text>
@@ -156,42 +215,65 @@ export default function TabOneScreen() {
           placeholderTextColor={CUSTOMCOLORS.lightGray}
           value={searchQuery}
           onChangeText={setSearchQuery}
-		      cursorColor={CUSTOMCOLORS.lightPurple}
-		      selectionColor={CUSTOMCOLORS.lightPurple}
+          cursorColor={CUSTOMCOLORS.lightPurple}
+          selectionColor={CUSTOMCOLORS.lightPurple}
         />
-		{/*
+    {/*
         <TouchableOpacity onPress={handleSearch} style={styles.searhIconBackground}>
           <Icon name="search" size={30} color={CUSTOMCOLORS.darkPurple} />
         </TouchableOpacity>
-		*/}
+    */}
       </View>
 
-	  <View style={styles.divider}></View>
+    <View style={styles.divider}></View>
+
+    {/* Slider for selecting radius */}
+<View style={styles.radiusSliderContainer}>
+<Slider
+style={{width: '80%', height: 40}}
+minimumValue={0}
+maximumValue={3}
+step={1}
+value={sliderVal}
+onValueChange={handleSliderChange}
+minimumTrackTintColor={CUSTOMCOLORS.darkPurple}
+maximumTrackTintColor={CUSTOMCOLORS.lightPurple}
+thumbTintColor={CUSTOMCOLORS.darkPurple}
+/>
+<View style={styles.sliderOptionsContainer}>
+<Text style={styles.sliderOptionText}>1mi</Text>
+<Text style={styles.sliderOptionText}>2mi</Text>
+<Text style={styles.sliderOptionText}>5mi</Text>
+<Text style={styles.sliderOptionText}>All</Text>
+</View>
+</View>
+
+    
 
       <FlatList
         data={posts}
-		    style={[styles.flatList, styles.testBorder]}
-		    showsVerticalScrollIndicator={false}
+        style={[styles.flatList, styles.testBorder]}
+        showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
           //<View style={[styles.block, item.lostFound === 'lost' ? styles.lostItemBackground : styles.foundItemBackground, styles.testBorder]}>
           <View style={[styles.testBorder, styles.block, item.lostFound === 'returned' ? styles.returnedItemBackground : styles.block, item.lostFound === 'lost' ? styles.lostItemBorder : styles.foundItemBorder]}>
-			<View style={[styles.testBorder, styles.titleWrapper]}>
-				<Text style={[styles.testBorder, styles.inblocktitle]}>{item.title}</Text>
-				<Text style={[styles.testBorder, styles.inblockstatus, 
-					item.lostFound === 'returned' ? 
-						styles.statusReturnedBackground : (item.lostFound === 'lost' ? 
-							styles.statusLostBackground : styles.statusFoundBackground
-						)]}>
-							{item.lostFound === 'returned' ? 'Returned' : (item.lostFound === 'lost' ? 'Lost' : 'Found')}
-				</Text>
-			</View>
+      <View style={[styles.testBorder, styles.titleWrapper]}>
+        <Text style={[styles.testBorder, styles.inblocktitle]}>{item.title}</Text>
+        <Text style={[styles.testBorder, styles.inblockstatus, 
+          item.lostFound === 'returned' ? 
+            styles.statusReturnedBackground : (item.lostFound === 'lost' ? 
+              styles.statusLostBackground : styles.statusFoundBackground
+            )]}>
+              {item.lostFound === 'returned' ? 'Returned' : (item.lostFound === 'lost' ? 'Lost' : 'Found')}
+        </Text>
+      </View>
             {item.media && item.media.length > 0 && (
               <Image source={{ uri: item.media[0] }} style={[styles.testBorder, styles.postImage]} resizeMode="cover" />
             )}
             {/*<Text style={[styles.inblocktext, item.lostFound === 'lost' ? styles.lostTextBackground : styles.foundTextBackground]}>{item.description}</Text>*/}
             <Text style={[styles.testBorder, styles.inblocktext]}>{item.description.trim()}</Text>
 
-			<View style={styles.divider}></View>
+      <View style={styles.divider}></View>
 
             {item.lostFound === 'lost' && item.reward && <Text style={styles.inblocktext}>Reward: ${item.reward}</Text>}
             {item.address && <Text style={styles.inblocktext}>Location: {item.address}</Text>}
@@ -209,101 +291,101 @@ export default function TabOneScreen() {
     container: {
       flex: 1,
       backgroundColor: CUSTOMCOLORS.offWhite,
-	  padding: 10,
+    padding: 10,
     },
-	testBorder: {
-		borderWidth: 0,
-		borderColor: 'red',
-	},
-	divider: {
-		borderBottomWidth: 1,
-		borderColor: CUSTOMCOLORS.lightPurple,
-		marginVertical: 10,
-	},
+  testBorder: {
+    borderWidth: 0,
+    borderColor: 'red',
+  },
+  divider: {
+    borderBottomWidth: 1,
+    borderColor: CUSTOMCOLORS.lightPurple,
+    marginVertical: 10,
+  },
 
-	recentPostsHeader: {
-		alignSelf: 'center',
-		fontWeight: 'bold',
-		color: CUSTOMCOLORS.darkGray,
-		fontSize: 20,
-		margin: 10,
-	},
+  recentPostsHeader: {
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    color: CUSTOMCOLORS.darkGray,
+    fontSize: 20,
+    margin: 10,
+  },
 
     searchFunc: {
       flexDirection: 'row',
       alignItems: 'center',
-		margin: 10,
-		height: 40,
-		backgroundColor: 'transparent',
-		alignSelf: 'center',
-	  width: '80%',
+    margin: 10,
+    height: 40,
+    backgroundColor: 'transparent',
+    alignSelf: 'center',
+    width: '80%',
     },
     searchBar: {
       flex: 1,
       height: 30,
       borderBottomWidth: 1,
       borderColor: CUSTOMCOLORS.darkPurple,
-	  paddingHorizontal: 5,
-	  fontSize: 15,
+    paddingHorizontal: 5,
+    fontSize: 15,
     },
     searhIconBackground: {
       backgroundColor: CUSTOMCOLORS.lightPurple,
-	  height: 40,
-	  width: 40,
+    height: 40,
+    width: 40,
       borderRadius: 20,
       justifyContent: 'center',
       alignItems: 'center',
     },
 
-	flatList: {
-		margin: 10,
-	},
+  flatList: {
+    margin: 10,
+  },
     block: {
       backgroundColor: CUSTOMCOLORS.veryLightPurple,
       padding: 10,
       borderRadius: 10,
       marginVertical: 5,
-	  //borderWidth: 1,
-	  /*
+    //borderWidth: 1,
+    /*
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.23,
       shadowRadius: 2.62,
       elevation: 4,
-	  */
+    */
     },
 
-	titleWrapper: {
-		//flexDirection: 'row',
-		alignItems: 'flex-start',
-		backgroundColor: 'transparent',
-		marginBottom: 5,
-	},
-	inblocktitle: {
+  titleWrapper: {
+    //flexDirection: 'row',
+    alignItems: 'flex-start',
+    backgroundColor: 'transparent',
+    marginBottom: 5,
+  },
+  inblocktitle: {
       fontSize: 20,
       fontWeight: 'bold',
       marginHorizontal: 5,
-	  color: CUSTOMCOLORS.darkGray,
-	  flexShrink: 1,
+    color: CUSTOMCOLORS.darkGray,
+    flexShrink: 1,
     },
-	inblockstatus: {
+  inblockstatus: {
       fontSize: 15,
       fontWeight: 'bold',
       color: CUSTOMCOLORS.darkGray,
-	  margin: 5,
-	  borderRadius: 20,
-	  paddingVertical: 1,
-	  paddingHorizontal: 10,
+    margin: 5,
+    borderRadius: 20,
+    paddingVertical: 1,
+    paddingHorizontal: 10,
     },
-	statusLostBackground: {
-		backgroundColor: CUSTOMCOLORS.lostRed,
-	},
-	statusFoundBackground: {
-		backgroundColor: CUSTOMCOLORS.foundYellow,
-	},
-	statusReturnedBackground: {
-		backgroundColor: CUSTOMCOLORS.returnedGreen,
-	},
+  statusLostBackground: {
+    backgroundColor: CUSTOMCOLORS.lostRed,
+  },
+  statusFoundBackground: {
+    backgroundColor: CUSTOMCOLORS.foundYellow,
+  },
+  statusReturnedBackground: {
+    backgroundColor: CUSTOMCOLORS.returnedGreen,
+  },
     postImage: {
       width: 'auto',
       height: undefined,
@@ -313,10 +395,10 @@ export default function TabOneScreen() {
     inblocktext: {
       fontSize: 15,
       margin: 5,
-	  color: CUSTOMCOLORS.darkGray,
+    color: CUSTOMCOLORS.darkGray,
     },
-	/*
-	rewardText: {
+  /*
+  rewardText: {
       fontSize: 16,
       color: '#FFA500',
       fontWeight: 'bold',
@@ -338,16 +420,16 @@ export default function TabOneScreen() {
       padding: 5,
       borderRadius: 5,
     },
-	*/
-	lostItemBorder: {
-		borderColor: CUSTOMCOLORS.lostRed,
-	},
-	foundItemBorder: {
-		borderColor: CUSTOMCOLORS.foundYellow,
-	},
-	returnedItemBorder: {
-		borderColor: CUSTOMCOLORS.returnedGreen,
-	},
+  */
+  lostItemBorder: {
+    borderColor: CUSTOMCOLORS.lostRed,
+  },
+  foundItemBorder: {
+    borderColor: CUSTOMCOLORS.foundYellow,
+  },
+  returnedItemBorder: {
+    borderColor: CUSTOMCOLORS.returnedGreen,
+  },
     postContent: {
       flex: 1,
     },
@@ -357,5 +439,17 @@ export default function TabOneScreen() {
       color: '#777',
       marginBottom: 5,
     },
-    
+    radiusSliderContainer: {
+      alignItems: 'center',
+      marginBottom: 10,
+      },
+      sliderOptionsContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '80%',
+      },
+      sliderOptionText: {
+      color: CUSTOMCOLORS.darkGray,
+      fontSize: 12,
+      },
   });
