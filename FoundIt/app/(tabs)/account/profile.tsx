@@ -16,12 +16,12 @@ export default function TabOneScreen({}) {
   const { user: currentUser, setCurrentUser } = useUser();
   const [posts, setPosts] = useState<any[]>([]);
   const [searchQuery] = useState('');
-  const [refreshing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 	const [usernameState, setUsernameState] = React.useState();
-	const [johnSmithsId, setJohnSmithsId] = React.useState('2j9pC69JqbZ0MqUyYCV6');
+  const currentUserId = currentUser?.id;
 
 	const getUsername = async () => {
-		const docSnap = await getUserByDocId(currentUser?.id || johnSmithsId);
+		const docSnap = await getUserByDocId(currentUser?.id || '0');
 		setUsernameState(currentUser? docSnap.data().Name : "");
 	};
 	useFocusEffect(
@@ -32,8 +32,8 @@ export default function TabOneScreen({}) {
 
   const handleSearch = async () => {
     try {
-      const results = await getPosts(currentUser?.id || '0');
-      console.log(results)
+      console.log("SEARCHING...");
+      const results = await getPosts(currentUserId || '0');
       const postsArray = await Promise.all(results.map(async (result) => {
         const { latitude, longitude } = result.location;
         const address = await fetchAddress(latitude, longitude);
@@ -50,12 +50,6 @@ export default function TabOneScreen({}) {
   };
   
   
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    handleSearch().then(() => setRefreshing(false));
-    console.log(currentUser)
-  }, []);
-
   useEffect(() => {
     handleSearch(); // Call handleSearch when the component mounts or currentUser.id changes
   }, [currentUser?.id, searchQuery]);
@@ -67,13 +61,9 @@ export default function TabOneScreen({}) {
 
   // Function to fetch address from Google Geocoding API
   const fetchAddress = async (latitude, longitude) => {
-    console.log("fetchAddress");
     try {
-      console.log("latitude", latitude);
-      console.log("longitude", longitude);
       const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyBCs6VRQAtgywJkLYMSQR2B5We3kAIwUUo`);
       const data = await response.json();
-      console.log("waiting on response");
       if (data.results && data.results.length > 0) {
         console.log("success fetchAddress");
         return data.results[0].formatted_address;
@@ -133,7 +123,7 @@ export default function TabOneScreen({}) {
 			  </View>
 			)}
 			keyExtractor={item => item.id.toString()}
-			refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+			refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleSearch} />}
 		/>
 	</View>
   );
