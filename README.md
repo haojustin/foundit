@@ -53,10 +53,9 @@ expo-camera for camera feature.
 2. npm install -g expo-cli
 3. npm install -g eas-cli
 4. npm install
-5. npm install @babel/preset-react @miblanchard/react-native-slider @react-native-community/geolocation @react-navigation/native @react-native-firebase/app @react-native-firebase/auth @react-native-vector-icons @react-native-maps @react-native-elegant-header
-6. npx expo start
-7. s
-8. Use your phone to scan the Expo Go QR code.
+5. npx expo start
+6. s
+7. Use your phone to scan the Expo Go QR code.
 
 ## Functionality
 
