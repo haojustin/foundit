@@ -47,7 +47,7 @@ Firebase for signin function and data storage.
 react-native-maps for map feature.
 expo-camera for camera feature.
 
-## Installation Steps
+## Deployment
 
 1. Clone main.
 2. npm install -g expo-cli
