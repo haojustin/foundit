@@ -42,16 +42,7 @@ export default function TabLayout() {
           options={{
             title: 'Home',
             tabBarIcon: ({ color }) => <AntDesign name="home" size={24} color={CUSTOMCOLORS.darkPurple} />,
-            headerRight: () => (
-              <Link href="/modal" asChild>
-                <Pressable>
-                  {({ pressed }) => (
-                    <SimpleLineIcons name="location-pin" size={24} color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}/>
-                  )}
-                </Pressable>
-              </Link>
-            ),
+            
           }}
         />
         <Tabs.Screen
