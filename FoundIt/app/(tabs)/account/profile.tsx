@@ -7,21 +7,24 @@ import { useUser } from '../../../constants/UserContext';
 import { FlatList,  Appearance, StatusBar  } from 'react-native';
 import {CUSTOMCOLORS} from '../../../constants/CustomColors';
 import { useFocusEffect } from '@react-navigation/native';
+import { fetchUserData } from '../../../constants/authService';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
 export default function TabOneScreen({}) {
-  const { user: currentUser, setCurrentUser } = useUser();
+  const { user: currentUser, setUser } = useUser();
   const [posts, setPosts] = useState<any[]>([]);
   const [searchQuery] = useState('');
   const [refreshing, setRefreshing] = useState(false);
+	/*
 	const [usernameState, setUsernameState] = React.useState();
 	const [johnSmithsId, setJohnSmithsId] = React.useState('2j9pC69JqbZ0MqUyYCV6');
 
 	const getUsername = async () => {
-		const docSnap = await getUserByDocId(currentUser?.id || johnSmithsId);
+		const docSnap = await getUserByDocId(currentUser.id);
 		setUsernameState(currentUser? docSnap.data().Name : "");
 	};
 	useFocusEffect(
@@ -29,10 +32,11 @@ export default function TabOneScreen({}) {
 			getUsername();
 		}, [])
 	);
+	*/
 
-  const handleSearch = async () => {
+const handleSearch = async () => {
     try {
-      const results = await getPosts(currentUser?.id || '0');
+      const results = await getPosts(currentUser?.id || '-1');
       console.log(results)
       const postsArray = await Promise.all(results.map(async (result) => {
         const { latitude, longitude } = result.location;
@@ -97,6 +101,12 @@ export default function TabOneScreen({}) {
 		<Text style={[styles.testBorder, styles.profileName]}>
 			{currentUser?.displayName || 'Guest User'}
 		</Text>
+
+		<TouchableOpacity style={[styles.testBorder, styles.reloadButton]} onPress={async () => {
+				await fetchUserData(currentUser.id, setUser);
+			}}>
+			<Icon name="reload" size={30} color={CUSTOMCOLORS.darkPurple} />
+		</TouchableOpacity>
 
 		<View style={[styles.testBorder, styles.divider]}>
 			<View style={styles.hrLine} />
@@ -166,6 +176,12 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 		alignSelf: 'center',
 		color: CUSTOMCOLORS.darkGray,
+	},
+
+	reloadButton: {
+		position: 'absolute',
+		top: 10,
+		right: 10,
 	},
 
 	divider: {

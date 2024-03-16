@@ -21,13 +21,15 @@ export default function Settings() {
 	const [usernameState, setUsernameState] = React.useState();
 	const [johnSmithsId, setJohnSmithsId] = React.useState('2j9pC69JqbZ0MqUyYCV6');
 
+	/*
 	const getUsername = async () => {
-		const docSnap = await getUserByDocId(currentUser?.id || johnSmithsId);
-		setUsernameState(currentUser? docSnap.data().Name : "");
+		//const docSnap = await getUserByDocId(currentUser?.id || johnSmithsId);
+		setUsernameState(currentUser?.displayName || "");
 	};
+	*/
 	useFocusEffect(
 		React.useCallback(() => {
-			getUsername();
+			setUsernameState("");
 		}, [])
 	);
 	
@@ -45,6 +47,8 @@ export default function Settings() {
 						value={usernameState}
 						selectionColor={colors.lightGray}
 						cursorColor={CUSTOMCOLORS.lightPurple}
+						placeholder="Username"
+						placeholderTextColor={CUSTOMCOLORS.lightGray}
 					/>
 				</View>
 				<TouchableOpacity style={[styles.changeNameButton, styles.testBorder]} onPress={async () => {await changeUsername(currentUser?.id || johnSmithsId, usernameState);}}>
