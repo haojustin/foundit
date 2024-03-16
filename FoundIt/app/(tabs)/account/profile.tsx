@@ -35,7 +35,7 @@ export default function TabOneScreen({}) {
 const handleSearch = async () => {
     try {
       console.log("SEARCHING...");
-      const results = await getPosts(currentUserId || '0');
+      const results = await getPosts(currentUserId || '-1');
       const postsArray = await Promise.all(results.map(async (result) => {
         const { latitude, longitude } = result.location;
         const address = await fetchAddress(latitude, longitude);
