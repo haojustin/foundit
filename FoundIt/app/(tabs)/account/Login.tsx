@@ -67,6 +67,7 @@ export default function Login({ navigation }: { navigation: any }) {
 			placeholderTextColor={CUSTOMCOLORS.lightGray}
 			cursorColor={CUSTOMCOLORS.lightPurple}
 			selectionColor={CUSTOMCOLORS.lightPurple}
+			autoCapitalize="none"
 		/>
 
         {/* Password */}
@@ -80,6 +81,7 @@ export default function Login({ navigation }: { navigation: any }) {
 			placeholderTextColor={CUSTOMCOLORS.lightGray}
 			cursorColor={CUSTOMCOLORS.lightPurple}
 			selectionColor={CUSTOMCOLORS.lightPurple}
+			autoCapitalize="none"
         />
 
         {/* Forgot Password */}

@@ -20,7 +20,7 @@ export default function Post() {
 
 
     const [title, setTitle] = useState('');
-	const { user: currentUser } = useUser();
+	const { user: currentUser, setUser: setCurrentUser } = useUser();
     const [description, setDescription] = useState('');
     const [reward, setReward] = useState('');
     const [lostFound, setLostFound] = useState('lost');

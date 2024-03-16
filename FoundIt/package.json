@@ -24,6 +24,7 @@
     "@expo/vector-icons": "^14.0.0",
     "@miblanchard/react-native-slider": "^2.3.1",
     "@react-native-community/geolocation": "^3.2.0",
+    "@react-native-community/slider": "^4.5.0",
     "@react-native-firebase/app": "^18.8.0",
     "@react-native-firebase/auth": "^18.8.0",
     "@react-native-firebase/crashlytics": "^18.8.0",
