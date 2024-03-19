@@ -25,7 +25,7 @@ I am mostly responsible for the account page, which includes my post section and
 ## Kevin Lavelle
 
 I am responsible for creating the map functions. When the user opens the app and tries to post, the device should ask the user for permissions 
-to access geolocation and other sensitive data. I am responsible for reverse geocoding latitude and longitude coordinates to transalte it to a street address. Justin helped me with moving an interactive pin around for the user to create their own location. This weekend, I will be adding code for users to filter posts by location. 
+to access geolocation and other sensitive data. I am responsible for reverse geocoding latitude and longitude coordinates to transalte it to a street address. Justin helped me with moving an interactive pin around for the user to create their own location. I am also responsible for sorting the posts by location, from closest to furthest from the user. I am also responsible for the location-based slider, filtering posts by 1 mile, 2 miles, 5 miles, and all posts when selected. 
 
 
 ## Zixiao Jin
