@@ -2,22 +2,6 @@
 
 Post found or lost items, and receive replies from claimants and finders.
 
-## Group members
-
-Justin Hao: GitHub: haojustin Email: justinhao@ucsb.edu Phone: 408-693-9511 Discord: h_ow
-
-Victor Li: GitHub: eggzdee1 Email: victorli@ucsb.edu Phone: 669-212-1096 Discord: steve3482
-
-Kendrick Lee: GitHub: kendrick-lee Email: kendricklee@ucsb.edu Phone: (415) 664-3230 Discord: captain_cutlass
-
-Zixiao Jin: GitHub: ZixiaoJin Email: zixiao_jin@ucsb.edu Phone: (820) 758-8441 Discord: .brucejin
-
-Baimin Wang: GitHub: Baiming-Wang Email: baiminwang@ucsb.edu Phone: 714-906-2159 Discord: .harry.w.
-
-Kevin Lavelle: GitHub: coder626 Email: kevinlavelle@ucsb.edu Phone: (310) 650-6587 Discord: _daddydestroyer
-
-Alex Castelein: GitHub: 17acastelein Email: acastelein@ucsb.edu Phone: (650) 521-6344 Discord: acastelein
-
 ## Tech stack
 
 We have decided on using React Native for iOS-Android cross compatibility.
@@ -81,7 +65,7 @@ Many features are hard coded now and will be implemented in the future.
 5. Submit a pull request :D
 
 ## License
-Copyright (c) 2024 Justin Hao, Kevin Lavelle, Victor Li, Zixiao Jin, Baimin Wang, Alexandre Castelein, Kendrick Lee
+Copyright (c) 2024 Justin Hao
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
